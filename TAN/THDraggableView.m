@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Zach Drossman. All rights reserved.
 //
 
-#import "THDraggableImageView.h"
+#import "THDraggableView.h"
 
 typedef enum snapPosition {
     SnapPositionBottom = 0,
@@ -16,15 +16,14 @@ typedef enum snapPosition {
     SnapPositionReturn = 4,
 } SnapPosition;
 
-@interface THDraggableImageView ()
+@interface THDraggableView ()
 
 @property (strong, nonatomic) UIPanGestureRecognizer *panGestureRecognizer;
 @property (nonatomic) CGPoint originalPoint;
-@property (strong, nonatomic) UIImageView *imageView;
 
 @end
 
-@implementation THDraggableImageView
+@implementation THDraggableView
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if ((self = [super initWithCoder:aDecoder])) {
@@ -57,12 +56,7 @@ typedef enum snapPosition {
 
 - (void)loadImageViewAndStyle
 {
-    
-    self.imageView = [[UIImageView alloc] initWithFrame:self.bounds];
-    
-    [self addSubview:self.imageView];
-//    [self layoutSubviews];
-//    [self setNeedsDisplay];
+
     self.layer.shadowOffset = CGSizeMake(7,7);
     self.layer.shadowRadius = 5;
     self.layer.shadowOpacity = 0.5;
@@ -144,8 +138,6 @@ typedef enum snapPosition {
     CGPoint rightCenter = CGPointMake(self.snapToFrame.origin.x + self.snapToFrame.size.width, self.snapToFrame.origin.y + self.snapToFrame.size.height/2);
     CGPoint topCenter = CGPointMake(self.snapToFrame.origin.x + self.snapToFrame.size.width/2, self.snapToFrame.origin.y);
     CGPoint leftCenter = CGPointMake(self.snapToFrame.origin.x, self.snapToFrame.origin.y + self.snapToFrame.size.height/2);
-
-    
     
     [UIView animateWithDuration:0.2 animations:^{
         switch (snapPosition) {
@@ -179,11 +171,11 @@ typedef enum snapPosition {
 }
 
 
--(void)setImage:(UIImage *)image
-{
-    _image = image;
-    [self refresh];
-}
+//-(void)setImage:(UIImage *)image
+//{
+//    _image = image;
+//    [self refresh];
+//}
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -193,8 +185,8 @@ typedef enum snapPosition {
 }
 */
 
-- (void)refresh {
-    self.imageView.image = self.image;
-}
+//- (void)refresh {
+//    self.imageView.image = self.image;
+//}
 
 @end

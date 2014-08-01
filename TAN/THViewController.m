@@ -7,17 +7,19 @@
 //
 
 #import "THViewController.h"
-#import "THDraggableImageView.h"
+#import "THDraggableView.h"
+#import "THCamera2ViewController.h"
+
 @interface THViewController ()
 
 @property (strong, nonatomic) IBOutlet UIImageView *imageView;
 @property (strong, nonatomic) UIImage *thenImage;
 @property (strong, nonatomic) UIImage *nowImage;
-@property (strong, nonatomic) IBOutlet THDraggableImageView *draggableImageView;
-
+@property (strong, nonatomic) IBOutlet THDraggableView *draggableImageView;
 @end
 
 @implementation THViewController
+
 
 - (void)viewDidLoad
 {
@@ -26,16 +28,6 @@
     
 	// Do any additional setup after loading the view, typically from a nib.
     
-    if (self.nowImage)
-    {
-        self.draggableImageView.image = self.nowImage;
-    }
-    else
-    {
-        self.draggableImageView.image = [UIImage imageNamed:@"blossom.jpg"];
-    }
-    
-    self.draggableImageView.snapToFrame = self.imageView.frame;
     
     [self setupInitialState];
     
@@ -58,6 +50,22 @@
     }
     
     self.imageView.image = self.thenImage;
+    
+    self.draggableImageView.snapToFrame = AVMakeRectWithAspectRatioInsideRect(self.thenImage.size, self.imageView.frame);
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(receiveNotification:)name:@"didDragNowImageThroughMeridian"
+                                               object:nil];
+}
+
+- (void) receiveNotification:(NSNotification *) notification
+{
+    // [notification name] should always be @"TestNotification"
+    // unless you use this method for observation of other notifications
+    // as well.
+    
+    if ([[notification name] isEqualToString:@"didDragNowImageThroughMeridian"])
+        NSLog (@"Successfully received the test notification!");
 }
 
 
@@ -106,6 +114,12 @@
     return image;
 }
 
-
+- (void) dealloc
+{
+    // If you don't remove yourself as an observer, the Notification Center
+    // will continue to try and send notification objects to the deallocated
+    // object.
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 @end

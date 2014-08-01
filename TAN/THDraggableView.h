@@ -8,9 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface THDraggableImageView : UIView
+@interface THDraggableView : UIView
 
-@property (strong, nonatomic) UIImage *image;
 @property (nonatomic) CGRect snapToFrame;
 
 @end
