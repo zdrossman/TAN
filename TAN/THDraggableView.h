@@ -11,5 +11,7 @@
 @interface THDraggableView : UIView
 
 @property (nonatomic) CGRect snapToFrame;
-
+@property (nonatomic) CGRect superViewFrame;
+@property (strong, nonatomic) UIPanGestureRecognizer *panGestureRecognizer;
+@property (nonatomic, strong) NSString *name;
 @end

@@ -51,7 +51,7 @@
         }
     }
     
-    NSLog(@"about to request a capture from: %@", self.stillImageOutput);
+   // NSLog(@"about to request a capture from: %@", self.stillImageOutput);
     [self.stillImageOutput captureStillImageAsynchronouslyFromConnection:videoConnection completionHandler: ^(CMSampleBufferRef imageSampleBuffer, NSError *error) {
         
         if (imageSampleBuffer != NULL) {
@@ -85,16 +85,16 @@
     
     for (AVCaptureDevice *device in devices) {
         
-        NSLog(@"Device name: %@", [device localizedName]);
+      //  NSLog(@"Device name: %@", [device localizedName]);
         
         if ([device hasMediaType:AVMediaTypeVideo]) {
             
             if ([device position] == AVCaptureDevicePositionBack) {
-                NSLog(@"Device position : back");
+               // NSLog(@"Device position : back");
                 backCamera = device;
             }
             else {
-                NSLog(@"Device position : front");
+                //NSLog(@"Device position : front");
                 frontCamera = device;
             }
         }
@@ -104,7 +104,7 @@
         NSError *error = nil;
         AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:backCamera error:&error];
         if (!input) {
-            NSLog(@"ERROR: trying to open camera: %@", error);
+            //NSLog(@"ERROR: trying to open camera: %@", error);
         }
         [session addInput:input];
     }
@@ -113,7 +113,7 @@
         NSError *error = nil;
         AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:frontCamera error:&error];
         if (!input) {
-            NSLog(@"ERROR: trying to open camera: %@", error);
+            //NSLog(@"ERROR: trying to open camera: %@", error);
         }
         [session addInput:input];
     }
@@ -133,7 +133,7 @@
     
     UIGraphicsBeginImageContext(CGSizeMake(768, 1022));
     [image drawInRect: CGRectMake(0, 0, 768, 1022)];
-    NSLog(@"Bounds Height:%f Bounds Width:%f",self.view.bounds.size.height, self.view.bounds.size.width);
+    //NSLog(@"Bounds Height:%f Bounds Width:%f",self.view.bounds.size.height, self.view.bounds.size.width);
     UIImage *smallImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
@@ -149,24 +149,24 @@
     
     //adjust image orientation based on device orientation
     if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationLandscapeLeft) {
-        NSLog(@"landscape left image");
+       // NSLog(@"landscape left image");
         [self adjustImageOrientationByDegrees:-90];
     }
     
     if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationLandscapeRight) {
-        NSLog(@"landscape right");
+      //  NSLog(@"landscape right");
         
         [self adjustImageOrientationByDegrees:90];
     }
     
     if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationPortraitUpsideDown) {
-        NSLog(@"upside down");
+      //  NSLog(@"upside down");
         
         [self adjustImageOrientationByDegrees:-180];
     }
     
     if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationPortrait) {
-        NSLog(@"upside upright");
+      //  NSLog(@"upside upright");
         
         [self adjustImageOrientationByDegrees:0];
     }
@@ -197,12 +197,16 @@
         self.nowImageView.image = nil; //remove old image from view
         self.nowImageView.hidden = NO; //show the captured image view
         self.imageFeed.hidden = YES; //hide the live video feed
+        self.flashButton.hidden = YES;
+        self.frontBackToggle.hidden = YES;
         [self capImage];
     }
     else {
         self.nowImageView.hidden = YES;
         self.imageFeed.hidden = NO;
         self.haveCapturedImage = NO;
+        self.flashButton.hidden = NO;
+        self.frontBackToggle.hidden = NO;
     }
 }
 @end

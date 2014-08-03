@@ -9,13 +9,15 @@
 #import "THViewController.h"
 #import "THDraggableView.h"
 #import "THCamera2ViewController.h"
+#import "THDraggableImageView.h"
 
 @interface THViewController ()
 
-@property (strong, nonatomic) IBOutlet UIImageView *imageView;
 @property (strong, nonatomic) UIImage *thenImage;
 @property (strong, nonatomic) UIImage *nowImage;
-@property (strong, nonatomic) IBOutlet THDraggableView *draggableImageView;
+@property (strong, nonatomic) IBOutlet THDraggableView *draggableNowImageView;
+@property (strong, nonatomic) IBOutlet THDraggableImageView *draggableThenImageView;
+@property (nonatomic) CGRect originalThenImageFrame;
 @end
 
 @implementation THViewController
@@ -36,9 +38,11 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-    self.nowImage = [UIImage imageNamed:@"coffee.jpg"];
-    
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [self setupInitialState];
 }
 
 - (void)setupInitialState
@@ -46,26 +50,14 @@
     if (!self.nowImage)
     {
         self.thenImage = [UIImage imageNamed:@"blue.jpg"];
-        self.nowImage = [UIImage imageNamed:@"blossom.jpg"];
     }
     
-    self.imageView.image = self.thenImage;
+    self.draggableThenImageView.image = self.thenImage;
+    self.draggableNowImageView.name = @"camera";
+    self.draggableThenImageView.name = @"flower";
+    self.draggableNowImageView.snapToFrame = AVMakeRectWithAspectRatioInsideRect(self.thenImage.size, self.draggableThenImageView.frame);
     
-    self.draggableImageView.snapToFrame = AVMakeRectWithAspectRatioInsideRect(self.thenImage.size, self.imageView.frame);
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(receiveNotification:)name:@"didDragNowImageThroughMeridian"
-                                               object:nil];
-}
-
-- (void) receiveNotification:(NSNotification *) notification
-{
-    // [notification name] should always be @"TestNotification"
-    // unless you use this method for observation of other notifications
-    // as well.
-    
-    if ([[notification name] isEqualToString:@"didDragNowImageThroughMeridian"])
-        NSLog (@"Successfully received the test notification!");
+    self.draggableThenImageView.snapToFrame = AVMakeRectWithAspectRatioInsideRect(self.thenImage.size, self.draggableNowImageView.frame);
 }
 
 
@@ -75,17 +67,17 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)editTapped:(id)sender {
-    
-    if (self.imageView.image == self.thenImage)
-    {
-    self.imageView.image = [self imageByCombiningImage:self.thenImage withImage:self.nowImage ];
-    }
-    else
-    {
-        self.imageView.image = self.thenImage;
-    }
-}
+//- (IBAction)editTapped:(id)sender {
+//    
+//    if (self.imageView.image == self.thenImage)
+//    {
+//    self.imageView.image = [self imageByCombiningImage:self.thenImage withImage:self.nowImage ];
+//    }
+//    else
+//    {
+//        self.imageView.image = self.thenImage;
+//    }
+//}
 
 
 #pragma mark - Core Graphics methods
@@ -114,12 +106,12 @@
     return image;
 }
 
-- (void) dealloc
-{
-    // If you don't remove yourself as an observer, the Notification Center
-    // will continue to try and send notification objects to the deallocated
-    // object.
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
+//- (void) dealloc
+//{
+//    // If you don't remove yourself as an observer, the Notification Center
+//    // will continue to try and send notification objects to the deallocated
+//    // object.
+//    [[NSNotificationCenter defaultCenter] removeObserver:self];
+//}
 
 @end
