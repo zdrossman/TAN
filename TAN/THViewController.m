@@ -15,13 +15,28 @@
 
 @property (strong, nonatomic) UIImage *thenImage;
 @property (strong, nonatomic) UIImage *nowImage;
-@property (strong, nonatomic) IBOutlet THDraggableView *draggableNowImageView;
+@property (nonatomic) BOOL takingPhoto;
 @property (strong, nonatomic) IBOutlet THDraggableImageView *draggableThenImageView;
+@property (strong, nonatomic) IBOutlet THDraggableImageView *draggableNowImageView;
 @property (nonatomic) CGRect originalThenImageFrame;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *cameraButton;
+@property (strong, nonatomic) IBOutlet UIView *cameraContainerView;
+@property (strong, nonatomic) THCamera2ViewController *cameraVC;
 @end
 
 @implementation THViewController
 
+
+//-(THCamera2ViewController *)cameraVC
+//{
+//    if (!_cameraVC)
+//    {
+//        _cameraVC = [[THCamera2ViewController alloc] init];
+//        _cameraVC.frame
+//    }
+//    
+//    return _cameraVC;
+//}
 
 - (void)viewDidLoad
 {
@@ -29,10 +44,11 @@
     [super viewDidLoad];
     
 	// Do any additional setup after loading the view, typically from a nib.
-    
-    
+    self.cameraContainerView.backgroundColor = [UIColor clearColor];
+    self.takingPhoto = NO;
     [self setupInitialState];
     
+    self.cameraContainerView.hidden = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -45,16 +61,48 @@
     [self setupInitialState];
 }
 
+- (IBAction)cameraTapped:(id)sender {
+    
+    self.takingPhoto = !self.takingPhoto;
+
+    if (self.takingPhoto)
+    {
+        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(cameraTapped:)];
+        
+        self.navigationItem.rightBarButtonItem = doneButton;
+        [self toggleCamera];
+
+    }
+    else
+    {
+        UIBarButtonItem *cameraButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(cameraTapped:)];
+        
+        self.navigationItem.rightBarButtonItem = cameraButton;
+        [self toggleCamera];
+    }
+    
+}
+
+-(void)toggleCamera
+{
+    self.cameraContainerView.hidden = !self.cameraContainerView.hidden;
+    self.draggableNowImageView.hidden = !self.draggableNowImageView.hidden;
+}
+
 - (void)setupInitialState
 {
     if (!self.nowImage)
     {
         self.thenImage = [UIImage imageNamed:@"blue.jpg"];
+        self.nowImage = [UIImage imageNamed:@"blossom.jpg"];
     }
     
     self.draggableThenImageView.image = self.thenImage;
+    self.draggableNowImageView.image = self.nowImage;
+    
     self.draggableNowImageView.name = @"camera";
     self.draggableThenImageView.name = @"flower";
+    
     self.draggableNowImageView.snapToFrame = AVMakeRectWithAspectRatioInsideRect(self.thenImage.size, self.draggableThenImageView.frame);
     
     self.draggableThenImageView.snapToFrame = AVMakeRectWithAspectRatioInsideRect(self.thenImage.size, self.draggableNowImageView.frame);
@@ -113,5 +161,19 @@
 //    // object.
 //    [[NSNotificationCenter defaultCenter] removeObserver:self];
 //}
+
+-(void)didTakePhoto:(UIImage *)image
+{
+    self.draggableNowImageView.image = image;
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"cameraSegue"])
+    {
+        self.cameraVC = segue.destinationViewController;
+        self.cameraVC.delegate = self;
+    }
+}
 
 @end

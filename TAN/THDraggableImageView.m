@@ -38,7 +38,7 @@
 
 - (void)loadImageView
 {
-
+    self.imageView.backgroundColor = [UIColor clearColor];
     self.imageView = [[UIImageView alloc] initWithImage:self.image];
     self.imageView.frame = self.bounds;
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
@@ -71,6 +71,5 @@
 - (void)refresh {
     self.imageView.image = self.image;
 }
-
 
 @end

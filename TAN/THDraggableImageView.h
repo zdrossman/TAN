@@ -7,8 +7,10 @@
 //
 
 #import "THDraggableView.h"
+#import "THCameraDelegateProtocol.h"
 
-@interface THDraggableImageView : THDraggableView
+@interface THDraggableImageView : THDraggableView <THCameraDelegateProtocol>
 
 @property (strong, nonatomic) UIImage *image;
+
 @end

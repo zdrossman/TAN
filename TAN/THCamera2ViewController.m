@@ -18,6 +18,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
 	// Do any additional setup after loading the view, typically from a nib.
     self.frontCamera = YES;
     //cameraSwitch.selectedSegmentIndex = 0;
@@ -70,6 +71,8 @@
     [captureVideoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     
 	captureVideoPreviewLayer.frame = self.view.bounds;
+    captureVideoPreviewLayer.backgroundColor = [UIColor clearColor].CGColor;
+    self.view.backgroundColor = [UIColor clearColor];
 	[self.imageFeed.layer addSublayer:captureVideoPreviewLayer];
 
     UIView *view = [self imageFeed];
@@ -143,7 +146,10 @@
     
     UIImage *croppedImage = [UIImage imageWithCGImage:imageRef];
     
-    self.nowImageView.image = croppedImage;
+    
+    //self.nowImageView.image = croppedImage;
+    
+    [self.delegate didTakePhoto:croppedImage];
     
     CGImageRelease(imageRef);
     
@@ -209,4 +215,6 @@
         self.frontBackToggle.hidden = NO;
     }
 }
+
+
 @end

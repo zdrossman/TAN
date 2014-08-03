@@ -487,6 +487,7 @@
 				3161DF01198A9CC500EA1064 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3161DF02198A9CC500EA1064 /* Build configuration list for PBXNativeTarget "TANTests" */ = {
 			isa = XCConfigurationList;
@@ -495,6 +496,7 @@
 				3161DF04198A9CC500EA1064 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

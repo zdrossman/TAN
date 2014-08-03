@@ -9,9 +9,16 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 
+@protocol THCameraDelegateProtocol <NSObject>
+
+-(void)didTakePhoto:(UIImage *)image;
+
+@end
+
 @interface THCamera2ViewController : UIViewController
 
 @property (strong, nonatomic) IBOutlet UIButton *flashButton;
+@property (nonatomic, weak) id <THCameraDelegateProtocol> delegate;
 
 @property (strong, nonatomic) IBOutlet UIButton *takePhotoButton;
 @property (strong, nonatomic) IBOutlet UIImageView *nowImageView;

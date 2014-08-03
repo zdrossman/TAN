@@ -7,6 +7,7 @@
 //
 
 #import "THDraggableView.h"
+#import <AVFoundation/AVFoundation.h>
 
 typedef enum snapPosition {
     SnapPositionBottom = 0,
@@ -55,7 +56,7 @@ typedef enum pushDirection {
 
 - (void)baseInit {
     
-    self.backgroundColor = [UIColor greenColor]; //for testing
+    self.backgroundColor = [UIColor clearColor];
     self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(dragged:)];
     [self addGestureRecognizer:self.panGestureRecognizer];
     
@@ -89,7 +90,6 @@ typedef enum pushDirection {
     
     [self.superview bringSubviewToFront:self];
 
-    NSInteger i = 0; //testing code
     switch (gestureRecognizer.state) {
         case UIGestureRecognizerStateBegan:{
             
@@ -111,38 +111,47 @@ typedef enum pushDirection {
             NSInteger dangerZone = 20;
 
             self.center = CGPointMake(self.originalPoint.x + xDistance, self.originalPoint.y + yDistance);
-            //xDelta = self.center.x - (self.originalFrame.origin.x + self.originalFrame.size.width/2);
-            //yDelta = self.center.y - (self.originalFrame.origin)
             NSLog(@"Object: %@ Self.center.y = %f", self, self.center.y);
             
-//            if (self.frame.origin.x < self.snapToFrame.origin.x + self.snapToFrame.size.height)
             if (fabs(xDistance *568/320) < fabs(yDistance))
             {
-            //if dragged object is on top
-            if (self.frame.origin.y < self.snapToFrame.origin.y && self.center.y > self.snapToFrame.origin.y)
-           {
-               NSLog(@"Push From Top (to bottom)");
-               self.pushDirection = PushDirectionFromTop;
-               [[NSNotificationCenter defaultCenter]
-                 postNotificationName:@"didReceivePushFromAnotherView"
-                 object:self];
-           }
-            
-            //if dragged object is on bottom
-            else if (self.frame.origin.y > self.snapToFrame.origin.y)
-            {
-                
-                // if dragging has moved quarter Y up to edge of top image view
-                if (self.center.y < self.snapToFrame.size.height)
+                //if dragged object is on top
+                if (self.frame.origin.y < self.snapToFrame.origin.y && self.center.y > self.snapToFrame.origin.y)
                 {
-                    NSLog(@"Push From Bottom (to top)");
-                    
-                    self.pushDirection = PushDirectionFromBottom;
+                    NSLog(@"Push From Top (to bottom)");
+                    self.pushDirection = PushDirectionFromTop;
                     [[NSNotificationCenter defaultCenter]
                      postNotificationName:@"didReceivePushFromAnotherView"
                      object:self];
                 }
+                
+                //if dragged object is on bottom
+                else if (self.frame.origin.y > self.snapToFrame.origin.y)
+                {
+                    
+                    // if dragging has moved quarter Y up to edge of top image view
+                    if (self.center.y < self.snapToFrame.size.height)
+                    {
+                        NSLog(@"Push From Bottom (to top)");
+                        
+                        self.pushDirection = PushDirectionFromBottom;
+                        [[NSNotificationCenter defaultCenter]
+                         postNotificationName:@"didReceivePushFromAnotherView"
+                         object:self];
+                    }
+                }
             }
+            else
+            {
+                if (self.frame.origin.x < self.snapToFrame.origin.x && self.center.x > self.snapToFrame.origin.x)
+                {
+                    NSLog(@"Push From Top (to bottom)");
+                    self.pushDirection = PushDirectionFromLeft;
+                    [[NSNotificationCenter defaultCenter]
+                     postNotificationName:@"didReceivePushFromAnotherView"
+                     object:self];
+                }
+
             }
             NSLog(@"BREAK");
             break;
@@ -191,6 +200,7 @@ typedef enum pushDirection {
         THDraggableView *dragViewThatSentNotification = notification.object;
         
         self.snapToFrame = dragViewThatSentNotification.frame;
+//        AVMakeRectWithAspectRatioInsideRect(dragViewThatSentNotification.image.size, dragViewThatSentNotification.frame);
         
         NSLog(@"SnapToFrameDetails AFTER getFrame is called: %f %f %f %f",self.snapToFrame.origin.x, self.snapToFrame.origin.y, self.snapToFrame.size.width, self.snapToFrame.size.height);
 
@@ -351,7 +361,6 @@ typedef enum pushDirection {
 //            [UIView animateWithDuration:0.2 animations:^{
 //                self.frame = CGRectMake(self.frame.origin.x - 10, self.frame.origin.y - 10, self.frame.size.width + 20, self.frame.size.height + 20);
 //            }];
-
 
 
 @end
