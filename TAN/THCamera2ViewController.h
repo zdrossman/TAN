@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
-@class UICameraButton;
+#import "UICameraButton.h"
 
 @protocol THCameraDelegateProtocol <NSObject>
 
@@ -16,12 +16,12 @@
 
 @end
 
-@interface THCamera2ViewController : UIViewController
+@interface THCamera2ViewController : UIViewController <THCameraButtonDelegate>
 
 @property (strong, nonatomic) IBOutlet UIButton *flashButton;
 @property (nonatomic, weak) id <THCameraDelegateProtocol> delegate;
 
-@property (strong, nonatomic) IBOutlet UICameraButton *takePhotoButton;
+@property (strong, nonatomic) UICameraButton *takePhotoButton;
 @property (strong, nonatomic) IBOutlet UIImageView *nowImageView;
 
 @property(nonatomic, retain) AVCaptureStillImageOutput *stillImageOutput;

@@ -75,18 +75,6 @@
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kjV-as-ve9">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N1p-Xf-vct" customClass="UICameraButton">
-                                        <rect key="frame" x="135" y="438" width="50" height="50"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="snapImage:" destination="r2B-Up-oFG" eventType="touchUpInside" id="5TE-A2-haM"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="0vR-de-nob">
@@ -110,7 +98,6 @@
                         <outlet property="frontBackToggle" destination="0vR-de-nob" id="dst-C7-3hz"/>
                         <outlet property="imageFeed" destination="kjV-as-ve9" id="YW5-tf-08V"/>
                         <outlet property="nowImageView" destination="IRk-XF-bTg" id="cHJ-pj-Gor"/>
-                        <outlet property="takePhotoButton" destination="N1p-Xf-vct" id="FA6-nz-YR1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8XY-Vj-cT8" userLabel="First Responder" sceneMemberID="firstResponder"/>

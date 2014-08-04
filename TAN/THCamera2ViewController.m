@@ -24,6 +24,9 @@
     self.frontCamera = YES;
     //cameraSwitch.selectedSegmentIndex = 0;
     self.nowImageView.hidden = YES;
+    self.takePhotoButton = [[UICameraButton alloc] init];
+    self.takePhotoButton.delegate = self;
+    [self.view addSubview:self.takePhotoButton];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -65,9 +68,6 @@
 
 //AVCaptureSession to show live video feed in view
 - (void) initializeCamera {
-    
-    self.takePhotoButton.circleWidth = self.takePhotoButton.frame.size.width;
-    self.takePhotoButton.circleHeight = self.takePhotoButton.frame.size.height;
     
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
 	session.sessionPreset = AVCaptureSessionPresetPhoto;
@@ -203,7 +203,7 @@
     }
 }
 
-- (IBAction)snapImage:(id)sender {
+- (void)takePhotoTapped:(id)sender {
 //    if (!self.haveCapturedImage) {
 //        self.nowImageView.image = nil; //remove old image from view
 //        self.nowImageView.hidden = NO; //show the captured image view
