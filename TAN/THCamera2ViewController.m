@@ -7,6 +7,7 @@
 //
 
 #import "THCamera2ViewController.h"
+#import "UICameraButton.h"
 
 #define DegreesToRadians(x) ((x) * M_PI / 180.0)
 
@@ -64,6 +65,10 @@
 
 //AVCaptureSession to show live video feed in view
 - (void) initializeCamera {
+    
+    self.takePhotoButton.circleWidth = self.takePhotoButton.frame.size.width;
+    self.takePhotoButton.circleHeight = self.takePhotoButton.frame.size.height;
+    
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
 	session.sessionPreset = AVCaptureSessionPresetPhoto;
     
@@ -199,21 +204,21 @@
 }
 
 - (IBAction)snapImage:(id)sender {
-    if (!self.haveCapturedImage) {
-        self.nowImageView.image = nil; //remove old image from view
-        self.nowImageView.hidden = NO; //show the captured image view
-        self.imageFeed.hidden = YES; //hide the live video feed
-        self.flashButton.hidden = YES;
-        self.frontBackToggle.hidden = YES;
+//    if (!self.haveCapturedImage) {
+//        self.nowImageView.image = nil; //remove old image from view
+//        self.nowImageView.hidden = NO; //show the captured image view
+//        self.imageFeed.hidden = YES; //hide the live video feed
+//        self.flashButton.hidden = YES;
+//        self.frontBackToggle.hidden = YES;
         [self capImage];
-    }
-    else {
-        self.nowImageView.hidden = YES;
-        self.imageFeed.hidden = NO;
-        self.haveCapturedImage = NO;
-        self.flashButton.hidden = NO;
-        self.frontBackToggle.hidden = NO;
-    }
+//    }
+//    else {
+//        self.nowImageView.hidden = YES;
+//        self.imageFeed.hidden = NO;
+//        self.haveCapturedImage = NO;
+//        self.flashButton.hidden = NO;
+//        self.frontBackToggle.hidden = NO;
+//    }
 }
 
 

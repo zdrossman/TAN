@@ -12,5 +12,11 @@
 @interface THDraggableImageView : THDraggableView <THCameraDelegateProtocol>
 
 @property (strong, nonatomic) UIImage *image;
+@property (nonatomic) CGPoint postion;
+@property (nonatomic) CGFloat textSize;
+@property (strong, nonatomic) NSString *imageText;
+
+- (void)loadImageView;
+-(UIImage *)applyOverlayToImage:(UIImage *)image withPostion:(CGPoint)postion withTextSize:(CGFloat)textSize withText:(NSString *)text;
 
 @end
