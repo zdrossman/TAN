@@ -66,10 +66,35 @@
     
     CGRect initialFrame = CGRectMake(0,64,self.view.frame.size.width,(self.view.frame.size.height - 64)/2);
     
-    [UIView animateWithDuration:0.4 animations:^{
+//    [UIView animateWithDuration:0.4 animations:^{
+//        
+//        self.draggableThenImageView.frame = initialFrame;
+//    }];
+    
+    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+        self.draggableThenImageView.alpha = 0;
         
-        self.draggableThenImageView.frame = initialFrame;
+        
+    } completion:^(BOOL finished) {
+        if (finished)
+        {
+            
+            
+            self.draggableThenImageView.transform = CGAffineTransformMakeTranslation(0, 0);
+            self.draggableThenImageView.transform = CGAffineTransformScale(self.draggableThenImageView.transform, 1,1);
+            self.draggableThenImageView.layer.shadowOffset = CGSizeMake(7,7);
+            self.draggableThenImageView.layer.shadowRadius = 5;
+            self.draggableThenImageView.layer.shadowOpacity = 0.5;
+            
+            [UIView animateWithDuration:0.2 animations:^{
+                self.draggableThenImageView.alpha = 1;
+                
+                
+            }];
+        }
     }];
+
+    
 
 }
 - (IBAction)cameraTapped:(id)sender {
@@ -101,6 +126,30 @@
 //            //self.draggableThenImageView.contentMode = UIViewContentModeScaleAspectFit;
 //        }];
 
+        
+        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+            self.draggableThenImageView.alpha = 0;
+            
+            
+        } completion:^(BOOL finished) {
+            if (finished)
+            {
+            
+                
+                self.draggableThenImageView.transform = CGAffineTransformMakeTranslation(50, 800);
+                self.draggableThenImageView.transform = CGAffineTransformScale(self.draggableThenImageView.transform, 0.3,0.3);
+                self.draggableThenImageView.layer.shadowOffset = CGSizeMake(7,7);
+                self.draggableThenImageView.layer.shadowRadius = 5;
+                self.draggableThenImageView.layer.shadowOpacity = 0.5;
+                
+                [UIView animateWithDuration:0.2 animations:^{
+                    self.draggableThenImageView.alpha = .5;
+                    
+                    
+                }];
+            }
+        }];
+        
     }
     else
     {
