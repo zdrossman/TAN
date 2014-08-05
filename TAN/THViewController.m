@@ -154,9 +154,9 @@
 
     __block NSArray *horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:nil views:self.viewsDictionary];
     __block NSArray *verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide]-(44)-[_cameraView(==0)]" options:0 metrics:nil views:self.viewsDictionary];
-    __block NSArray *verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==44)]|" options:0 metrics:nil views:self.viewsDictionary];
-
+    
     __block NSArray *horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
+    __block NSArray *verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==44)]|" options:0 metrics:nil views:self.viewsDictionary];
 
     
     [self.view addConstraints:horizontalCameraConstraints];
@@ -165,6 +165,9 @@
     [self.view addConstraints:horizontalToolbarConstraints];
     
     [self.view layoutIfNeeded];
+    
+    self.draggableThenImageView.hidden = YES;
+    self.draggableThenImageView.transform = CGAffineTransformMakeScale(0.4, 0.4);
     
     [UIView animateWithDuration:0.5 animations:^{
         
@@ -183,12 +186,18 @@
         [self.view layoutIfNeeded];
         
         //TODO: Add constraints for moving THENphoto to "preview"
-        
-        self.draggableThenImageView.transform = CGAffineTransformMakeScale(0.4, 0.4);
+        [self.view bringSubviewToFront:self.draggableThenImageView];
         self.draggableThenImageView.alpha = 0.5;
+        self.draggableThenImageView.hidden = NO;
         
     } completion:^(BOOL finished) {
         self.draggableNowImageView.hidden = YES;
+    }];
+    
+    [UIView animateWithDuration:0.45 animations:^{
+        
+        //TODO: Finish animation of camera downward / toolbar downward.
+    
     }];
     
     
