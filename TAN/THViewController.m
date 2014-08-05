@@ -60,10 +60,12 @@
     self.toolbar = [[UIToolbar alloc] init];
     self.cameraContainerView = [[UIView alloc] init];
     
+    
     [self.view addSubview:self.draggableThenImageView];
     [self.view addSubview:self.draggableNowImageView];
     [self.view addSubview:self.toolbar];
     [self.view addSubview:self.cameraContainerView];
+
     
     [self addChildViewController:self.cameraVC];
     [self.cameraContainerView addSubview:self.cameraVC.view];
@@ -77,6 +79,11 @@
     
     [self.toolbar setItems:@[alignmentButton,textOverlay]];
     
+    self.draggableNowImageView.layer.backgroundColor = [UIColor redColor].CGColor;
+    self.draggableThenImageView.layer.backgroundColor = [UIColor yellowColor].CGColor;
+    self.cameraContainerView.backgroundColor = [UIColor greenColor];
+    self.cameraVC.view.backgroundColor = [UIColor orangeColor];
+    
     
 }
 
@@ -87,6 +94,10 @@
     self.toolbar.alpha = 1;
     self.toolbar.hidden = NO;
     
+    self.draggableNowImageView.layer.backgroundColor = [UIColor redColor].CGColor;
+    self.draggableThenImageView.layer.backgroundColor = [UIColor yellowColor].CGColor;
+    self.cameraContainerView.backgroundColor = [UIColor greenColor];
+    self.cameraVC.view.backgroundColor = [UIColor orangeColor];
     
     //[UIView animateWithDuration:0.5 animations:^{
         
@@ -107,8 +118,6 @@
         [self.view layoutIfNeeded];
     //}];
     
-    self.draggableNowImageView.layer.backgroundColor = [UIColor redColor].CGColor;
-    self.draggableThenImageView.layer.backgroundColor = [UIColor yellowColor].CGColor;
 
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(cameraTapped:)];
 
@@ -134,32 +143,47 @@
 
 - (void)setupCameraAutolayout
 {
+    
+    self.draggableNowImageView.layer.backgroundColor = [UIColor redColor].CGColor;
+    self.draggableThenImageView.layer.backgroundColor = [UIColor yellowColor].CGColor;
+    self.cameraContainerView.backgroundColor = [UIColor greenColor];
+    self.cameraVC.view.backgroundColor = [UIColor orangeColor];
     self.cameraContainerView.hidden = NO;
-    self.draggableNowImageView.hidden = YES;
-    self.toolbar.alpha = 0;
-    self.toolbar.hidden = YES;
-    
+
     [self removeAllConstraints];
-    
+
     __block NSArray *horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:nil views:self.viewsDictionary];
+    __block NSArray *verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide]-(44)-[_cameraView(==0)]" options:0 metrics:nil views:self.viewsDictionary];
+    __block NSArray *verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==44)]|" options:0 metrics:nil views:self.viewsDictionary];
+
     
-    __block NSArray *verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide][_cameraView(==0)]" options:0 metrics:nil views:self.viewsDictionary];
+   // NSArray *constraintsToRemove = self.view.constraints;
+    
+    __block NSArray *horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
+
     
     [self.view addConstraints:horizontalCameraConstraints];
     [self.view addConstraints:verticalCameraConstraints];
+    [self.view addConstraints:verticalToolbarConstraints];
+    [self.view addConstraints:horizontalToolbarConstraints];
+    
     [self.view layoutIfNeeded];
     
     [UIView animateWithDuration:0.5 animations:^{
         
-       [self removeAllConstraints];
-
+        //[self.view removeConstraints:constraintsToRemove];
+        [self removeAllConstraints];
+        
         horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:nil views:self.viewsDictionary];
         
-        verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide][_cameraView]|" options:0 metrics:nil views:self.viewsDictionary];
-        
+        verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide]-(44)-[_cameraView(==460)][_toolbar(==44)]|" options:0 metrics:nil views:self.viewsDictionary];
+
+        horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
         
         [self.view addConstraints:horizontalCameraConstraints];
         [self.view addConstraints:verticalCameraConstraints];
+        [self.view addConstraints:horizontalToolbarConstraints];
+        
         [self.view layoutIfNeeded];
         
         //TODO: Add constraints for moving THENphoto to "preview"
@@ -167,7 +191,19 @@
         self.draggableThenImageView.transform = CGAffineTransformMakeScale(0.4, 0.4);
         self.draggableThenImageView.alpha = 0.5;
         
+    } completion:^(BOOL finished) {
+        self.draggableNowImageView.hidden = YES;
     }];
+    
+//    [UIView animateWithDuration:0.4365079365 animations:^{
+//        verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==0)]|" options:0 metrics:nil views:self.viewsDictionary];
+//        
+//        horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
+//        
+//        [self.view addConstraints:verticalToolbarConstraints];
+//        [self.view addConstraints:horizontalToolbarConstraints];
+//        [self.view layoutIfNeeded];
+//    }];
     
     self.navigationItem.rightBarButtonItem = nil;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(setupPhotoAutoLayout)];
