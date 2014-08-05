@@ -156,9 +156,6 @@
     __block NSArray *verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide]-(44)-[_cameraView(==0)]" options:0 metrics:nil views:self.viewsDictionary];
     __block NSArray *verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==44)]|" options:0 metrics:nil views:self.viewsDictionary];
 
-    
-   // NSArray *constraintsToRemove = self.view.constraints;
-    
     __block NSArray *horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
 
     
@@ -171,7 +168,6 @@
     
     [UIView animateWithDuration:0.5 animations:^{
         
-        //[self.view removeConstraints:constraintsToRemove];
         [self removeAllConstraints];
         
         horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:nil views:self.viewsDictionary];
@@ -195,15 +191,6 @@
         self.draggableNowImageView.hidden = YES;
     }];
     
-//    [UIView animateWithDuration:0.4365079365 animations:^{
-//        verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==0)]|" options:0 metrics:nil views:self.viewsDictionary];
-//        
-//        horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
-//        
-//        [self.view addConstraints:verticalToolbarConstraints];
-//        [self.view addConstraints:horizontalToolbarConstraints];
-//        [self.view layoutIfNeeded];
-//    }];
     
     self.navigationItem.rightBarButtonItem = nil;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(setupPhotoAutoLayout)];
