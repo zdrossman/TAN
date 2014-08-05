@@ -1,4 +1,4 @@
-//
+
 //  THViewController.m
 //  playingWithPhotos
 //
@@ -21,12 +21,14 @@
     [super viewDidLoad];
     
 	// Do any additional setup after loading the view, typically from a nib.
+    
+    
     self.frontCamera = YES;
     //cameraSwitch.selectedSegmentIndex = 0;
-    self.nowImageView.hidden = YES;
-    self.takePhotoButton = [[UICameraButton alloc] init];
+//    self.takePhotoButton = [[UICameraButton alloc] init];
     self.takePhotoButton.delegate = self;
-    [self.view addSubview:self.takePhotoButton];
+    
+   // [self.view addSubview:self.takePhotoButton];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -77,14 +79,14 @@
     
 	captureVideoPreviewLayer.frame = self.view.bounds;
     captureVideoPreviewLayer.backgroundColor = [UIColor clearColor].CGColor;
+    
     self.view.backgroundColor = [UIColor clearColor];
-	[self.imageFeed.layer addSublayer:captureVideoPreviewLayer];
+	[self.view.layer addSublayer:captureVideoPreviewLayer];
 
-    UIView *view = [self imageFeed];
-    CALayer *viewLayer = [view layer];
+    CALayer *viewLayer = [self.view layer];
     [viewLayer setMasksToBounds:YES];
     
-    CGRect bounds = [view bounds];
+    CGRect bounds = [self.view bounds];
     [captureVideoPreviewLayer setFrame:bounds];
     
     NSArray *devices = [AVCaptureDevice devices];
@@ -204,16 +206,14 @@
 }
 
 - (void)takePhotoTapped:(id)sender {
+    
 //    if (!self.haveCapturedImage) {
-//        self.nowImageView.image = nil; //remove old image from view
-//        self.nowImageView.hidden = NO; //show the captured image view
 //        self.imageFeed.hidden = YES; //hide the live video feed
 //        self.flashButton.hidden = YES;
 //        self.frontBackToggle.hidden = YES;
         [self capImage];
 //    }
 //    else {
-//        self.nowImageView.hidden = YES;
 //        self.imageFeed.hidden = NO;
 //        self.haveCapturedImage = NO;
 //        self.flashButton.hidden = NO;

@@ -113,8 +113,8 @@ typedef enum pushDirection {
             self.center = CGPointMake(self.originalPoint.x + xDistance, self.originalPoint.y + yDistance);
             NSLog(@"Object: %@ Self.center.y = %f", self, self.center.y);
             
-            if (fabs(xDistance *568/320) < fabs(yDistance))
-            {
+//            if (fabs(xDistance *568/320) < fabs(yDistance))
+//            {
                 //if dragged object is on top
                 if (self.frame.origin.y < self.snapToFrame.origin.y && self.center.y > self.snapToFrame.origin.y)
                 {
@@ -140,20 +140,20 @@ typedef enum pushDirection {
                          object:self];
                     }
                 }
-            }
-            else
-            {
-                if (self.frame.origin.x < self.snapToFrame.origin.x && self.center.x > self.snapToFrame.origin.x)
-                {
-                    NSLog(@"Push From Top (to bottom)");
-                    self.pushDirection = PushDirectionFromLeft;
-                    [[NSNotificationCenter defaultCenter]
-                     postNotificationName:@"didReceivePushFromAnotherView"
-                     object:self];
-                }
-
-            }
-            NSLog(@"BREAK");
+            //}
+//            else
+//            {
+//                if (self.frame.origin.x < self.snapToFrame.origin.x && self.center.x > self.snapToFrame.origin.x)
+//                {
+//                    NSLog(@"Push From Top (to bottom)");
+//                    self.pushDirection = PushDirectionFromLeft;
+//                    [[NSNotificationCenter defaultCenter]
+//                     postNotificationName:@"didReceivePushFromAnotherView"
+//                     object:self];
+//                }
+//
+//            }
+//            NSLog(@"BREAK");
             break;
         };
            
