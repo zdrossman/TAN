@@ -12,7 +12,7 @@
 @interface THDraggableImageView : THDraggableView <THCameraDelegateProtocol>
 
 @property (strong, nonatomic) UIImage *image;
-@property (nonatomic) CGPoint postion;
+@property (nonatomic) CGPoint position;
 @property (nonatomic) CGFloat textSize;
 @property (strong, nonatomic) NSString *imageText;
 

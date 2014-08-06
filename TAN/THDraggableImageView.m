@@ -17,11 +17,22 @@
 
 @implementation THDraggableImageView
 
+-(id)init
+{
+    self = [super init];
+    if (self)
+    {
+        [self addSubview:self.imageView];
+    }
+    
+    return self;
+}
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code
+
+        self.imageView.image = nil;
     }
     return self;
 }
@@ -40,11 +51,7 @@
 {
     if (!_imageView)
     {
-        _imageView.backgroundColor = [UIColor purpleColor];
         _imageView = [[UIImageView alloc] initWithImage:self.image];
-        //_imageView.frame = self.bounds;
-        _imageView.contentMode = UIViewContentModeScaleAspectFill;
-        [self addSubview:_imageView];
     }
     
     return _imageView;
@@ -87,6 +94,9 @@
 
 - (void)refresh {
     self.imageView.image = self.image;
+    self.imageView.backgroundColor = [UIColor yellowColor];
+    self.imageView.frame = self.bounds;
+    self.imageView.contentMode = UIViewContentModeScaleAspectFill;
 }
 
 -(UIImage *)applyOverlayToImage:(UIImage *)image withPostion:(CGPoint)postion withTextSize:(CGFloat)textSize withText:(NSString *)text{

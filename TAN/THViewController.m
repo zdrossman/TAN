@@ -124,7 +124,7 @@ typedef void(^ButtonReplacementBlock)(void);
     
     [self removeAllConstraints];
     
-    self.verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide][_draggableThenImageView][_draggableNowImageView(==_draggableThenImageView)]" options:0 metrics:nil views:self.viewsDictionary];
+    self.verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide][_draggableThenImageView(==230)][_draggableNowImageView(==_draggableThenImageView)]" options:0 metrics:nil views:self.viewsDictionary];
     
     self.horizontalDTIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_draggableThenImageView]|" options:0 metrics:nil views:self.viewsDictionary];
     
@@ -147,10 +147,6 @@ typedef void(^ButtonReplacementBlock)(void);
     UIBarButtonItem *testButton2 = [[UIBarButtonItem alloc] initWithTitle:@"Test2" style:UIBarButtonItemStylePlain target:self action:@selector(replaceToolbarWithButtons:)];
     
     self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(cameraTapped:)],testButton2];;
-
-
-    
-
 }
 
 - (void)removeAllConstraints;
@@ -368,7 +364,6 @@ typedef void(^ButtonReplacementBlock)(void);
         self.nowImage = [UIImage imageNamed:@"blossom.jpg"];
     }
     
-    self.draggableThenImageView.image = self.thenImage;
     //    self.draggableNowImageView.image = self.nowImage;
     
 //    self.draggableThenImageView.frame = CGRectMake(0,self.view.frame.origin.y + 64, self.view.frame.size.width, (self.view.frame.size.height - 64)/2);
@@ -385,6 +380,8 @@ typedef void(^ButtonReplacementBlock)(void);
     self.draggableThenImageView.contentMode = UIViewContentModeScaleAspectFit;
     self.draggableNowImageView.contentMode = UIViewContentModeScaleAspectFit;
     
+    self.draggableThenImageView.image = self.thenImage;
+
 }
 
 

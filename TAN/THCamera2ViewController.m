@@ -84,7 +84,7 @@
     self.view.backgroundColor = [UIColor clearColor];
 	[self.view.layer addSublayer:captureVideoPreviewLayer];
 
-    CALayer *v  iewLayer = [self.view layer];
+    CALayer *viewLayer = [self.view layer];
     [viewLayer setMasksToBounds:YES];
     
     CGRect bounds = [self.view bounds];
