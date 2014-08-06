@@ -133,6 +133,9 @@ typedef void(^ButtonReplacementBlock)(void);
     
     self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(cameraTapped:)],testButton2];;
 
+
+    
+
 }
 
 - (void)removeAllConstraints;
@@ -232,7 +235,6 @@ typedef void(^ButtonReplacementBlock)(void);
             }];
     }];
    
-
 
     
 
