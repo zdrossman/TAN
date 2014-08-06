@@ -34,6 +34,14 @@ typedef void(^ButtonReplacementBlock)(void);
 
 @property (strong, nonatomic) NSArray *verticalCameraConstraints;
 @property (strong, nonatomic) NSArray *horizontalCameraConstraints;
+
+@property (strong, nonatomic) NSArray *horizontalDTIVConstraints;
+@property (strong, nonatomic) NSArray *horizontalDNIVConstraints;
+
+
+@property (strong, nonatomic) NSArray *verticalIVConstraints;
+
+
 @end
 
 @implementation THViewController
@@ -55,8 +63,6 @@ typedef void(^ButtonReplacementBlock)(void);
     [super viewDidLoad];
     
 	// Do any additional setup after loading the view, typically from a nib.
-
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -68,7 +74,7 @@ typedef void(^ButtonReplacementBlock)(void);
 {
     self.takingPhoto = NO;
     [self baseInit];
-    [self setupPhotoAutoLayout];
+    [self setupPhotos];
     [self setupInitialStateOfImageViews];
 }
 
@@ -104,7 +110,7 @@ typedef void(^ButtonReplacementBlock)(void);
     
 }
 
--(void)setupPhotoAutoLayout
+-(void)setupPhotos
 {
     self.cameraContainerView.hidden = YES;
     self.draggableNowImageView.hidden = NO;
@@ -118,19 +124,19 @@ typedef void(^ButtonReplacementBlock)(void);
     
     [self removeAllConstraints];
     
-    NSArray *verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide][_draggableThenImageView(==230)][_draggableNowImageView(==_draggableThenImageView)]" options:0 metrics:nil views:self.viewsDictionary];
+    self.verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide][_draggableThenImageView][_draggableNowImageView(==_draggableThenImageView)]" options:0 metrics:nil views:self.viewsDictionary];
     
-    NSArray *horizontalDTIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_draggableThenImageView]|" options:0 metrics:nil views:self.viewsDictionary];
+    self.horizontalDTIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_draggableThenImageView]|" options:0 metrics:nil views:self.viewsDictionary];
     
-    NSArray *horizontalDNIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_draggableNowImageView]|" options:0 metrics:nil views:self.viewsDictionary];
+    self.horizontalDNIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_draggableNowImageView]|" options:0 metrics:nil views:self.viewsDictionary];
     
     self.verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==44)]|" options:0 metrics:nil views:self.viewsDictionary];
     
     self.horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
     
-    [self.view addConstraints:verticalIVConstraints];
-    [self.view addConstraints:horizontalDNIVConstraints];
-    [self.view addConstraints:horizontalDTIVConstraints];
+    [self.view addConstraints:self.verticalIVConstraints];
+    [self.view addConstraints:self.horizontalDNIVConstraints];
+    [self.view addConstraints:self.horizontalDTIVConstraints];
     [self.view addConstraints:self.horizontalToolbarConstraints];
     [self.view addConstraints:self.verticalToolbarConstraints];
     
@@ -349,7 +355,7 @@ typedef void(^ButtonReplacementBlock)(void);
 
 
     self.navigationItem.rightBarButtonItem = nil;
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(setupPhotoAutoLayout)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(setupPhotos)];
     
 }
 
