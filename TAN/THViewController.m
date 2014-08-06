@@ -30,11 +30,22 @@ typedef void(^ButtonReplacementBlock)(void);
 
 @property (strong, nonatomic) NSArray *horizontalToolbarConstraints;
 @property (strong, nonatomic) NSArray *verticalToolbarConstraints;
+@property (strong, nonatomic) NSArray *toolbarButtonsArray;
+
 @end
 
 @implementation THViewController
 
-
+-(NSArray *)toolbarButtonsArray
+{
+    UIBarButtonItem *alignmentButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1074-grid-2"] style:UIBarButtonItemStylePlain target:self action:nil];
+    
+    UIBarButtonItem *textOverlay = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1174-choose-font-toolbar"] style:UIBarButtonItemStylePlain target:self action:nil];
+    
+    _toolbarButtonsArray = @[alignmentButton, textOverlay];
+    
+    return _toolbarButtonsArray;
+}
 
 - (void)viewDidLoad
 {
@@ -42,9 +53,8 @@ typedef void(^ButtonReplacementBlock)(void);
     [super viewDidLoad];
     
 	// Do any additional setup after loading the view, typically from a nib.
-    self.takingPhoto = NO;
-    [self baseInit];
-    [self setupPhotoAutoLayout];
+
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -54,6 +64,9 @@ typedef void(^ButtonReplacementBlock)(void);
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    self.takingPhoto = NO;
+    [self baseInit];
+    [self setupPhotoAutoLayout];
     [self setupInitialStateOfImageViews];
 }
 
@@ -78,11 +91,8 @@ typedef void(^ButtonReplacementBlock)(void);
     self.cameraVC.view.frame = self.cameraContainerView.bounds;
     self.cameraContainerView.backgroundColor = [UIColor blueColor];
     self.cameraVC.view.backgroundColor = [UIColor orangeColor];
-    UIBarButtonItem *alignmentButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1074-grid-2"] style:UIBarButtonItemStylePlain target:self action:nil];
     
-    UIBarButtonItem *textOverlay = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1174-choose-font-toolbar"] style:UIBarButtonItemStylePlain target:self action:nil];
-    
-    [self.toolbar setItems:@[alignmentButton,textOverlay]];
+    [self.toolbar setItems:self.toolbarButtonsArray];
     
     self.draggableNowImageView.layer.backgroundColor = [UIColor redColor].CGColor;
     self.draggableThenImageView.layer.backgroundColor = [UIColor yellowColor].CGColor;
@@ -106,7 +116,7 @@ typedef void(^ButtonReplacementBlock)(void);
     
     [self removeAllConstraints];
     
-    NSArray *verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide][_draggableThenImageView][_draggableNowImageView(==_draggableThenImageView)]" options:0 metrics:nil views:self.viewsDictionary];
+    NSArray *verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide][_draggableThenImageView(==230)][_draggableNowImageView(==_draggableThenImageView)]" options:0 metrics:nil views:self.viewsDictionary];
     
     NSArray *horizontalDTIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_draggableThenImageView]|" options:0 metrics:nil views:self.viewsDictionary];
     
@@ -124,7 +134,6 @@ typedef void(^ButtonReplacementBlock)(void);
     
     [self.view layoutIfNeeded];
     
-
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Test" style:UIBarButtonItemStylePlain target:self action:@selector(slideToolbarDownWithCompletionBlock:)];
     
     UIBarButtonItem *testButton2 = [[UIBarButtonItem alloc] initWithTitle:@"Test2" style:UIBarButtonItemStylePlain target:self action:@selector(replaceToolbarWithButtons:)];
@@ -234,8 +243,8 @@ typedef void(^ButtonReplacementBlock)(void);
     
     self.draggableThenImageView.clipsToBounds = YES;
     
-    self.draggableNowImageView.name = @"camera";
-    self.draggableThenImageView.name = @"flower";
+    self.draggableNowImageView.name = @"NOW";
+    self.draggableThenImageView.name = @"THEN";
     
     self.draggableNowImageView.snapToFrame = AVMakeRectWithAspectRatioInsideRect(self.thenImage.size, self.draggableThenImageView.frame);
     
@@ -251,9 +260,10 @@ typedef void(^ButtonReplacementBlock)(void);
 {
     
     [self slideToolbarDownWithCompletionBlock:^{
-        [self slideToolbarUpWithCompletionBlock:nil];
-         
-         }];
+        [self slideToolbarUpWithCompletionBlock:^{
+            NSLog(@"Complete!");
+        }];
+    }];
 }
 
 -(void)slideToolbarDownWithCompletionBlock:(void (^)(void))completionBlock;

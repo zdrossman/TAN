@@ -13,13 +13,15 @@
 
 @interface THCamera2ViewController ()
 
+@property (strong, nonatomic) UIView *videoPreview;
+
 @end
 
 @implementation THCamera2ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.videoPreview = [[UIView alloc] initWithFrame:CGRectMake(34,0,self.view.bounds.size.height,self.view.bounds.size.width - 68)];
 	// Do any additional setup after loading the view, typically from a nib.
     
     
@@ -75,15 +77,14 @@
 	session.sessionPreset = AVCaptureSessionPresetPhoto;
     
 	AVCaptureVideoPreviewLayer *captureVideoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
+	captureVideoPreviewLayer.bounds = self.videoPreview.bounds;
     [captureVideoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     
-	captureVideoPreviewLayer.frame = self.view.bounds;
     captureVideoPreviewLayer.backgroundColor = [UIColor clearColor].CGColor;
-    
     self.view.backgroundColor = [UIColor clearColor];
 	[self.view.layer addSublayer:captureVideoPreviewLayer];
 
-    CALayer *viewLayer = [self.view layer];
+    CALayer *v  iewLayer = [self.view layer];
     [viewLayer setMasksToBounds:YES];
     
     CGRect bounds = [self.view bounds];

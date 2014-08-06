@@ -36,16 +36,21 @@
 }
 
 
-- (void)loadImageView
+- (UIImageView *)imageView
 {
-    self.imageView.backgroundColor = [UIColor clearColor];
-    self.imageView = [[UIImageView alloc] initWithImage:self.image];
-    self.imageView.frame = self.bounds;
-    self.imageView.contentMode = UIViewContentModeScaleAspectFit;
-    [self addSubview:self.imageView];
+    if (!_imageView)
+    {
+        _imageView.backgroundColor = [UIColor purpleColor];
+        _imageView = [[UIImageView alloc] initWithImage:self.image];
+        //_imageView.frame = self.bounds;
+        _imageView.contentMode = UIViewContentModeScaleAspectFill;
+        [self addSubview:_imageView];
+    }
+    
+    return _imageView;
 }
 /*
-// Only override drawRect: if you perform custom drawing.
+ // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
