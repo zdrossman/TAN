@@ -193,12 +193,32 @@
     } completion:^(BOOL finished) {
         self.draggableNowImageView.hidden = YES;
     }];
-    
+   
     [UIView animateWithDuration:0.45 animations:^{
         
         //TODO: Finish animation of camera downward / toolbar downward.
+        [self removeAllConstraints];
     
+        horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:nil views:self.viewsDictionary];
+        
+       verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide]-(44)-[_cameraView(==460)][_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
+        
+        horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
+        
+        verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide]-(44)-[_cameraView(==460)]|" options:0 metrics:nil views:self.viewsDictionary];
+        
+        [self.view addConstraints:horizontalCameraConstraints];
+        [self.view addConstraints:verticalCameraConstraints];
+        [self.view addConstraints:horizontalToolbarConstraints];
+        [self.view addConstraints:verticalToolbarConstraints];
+        
+        [self.view layoutIfNeeded];
+
+    }completion:^(BOOL finished) {
+        self.draggableNowImageView.hidden = YES;
     }];
+
+    
     
     
     self.navigationItem.rightBarButtonItem = nil;

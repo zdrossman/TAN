@@ -5,34 +5,34 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>9E409525-10EB-47EB-A871-C578EDF51EF7</string>
+	<string>1F1C7B27-8105-40A1-AB4C-8148F317DB64</string>
 	<key>IDESourceControlProjectName</key>
 	<string>TAN</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>C9D11317-2C7A-48D3-9023-7470D9E4E6DB</key>
-		<string>ssh://github.com/zdrossman/TAN.git</string>
+		<key>415C5135-11C0-4C90-A633-97A9D43A4394</key>
+		<string>https://github.com/stevezhou007/TAN.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>TAN.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>C9D11317-2C7A-48D3-9023-7470D9E4E6DB</key>
+		<key>415C5135-11C0-4C90-A633-97A9D43A4394</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>ssh://github.com/zdrossman/TAN.git</string>
+	<string>https://github.com/stevezhou007/TAN.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>C9D11317-2C7A-48D3-9023-7470D9E4E6DB</string>
+	<string>415C5135-11C0-4C90-A633-97A9D43A4394</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>C9D11317-2C7A-48D3-9023-7470D9E4E6DB</string>
+			<string>415C5135-11C0-4C90-A633-97A9D43A4394</string>
 			<key>IDESourceControlWCCName</key>
 			<string>TAN</string>
 		</dict>
