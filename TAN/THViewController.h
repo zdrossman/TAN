@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "THCamera2ViewController.h"
 
-@interface THViewController : UIViewController
+@interface THViewController : UIViewController <THCameraDelegateProtocol>
 
 @end

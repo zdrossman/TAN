@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>1F1C7B27-8105-40A1-AB4C-8148F317DB64</string>
+	<key>IDESourceControlProjectName</key>
+	<string>TAN</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>415C5135-11C0-4C90-A633-97A9D43A4394</key>
+		<string>https://github.com/stevezhou007/TAN.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>TAN.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>415C5135-11C0-4C90-A633-97A9D43A4394</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/stevezhou007/TAN.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>415C5135-11C0-4C90-A633-97A9D43A4394</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>415C5135-11C0-4C90-A633-97A9D43A4394</string>
+			<key>IDESourceControlWCCName</key>
+			<string>TAN</string>
+		</dict>
+	</array>
+</dict>
+</plist>

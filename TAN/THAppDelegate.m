@@ -7,12 +7,18 @@
 //
 
 #import "THAppDelegate.h"
-
+#import "THViewController.h"
 @implementation THAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window.backgroundColor = [UIColor purpleColor];
+    THViewController *mainViewController = [[THViewController alloc] init];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:mainViewController];
+    self.window.rootViewController = navController;
+
+    [self.window makeKeyAndVisible];
     return YES;
 }
 							
