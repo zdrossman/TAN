@@ -30,6 +30,8 @@ typedef void(^ButtonReplacementBlock)(void);
 
 @property (strong, nonatomic) NSArray *horizontalToolbarConstraints;
 @property (strong, nonatomic) NSArray *verticalToolbarConstraints;
+@property (strong, nonatomic) NSArray *verticalCameraConstraints;
+@property (strong, nonatomic) NSArray *horizontalCameraConstraints;
 @end
 
 @implementation THViewController
@@ -178,7 +180,7 @@ typedef void(^ButtonReplacementBlock)(void);
     self.draggableThenImageView.hidden = YES;
     self.draggableThenImageView.transform = CGAffineTransformMakeScale(0.4, 0.4);
     
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         
         [self removeAllConstraints];
         
@@ -203,41 +205,139 @@ typedef void(^ButtonReplacementBlock)(void);
         self.draggableThenImageView.hidden = NO;
         
     } completion:^(BOOL finished) {
-        self.draggableNowImageView.hidden = YES;
+        
+        [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+            
+            //TODO: Finish animation of camera downward / toolbar downward.
+            [self removeAllConstraints];
+            
+            [self.toolbar setItems:nil animated:YES];
+            horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:nil views:self.viewsDictionary];
+            
+            verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide]-(44)-[_cameraView(==524)]" options:0 metrics:nil views:self.viewsDictionary];
+            
+            horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
+            
+            verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==0)]|" options:0 metrics:nil views:self.viewsDictionary];
+            
+            [self.view addConstraints:horizontalCameraConstraints];
+            [self.view addConstraints:verticalCameraConstraints];
+            [self.view addConstraints:horizontalToolbarConstraints];
+            [self.view addConstraints:verticalToolbarConstraints];
+            
+            [self.view layoutIfNeeded];
+            
+            }completion:^(BOOL finished) {
+                self.draggableNowImageView.hidden = YES;
+            }];
     }];
    
-    [UIView animateWithDuration:0.45 animations:^{
-        
-        //TODO: Finish animation of camera downward / toolbar downward.
-        [self removeAllConstraints];
-    
-        horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:nil views:self.viewsDictionary];
-        
-       verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide]-(44)-[_cameraView(==460)][_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
-        
-        horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
-        
-        verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide]-(44)-[_cameraView(==460)]|" options:0 metrics:nil views:self.viewsDictionary];
-        
-        [self.view addConstraints:horizontalCameraConstraints];
-        [self.view addConstraints:verticalCameraConstraints];
-        [self.view addConstraints:horizontalToolbarConstraints];
-        [self.view addConstraints:verticalToolbarConstraints];
-        
-        [self.view layoutIfNeeded];
 
-    }completion:^(BOOL finished) {
-        self.draggableNowImageView.hidden = YES;
-    }];
+
+    
 
     
     
     
     self.navigationItem.rightBarButtonItem = nil;
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(setupPhotoAutoLayout)];
+   // self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(setupPhotoAutoLayout)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(resignCamera)];
     
 
 }
+
+-(void)resignCamera{
+    
+    self.draggableNowImageView.layer.backgroundColor = [UIColor redColor].CGColor;
+    self.draggableThenImageView.layer.backgroundColor = [UIColor yellowColor].CGColor;
+    self.cameraContainerView.backgroundColor = [UIColor greenColor];
+    self.cameraVC.view.backgroundColor = [UIColor orangeColor];
+    self.cameraContainerView.hidden = NO;
+    
+    [self removeAllConstraints];
+    
+    self.horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:nil views:self.viewsDictionary];
+    self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide]-(44)-[_cameraView(==524)]" options:0 metrics:nil views:self.viewsDictionary];
+    
+    self.horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
+     self.verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==0)]|" options:0 metrics:nil views:self.viewsDictionary];
+    
+    [self.view addConstraints:self.horizontalCameraConstraints];
+    [self.view addConstraints:self.verticalCameraConstraints];
+    [self.view addConstraints:self.verticalToolbarConstraints];
+    [self.view addConstraints:self.horizontalToolbarConstraints];
+    
+    [self.view layoutIfNeeded];
+    
+    self.draggableThenImageView.hidden = YES;
+    self.draggableThenImageView.transform = CGAffineTransformMakeScale(0.4, 0.4);
+    
+    [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+        
+        NSLog(@"Animation called");
+        [self removeAllConstraints];
+    
+        //[self.toolbar setItems:nil animated:YES];
+        
+        self.horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
+        
+        self.verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==44)]|" options:0 metrics:nil views:self.viewsDictionary];
+        
+        self.horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:nil views:self.viewsDictionary];
+        
+        self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide]-(44)-[_cameraView(==480)]" options:0 metrics:nil views:self.viewsDictionary];
+        
+       
+        
+        [self.view addConstraints:self.horizontalCameraConstraints];
+        [self.view addConstraints:self.verticalCameraConstraints];
+        [self.view addConstraints:self.horizontalToolbarConstraints];
+        [self.view addConstraints:self.verticalToolbarConstraints];
+        
+        [self.view layoutIfNeeded];
+        
+    }completion:^(BOOL finished) {
+        self.draggableNowImageView.hidden = YES;
+        
+        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+            
+            [self removeAllConstraints];
+            
+        
+            self.horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
+            
+             self.verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==44)]|" options:0 metrics:nil views:self.viewsDictionary];
+            
+            
+            self.horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:nil views:self.viewsDictionary];
+            
+            self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide]-(44)-[_cameraView(==0)]" options:0 metrics:nil views:self.viewsDictionary];
+
+            
+            [self.view addConstraints:self.verticalToolbarConstraints];
+            [self.view addConstraints:self.horizontalCameraConstraints];
+            [self.view addConstraints:self.verticalCameraConstraints];
+            [self.view addConstraints:self.horizontalToolbarConstraints];
+            
+            [self.view layoutIfNeeded];
+            
+            //TODO: Add constraints for moving THENphoto to "preview"
+            [self.view bringSubviewToFront:self.draggableThenImageView];
+            self.draggableThenImageView.alpha = 0.5;
+            self.draggableThenImageView.hidden = NO;
+            
+        } completion:^(BOOL finished) {
+            
+        }];
+    }];
+
+
+
+    self.navigationItem.rightBarButtonItem = nil;
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(setupPhotoAutoLayout)];
+    
+}
+
 
 - (void)setupInitialStateOfImageViews
 {
