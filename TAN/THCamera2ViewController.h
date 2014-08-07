@@ -16,7 +16,7 @@
 
 @end
 
-@interface THCamera2ViewController : UIViewController <THCameraButtonDelegate>
+@interface THCamera2ViewController : UIViewController
 
 @property (strong, nonatomic) IBOutlet UIButton *flashButton;
 @property (nonatomic, weak) id <THCameraDelegateProtocol> delegate;

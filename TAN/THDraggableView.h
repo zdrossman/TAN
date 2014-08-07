@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "THCamera2ViewController.h"
 
-@interface THDraggableView : UIView
+@interface THDraggableView : UIView <THCameraDelegateProtocol>
 
 @property (nonatomic) CGRect snapToFrame;
 @property (nonatomic) CGRect superViewFrame;
