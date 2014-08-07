@@ -174,23 +174,23 @@ typedef void(^ButtonReplacementBlock)(void);
     
     UIBarButtonItem *testButton3 = [[UIBarButtonItem alloc] initWithTitle:@"Test3" style:UIBarButtonItemStylePlain target:self action:@selector(thenAndNowswitch)];
     
-    UIBarButtonItem *testButton4 = [[UIBarButtonItem alloc] initWithTitle:@"test4" style:UIBarButtonItemStylePlain target:self action:@selector(reverseThenAndNowSwitch)];
-    self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(cameraTapped:)],testButton2, testButton3, testButton4];
+    
+    self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(cameraTapped:)],testButton2, testButton3];
 }
 
 -(void)thenAndNowswitch{
     
     if (!self.originalOrder)
     {
-        [self.view bringSubviewToFront:self.draggableThenImageView];
+        [self.view bringSubviewToFront:self.thenImageView];
     }
     else
     {
-        [self.view bringSubviewToFront:self.draggableNowImageView];
+        [self.view bringSubviewToFront:self.nowImageView];
     }
     
-    self.draggableNowImageView.layer.shadowOffset = CGSizeMake(0,0);
-    self.draggableNowImageView.layer.shadowRadius = 25;
+    self.nowImageView.layer.shadowOffset = CGSizeMake(0,0);
+    self.nowImageView.layer.shadowRadius = 25;
     
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionTransitionFlipFromTop animations:^{
         
@@ -198,9 +198,9 @@ typedef void(^ButtonReplacementBlock)(void);
         
 
         
-//        self.draggableThenImageView.layer.shadowOffset = CGSizeMake(20,50);
-//        self.draggableThenImageView.layer.shadowRadius = 50;
-//        self.draggableThenImageView.layer.shadowOpacity = 1;
+//        self.thenImageView.layer.shadowOffset = CGSizeMake(20,50);
+//        self.thenImageView.layer.shadowRadius = 50;
+//        self.thenImageView.layer.shadowOpacity = 1;
 //        
         [self.view removeConstraints:self.horizontalDTIVConstraints];
         [self.view removeConstraints:self.verticalIVConstraints];
@@ -251,8 +251,8 @@ typedef void(^ButtonReplacementBlock)(void);
             anim.fromValue = [NSNumber numberWithFloat:1.0];
             anim.toValue = [NSNumber numberWithFloat:0.0];
             anim.duration = 0.3;
-            [self.draggableNowImageView.layer addAnimation:anim forKey:@"shadowOpacity"];
-            self.draggableNowImageView.layer.shadowOpacity = 0.0;
+            [self.nowImageView.layer addAnimation:anim forKey:@"shadowOpacity"];
+            self.nowImageView.layer.shadowOpacity = 0.0;
             
               [UIView animateWithDuration:.15 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
                 
@@ -264,9 +264,9 @@ typedef void(^ButtonReplacementBlock)(void);
                   self.verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(64)-[_bottomImageView(==230)][_topImageView(==230)]" options:0 metrics:nil views:self.viewsDictionary];
                   
                   
-                  self.draggableNowImageView.layer.shadowOffset = CGSizeMake(0,0);
-//                  self.draggableNowImageView.layer.shadowRadius = 0;
-//                  self.draggableNowImageView.layer.shadowOpacity = 0;
+                  self.nowImageView.layer.shadowOffset = CGSizeMake(0,0);
+//                  self.nowImageView.layer.shadowRadius = 0;
+//                  self.nowImageView.layer.shadowOpacity = 0;
 
                   
                   [self.view addConstraints:self.horizontalDTIVConstraints];
@@ -287,8 +287,8 @@ typedef void(^ButtonReplacementBlock)(void);
     anim.fromValue = [NSNumber numberWithFloat:0.0];
     anim.toValue = [NSNumber numberWithFloat:1.0];
     anim.duration = 0.3;
-    [self.draggableNowImageView.layer addAnimation:anim forKey:@"shadowOpacity"];
-    self.draggableNowImageView.layer.shadowOpacity = 1.0;
+    [self.nowImageView.layer addAnimation:anim forKey:@"shadowOpacity"];
+    self.nowImageView.layer.shadowOpacity = 1.0;
 
     
     
@@ -353,8 +353,8 @@ typedef void(^ButtonReplacementBlock)(void);
     
     [self.view layoutIfNeeded];
     
-//    self.draggableThenImageView.hidden = YES;
-//    self.draggableThenImageView.transform = CGAffineTransformMakeScale(0.4, 0.4);
+//    self.thenImageView.hidden = YES;
+//    self.thenImageView.transform = CGAffineTransformMakeScale(0.4, 0.4);
     
     [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         
@@ -521,9 +521,9 @@ typedef void(^ButtonReplacementBlock)(void);
         self.nowImage = [UIImage imageNamed:@"blossom.jpg"];
     }
     
-    //    self.draggableNowImageView.image = self.nowImage;
+    //    self.nowImageView.image = self.nowImage;
     
-//    self.draggableThenImageView.frame = CGRectMake(0,self.view.frame.origin.y + 64, self.view.frame.size.width, (self.view.frame.size.height - 64)/2);
+//    self.thenImageView.frame = CGRectMake(0,self.view.frame.origin.y + 64, self.view.frame.size.width, (self.view.frame.size.height - 64)/2);
     
     self.thenImageView.clipsToBounds = YES;
     
@@ -587,20 +587,20 @@ typedef void(^ButtonReplacementBlock)(void);
 {
     id _cameraView = self.cameraContainerView;
     id _topLayoutGuide = self.topLayoutGuide;
-    id _topImageView = self.draggableThenImageView;
-    id _bottomImageView = self.draggableNowImageView;
+    id _topImageView = self.thenImageView;
+    id _bottomImageView = self.nowImageView;
     
     if (self.originalOrder)
     {
 
-        _topImageView = self.draggableThenImageView;
-        _bottomImageView = self.draggableNowImageView;
+        _topImageView = self.thenImageView;
+        _bottomImageView = self.nowImageView;
 
     }
     else
     {
-        _bottomImageView = self.draggableThenImageView;
-        _topImageView = self.draggableNowImageView;
+        _bottomImageView = self.thenImageView;
+        _topImageView = self.nowImageView;
     }
     
     _viewsDictionary = NSDictionaryOfVariableBindings(_topImageView, _bottomImageView, _toolbar, _topLayoutGuide, _cameraView);
@@ -655,7 +655,7 @@ typedef void(^ButtonReplacementBlock)(void);
 //    {
 //        UIBarButtonItem *cancelButton;
 //        
-//        if (!self.draggableNowImageView.image)
+//        if (!self.nowImageView.image)
 //        {
 //        cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(goBackToBeginning)];
 //        }
@@ -668,7 +668,7 @@ typedef void(^ButtonReplacementBlock)(void);
 //        self.navigationItem.rightBarButtonItem = nil;
 //        
 //        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
-//            self.draggableThenImageView.alpha = 0;
+//            self.thenImageView.alpha = 0;
 //            
 //            
 //        } completion:^(BOOL finished) {
@@ -676,14 +676,14 @@ typedef void(^ButtonReplacementBlock)(void);
 //            {
 //                
 //                
-//                self.draggableThenImageView.transform = CGAffineTransformMakeTranslation(50, 800);
-//                self.draggableThenImageView.transform = CGAffineTransformScale(self.draggableThenImageView.transform, 0.3,0.3);
-//                self.draggableThenImageView.layer.shadowOffset = CGSizeMake(7,7);
-//                self.draggableThenImageView.layer.shadowRadius = 5;
-//                self.draggableThenImageView.layer.shadowOpacity = 0.5;
+//                self.thenImageView.transform = CGAffineTransformMakeTranslation(50, 800);
+//                self.thenImageView.transform = CGAffineTransformScale(self.thenImageView.transform, 0.3,0.3);
+//                self.thenImageView.layer.shadowOffset = CGSizeMake(7,7);
+//                self.thenImageView.layer.shadowRadius = 5;
+//                self.thenImageView.layer.shadowOpacity = 0.5;
 //                
 //                [UIView animateWithDuration:0.2 animations:^{
-//                    self.draggableThenImageView.alpha = .5;
+//                    self.thenImageView.alpha = .5;
 //                    
 //                    
 //                }];
@@ -694,7 +694,7 @@ typedef void(^ButtonReplacementBlock)(void);
 //    else
 //    {
 //
-//        self.draggableNowImageView.hidden = NO;
+//        self.nowImageView.hidden = NO;
 //
 //        UIBarButtonItem *cameraButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(cameraTapped:)];
 //        
@@ -705,18 +705,18 @@ typedef void(^ButtonReplacementBlock)(void);
 //        [self toggleCamera];
 //        
 //        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
-//            self.draggableThenImageView.alpha = 0;
+//            self.thenImageView.alpha = 0;
 //            
 //        } completion:^(BOOL finished) {
 //            if (finished)
 //            {
 //                
 //                
-//                self.draggableThenImageView.transform = CGAffineTransformMakeTranslation(0, 504);
-//                self.draggableThenImageView.transform = CGAffineTransformScale(self.draggableThenImageView.transform, 1,1);
+//                self.thenImageView.transform = CGAffineTransformMakeTranslation(0, 504);
+//                self.thenImageView.transform = CGAffineTransformScale(self.thenImageView.transform, 1,1);
 //                
 //                [UIView animateWithDuration:0.2 animations:^{
-//                    self.draggableThenImageView.alpha = 1;
+//                    self.thenImageView.alpha = 1;
 //                    
 //                    
 //                }];
@@ -731,7 +731,7 @@ typedef void(^ButtonReplacementBlock)(void);
 -(void)toggleCamera
 {
     //self.cameraContainerView.hidden = !self.cameraContainerView.hidden;
-    //self.draggableNowImageView.hidden = !self.draggableNowImageView.hidden;
+    //self.nowImageView.hidden = !self.nowImageView.hidden;
 }
 
 
@@ -788,7 +788,7 @@ typedef void(^ButtonReplacementBlock)(void);
     if ([segue.identifier isEqualToString:@"cameraSegue"])
     {
         self.cameraVC = segue.destinationViewController;
-        //self.cameraVC.photoCropRect = AVMakeRectWithAspectRatioInsideRect(self.draggableThenImageView.image.size, self.draggableThenImageView.frame);
+        //self.cameraVC.photoCropRect = AVMakeRectWithAspectRatioInsideRect(self.thenImageView.image.size, self.thenImageView.frame);
        // NSLog(@"%f %f %f %f",self.cameraVC.photoCropRect.origin.x, self.cameraVC.photoCropRect.origin.y, self.cameraVC.photoCropRect.size.width, self.cameraVC.photoCropRect.size.height);
         self.cameraVC.delegate = self;
     }
