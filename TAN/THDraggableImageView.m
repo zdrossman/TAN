@@ -100,38 +100,4 @@
     self.imageView.contentMode = UIViewContentModeScaleAspectFill;
 }
 
--(UIImage *)applyOverlayToImage:(UIImage *)image withposition:(CGPoint)position withTextSize:(CGFloat)textSize withText:(NSString *)text{
-    
-    NSString *textToDraw = text;
-    UIColor *textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
-    UIFont *font = [UIFont systemFontOfSize:textSize];
-    
-    // Compute rect to draw the text inside
-    CGSize imageSize = image.size;
-    
-    
-    NSDictionary *attr = @{NSForegroundColorAttributeName: textColor, NSFontAttributeName: font};
-    CGSize thetextSize = [textToDraw sizeWithAttributes:attr];
-    
-    
-    CGRect textRect = CGRectMake(imageSize.width - thetextSize.width -position.x, imageSize.height - thetextSize.height - position.y, thetextSize.width, thetextSize.height);
-    
-    
-    
-    
-    // Create the image
-    UIGraphicsBeginImageContextWithOptions(imageSize, NO, 0.0f);
-    [image drawInRect:CGRectMake(0, 0, imageSize.width, imageSize.height)];
-    [textToDraw drawInRect:CGRectIntegral(textRect) withAttributes:attr];
-    UIImage *resultImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    
-    return resultImage;
-    
-    
-    
-}
-
-
 @end
