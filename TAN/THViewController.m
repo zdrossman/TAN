@@ -164,7 +164,8 @@ typedef void(^ButtonReplacementBlock)(void);
     
     UIBarButtonItem *testButton3 = [[UIBarButtonItem alloc] initWithTitle:@"Test3" style:UIBarButtonItemStylePlain target:self action:@selector(thenAndNowswitch)];
     
-    self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(cameraTapped:)],testButton2, testButton3];
+    UIBarButtonItem *testButton4 = [[UIBarButtonItem alloc] initWithTitle:@"test4" style:UIBarButtonItemStylePlain target:self action:@selector(reverseThenAndNowSwitch)];
+    self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(cameraTapped:)],testButton2, testButton3, testButton4];
 }
 
 -(void)thenAndNowswitch{
@@ -221,7 +222,7 @@ typedef void(^ButtonReplacementBlock)(void);
             self.draggableNowImageView.layer.shadowRadius = 0;
             self.draggableNowImageView.layer.shadowOpacity = 0;
             
-            
+        
             
               [UIView animateWithDuration:.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
                 
@@ -229,12 +230,13 @@ typedef void(^ButtonReplacementBlock)(void);
                   [self.view removeConstraints:self.verticalIVConstraints];
                   
                   self.horizontalDTIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_draggableThenImageView]|" options:0 metrics:nil views:self.viewsDictionary];
-                  
+                  self.verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(64)-[_draggableNowImageView(==230)][_draggableThenImageView(==230)]" options:0 metrics:nil views:self.viewsDictionary];
                   
                   
                   [self.view addConstraints:self.horizontalDTIVConstraints];
                   [self.view addConstraints:self.verticalIVConstraints];
                 
+                  [self.view layoutIfNeeded];
                 
                } completion:^(BOOL finished) {
                 
@@ -249,6 +251,13 @@ typedef void(^ButtonReplacementBlock)(void);
     
     
 }
+
+-(void)reverseThenAndNowSwitch{
+    
+}
+
+
+
 -(void)generateStandardToolBarConstraints{
     
     self.verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==44)]|" options:0 metrics:nil views:self.viewsDictionary];
