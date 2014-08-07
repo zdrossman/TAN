@@ -65,13 +65,13 @@ typedef enum pushDirection {
         self.superViewFrame = CGRectMake(0,0,320,568);
     }
     
-    self.layer.shadowOffset = CGSizeMake(7,7);
+    self.layer.shadowOffset = CGSizeMake(0,0);
     self.layer.shadowRadius = 5;
     self.layer.shadowOpacity = 0.5;
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(receiveNotification:)name:@"didReceivePushFromAnotherView"
-                                               object:nil];
+//    
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(receiveNotification:)name:@"didReceivePushFromAnotherView"
+//                                               object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(receiveNotification:)name:@"getFrame"
@@ -99,7 +99,7 @@ typedef enum pushDirection {
             
             NSLog(@"SnapToFrameDetails BEFORE drag and BEFORE snapLogic: %f %f %f %f",self.snapToFrame.origin.x, self.snapToFrame.origin.y, self.snapToFrame.size.width, self.snapToFrame.size.height);
             
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:@"didReceivePushFromAnotherView" object:nil];
+           // [[NSNotificationCenter defaultCenter] removeObserver:self name:@"didReceivePushFromAnotherView" object:nil];
             
             self.originalPoint = self.center;
             self.originalFrame = self.frame;
@@ -120,9 +120,9 @@ typedef enum pushDirection {
                 {
                     NSLog(@"Push From Top (to bottom)");
                     self.pushDirection = PushDirectionFromTop;
-                    [[NSNotificationCenter defaultCenter]
-                     postNotificationName:@"didReceivePushFromAnotherView"
-                     object:self];
+//                    [[NSNotificationCenter defaultCenter]
+//                     postNotificationName:@"didReceivePushFromAnotherView"
+//                     object:self];
                 }
                 
                 //if dragged object is on bottom
@@ -135,9 +135,9 @@ typedef enum pushDirection {
                         NSLog(@"Push From Bottom (to top)");
                         
                         self.pushDirection = PushDirectionFromBottom;
-                        [[NSNotificationCenter defaultCenter]
-                         postNotificationName:@"didReceivePushFromAnotherView"
-                         object:self];
+//                        [[NSNotificationCenter defaultCenter]
+//                         postNotificationName:@"didReceivePushFromAnotherView"
+//                         object:self];
                     }
                 }
             //}
@@ -163,9 +163,9 @@ typedef enum pushDirection {
 //            NSLog(@"SnapToFrame Height: %f", self.snapToFrame.size.height);
 //            NSLog(@"SnapToFrame Origin Y: %f", self.snapToFrame.origin.y);
 //            
-            [[NSNotificationCenter defaultCenter] addObserver:self
-                                                     selector:@selector(receiveNotification:)name:@"didReceivePushFromAnotherView"
-                                                       object:nil];
+//            [[NSNotificationCenter defaultCenter] addObserver:self
+//                                                     selector:@selector(receiveNotification:)name:@"didReceivePushFromAnotherView"
+//                                                       object:nil];
             
             NSLog(@"SnapToFrameDetails AFTER drag but BEFORE snapLogic: %f %f %f %f",self.snapToFrame.origin.x, self.snapToFrame.origin.y, self.snapToFrame.size.width, self.snapToFrame.size.height);
 

@@ -40,6 +40,7 @@ typedef void(^ButtonReplacementBlock)(void);
 
 
 @property (strong, nonatomic) NSArray *verticalIVConstraints;
+@property (strong, nonatomic) NSDictionary *metrics;
 
 
 @end
@@ -57,6 +58,16 @@ typedef void(^ButtonReplacementBlock)(void);
     return _toolbarButtonsArray;
 }
 
+-(NSDictionary *)metrics{
+ 
+    if (!_metrics)
+    {
+        _metrics = @{};
+    }
+    
+    return _metrics;
+    
+}
 - (void)viewDidLoad
 {
     
@@ -124,29 +135,123 @@ typedef void(^ButtonReplacementBlock)(void);
     
     [self removeAllConstraints];
     
-    self.verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide][_draggableThenImageView(==230)][_draggableNowImageView(==_draggableThenImageView)]" options:0 metrics:nil views:self.viewsDictionary];
+    self.verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(64)-[_draggableThenImageView(==230)][_draggableNowImageView(==_draggableThenImageView)]" options:0 metrics:nil views:self.viewsDictionary];
     
     self.horizontalDTIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_draggableThenImageView]|" options:0 metrics:nil views:self.viewsDictionary];
     
     self.horizontalDNIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_draggableNowImageView]|" options:0 metrics:nil views:self.viewsDictionary];
     
-    self.verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==44)]|" options:0 metrics:nil views:self.viewsDictionary];
-    
-    self.horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
+
     
     [self.view addConstraints:self.verticalIVConstraints];
     [self.view addConstraints:self.horizontalDNIVConstraints];
     [self.view addConstraints:self.horizontalDTIVConstraints];
-    [self.view addConstraints:self.horizontalToolbarConstraints];
-    [self.view addConstraints:self.verticalToolbarConstraints];
+    
+    [self generateStandardToolBarConstraints];
     
     [self.view layoutIfNeeded];
+    
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Test" style:UIBarButtonItemStylePlain target:self action:@selector(slideToolbarDownWithCompletionBlock:)];
     
     UIBarButtonItem *testButton2 = [[UIBarButtonItem alloc] initWithTitle:@"Test2" style:UIBarButtonItemStylePlain target:self action:@selector(replaceToolbarWithButtons:)];
     
-    self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(cameraTapped:)],testButton2];;
+    UIBarButtonItem *testButton3 = [[UIBarButtonItem alloc] initWithTitle:@"Test3" style:UIBarButtonItemStylePlain target:self action:@selector(thenAndNowswitch)];
+    
+    self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(cameraTapped:)],testButton2, testButton3];
+}
+
+-(void)thenAndNowswitch{
+    
+    [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionTransitionFlipFromTop animations:^{
+        
+        NSLog(@"Animation for setupPhotos called");
+        
+        self.draggableNowImageView.layer.shadowOffset = CGSizeMake(7,7);
+        self.draggableNowImageView.layer.shadowRadius = 5;
+        self.draggableNowImageView.layer.shadowOpacity = 0.5;
+
+        [self.view removeConstraints:self.horizontalDTIVConstraints];
+        [self.view removeConstraints:self.verticalIVConstraints];
+        [self.view removeConstraints:self.horizontalDNIVConstraints];
+        
+        self.horizontalDTIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(15)-[_draggableThenImageView(==290)]-(15)-|" options:0 metrics:nil views:self.viewsDictionary];
+        self.horizontalDNIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_draggableNowImageView]|" options:0 metrics:nil views:self.viewsDictionary];
+        self.verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(79)-[_draggableThenImageView(==200)]-(15)-[_draggableNowImageView(==230)]" options:0 metrics:nil views:self.viewsDictionary];
+        
+
+        
+        [self.view addConstraints:self.horizontalDTIVConstraints];
+        [self.view addConstraints:self.verticalIVConstraints];
+        [self.view addConstraints:self.horizontalDNIVConstraints];
+        
+        [self.view layoutIfNeeded];
+        
+    } completion:^(BOOL finished) {
+        
+       
+        [UIView animateWithDuration:.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+            
+            NSLog(@"Animation for setupPhotos called");
+            [self removeAllConstraints];
+            
+            self.horizontalDTIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(15)-[_draggableThenImageView(==290)]-(15)-|" options:0 metrics:nil views:self.viewsDictionary];
+            
+            self.verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(64)-[_draggableNowImageView(==230)]-(15)-[_draggableThenImageView(==200)]" options:0 metrics:nil views:self.viewsDictionary];
+            
+            self.horizontalDNIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_draggableNowImageView]|" options:0 metrics:nil views:self.viewsDictionary];
+            
+            
+            [self generateStandardToolBarConstraints];
+            [self.view addConstraints:self.horizontalDTIVConstraints];
+            [self.view addConstraints:self.horizontalDNIVConstraints];
+            [self.view addConstraints:self.verticalIVConstraints];
+            
+            [self.view layoutIfNeeded];
+        
+        } completion:^(BOOL finished) {
+            
+            self.draggableNowImageView.layer.shadowOffset = CGSizeMake(0,0);
+            self.draggableNowImageView.layer.shadowRadius = 0;
+            self.draggableNowImageView.layer.shadowOpacity = 0;
+            
+            
+            
+              [UIView animateWithDuration:.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+                
+                  [self.view removeConstraints:self.horizontalDTIVConstraints];
+                  [self.view removeConstraints:self.verticalIVConstraints];
+                  
+                  self.horizontalDTIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_draggableThenImageView]|" options:0 metrics:nil views:self.viewsDictionary];
+                  
+                  
+                  
+                  [self.view addConstraints:self.horizontalDTIVConstraints];
+                  [self.view addConstraints:self.verticalIVConstraints];
+                
+                
+               } completion:^(BOOL finished) {
+                
+                
+               }];
+            
+         }];
+
+        
+    }];
+
+    
+    
+}
+-(void)generateStandardToolBarConstraints{
+    
+    self.verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==44)]|" options:0 metrics:nil views:self.viewsDictionary];
+    
+    self.horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
+    
+    [self.view addConstraints:self.horizontalToolbarConstraints];
+    [self.view addConstraints:self.verticalToolbarConstraints];
+    
 }
 
 - (void)removeAllConstraints;
@@ -296,20 +401,18 @@ typedef void(^ButtonReplacementBlock)(void);
     
         //[self.toolbar setItems:nil animated:YES];
         
-        self.horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
-        
-        self.verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==44)]|" options:0 metrics:nil views:self.viewsDictionary];
+
         
         self.horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:nil views:self.viewsDictionary];
         
         self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide]-(44)-[_cameraView(==480)]" options:0 metrics:nil views:self.viewsDictionary];
         
        
-        
+        [self generateStandardToolBarConstraints];
         [self.view addConstraints:self.horizontalCameraConstraints];
         [self.view addConstraints:self.verticalCameraConstraints];
-        [self.view addConstraints:self.horizontalToolbarConstraints];
-        [self.view addConstraints:self.verticalToolbarConstraints];
+        
+
         
         [self.view layoutIfNeeded];
         
@@ -321,20 +424,15 @@ typedef void(^ButtonReplacementBlock)(void);
             [self removeAllConstraints];
             
         
-            self.horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
-            
-             self.verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==44)]|" options:0 metrics:nil views:self.viewsDictionary];
-            
-            
             self.horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:nil views:self.viewsDictionary];
             
             self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide]-(44)-[_cameraView(==0)]" options:0 metrics:nil views:self.viewsDictionary];
 
             
-            [self.view addConstraints:self.verticalToolbarConstraints];
+            [self generateStandardToolBarConstraints];
+            
             [self.view addConstraints:self.horizontalCameraConstraints];
             [self.view addConstraints:self.verticalCameraConstraints];
-            [self.view addConstraints:self.horizontalToolbarConstraints];
             
             [self.view layoutIfNeeded];
             
@@ -425,12 +523,8 @@ typedef void(^ButtonReplacementBlock)(void);
         [self.view removeConstraints:self.horizontalToolbarConstraints];
         [self.view removeConstraints:self.verticalToolbarConstraints];
         
-        self.horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
+        [self generateStandardToolBarConstraints];
         
-        self.verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==44)]|" options:0 metrics:nil views:self.viewsDictionary];
-        
-        [self.view addConstraints:self.horizontalToolbarConstraints];
-        [self.view addConstraints:self.verticalToolbarConstraints];
         [self.view layoutIfNeeded];
     } completion:^(BOOL finished) {
         completionBlock();
