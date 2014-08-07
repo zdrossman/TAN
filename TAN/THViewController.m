@@ -10,6 +10,7 @@
 #import "THDraggableView.h"
 #import "THCamera2ViewController.h"
 #import "THDraggableImageView.h"
+#import <QuartzCore/QuartzCore.h>
 //#import "UIImage+Resize.h"
 
 typedef void(^ButtonReplacementBlock)(void);
@@ -40,7 +41,7 @@ typedef void(^ButtonReplacementBlock)(void);
 
 #pragma mark - Other Properties
 @property (nonatomic) BOOL takingPhoto;
-
+@property (nonatomic) BOOL originalOrder;
 @end
 
 @implementation THViewController
@@ -86,6 +87,7 @@ typedef void(^ButtonReplacementBlock)(void);
     [super viewWillAppear:animated];
     
     self.takingPhoto = NO;
+    self.originalOrder = YES;
     [self baseInit];
     [self setupPhotos];
     [self setupInitialStateOfImageViews];
@@ -141,11 +143,11 @@ typedef void(^ButtonReplacementBlock)(void);
     
     [self removeAllConstraints];
     
-    self.verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(64)-[_draggableThenImageView(==230)][_draggableNowImageView(==_draggableThenImageView)]" options:0 metrics:nil views:self.viewsDictionary];
+    self.verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(64)-[_topImageView(==230)][_bottomImageView(==_topImageView)]" options:0 metrics:nil views:self.viewsDictionary];
     
-    self.horizontalDTIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_draggableThenImageView]|" options:0 metrics:nil views:self.viewsDictionary];
+    self.horizontalDTIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_topImageView]|" options:0 metrics:nil views:self.viewsDictionary];
     
-    self.horizontalDNIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_draggableNowImageView]|" options:0 metrics:nil views:self.viewsDictionary];
+    self.horizontalDNIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_bottomImageView]|" options:0 metrics:nil views:self.viewsDictionary];
     
 
     
@@ -170,21 +172,35 @@ typedef void(^ButtonReplacementBlock)(void);
 
 -(void)thenAndNowswitch{
     
-    [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionTransitionFlipFromTop animations:^{
+    if (!self.originalOrder)
+    {
+        [self.view bringSubviewToFront:self.draggableThenImageView];
+    }
+    else
+    {
+        [self.view bringSubviewToFront:self.draggableNowImageView];
+    }
+    
+    self.draggableNowImageView.layer.shadowOffset = CGSizeMake(0,0);
+    self.draggableNowImageView.layer.shadowRadius = 25;
+    
+    [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionTransitionFlipFromTop animations:^{
         
         NSLog(@"Animation for setupPhotos called");
         
-        self.draggableNowImageView.layer.shadowOffset = CGSizeMake(7,7);
-        self.draggableNowImageView.layer.shadowRadius = 5;
-        self.draggableNowImageView.layer.shadowOpacity = 0.5;
 
+        
+//        self.draggableThenImageView.layer.shadowOffset = CGSizeMake(20,50);
+//        self.draggableThenImageView.layer.shadowRadius = 50;
+//        self.draggableThenImageView.layer.shadowOpacity = 1;
+//        
         [self.view removeConstraints:self.horizontalDTIVConstraints];
         [self.view removeConstraints:self.verticalIVConstraints];
         [self.view removeConstraints:self.horizontalDNIVConstraints];
         
-        self.horizontalDTIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(15)-[_draggableThenImageView(==290)]-(15)-|" options:0 metrics:nil views:self.viewsDictionary];
-        self.horizontalDNIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_draggableNowImageView]|" options:0 metrics:nil views:self.viewsDictionary];
-        self.verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(79)-[_draggableThenImageView(==200)]-(15)-[_draggableNowImageView(==230)]" options:0 metrics:nil views:self.viewsDictionary];
+        self.horizontalDTIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(15)-[_topImageView(==290)]-(15)-|" options:0 metrics:nil views:self.viewsDictionary];
+        self.horizontalDNIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_bottomImageView]|" options:0 metrics:nil views:self.viewsDictionary];
+        self.verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(79)-[_topImageView(==200)]-(15)-[_bottomImageView(==230)]" options:0 metrics:nil views:self.viewsDictionary];
         
 
         
@@ -197,16 +213,16 @@ typedef void(^ButtonReplacementBlock)(void);
     } completion:^(BOOL finished) {
         
        
-        [UIView animateWithDuration:.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+        [UIView animateWithDuration:.35 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
             
             NSLog(@"Animation for setupPhotos called");
             [self removeAllConstraints];
             
-            self.horizontalDTIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(15)-[_draggableThenImageView(==290)]-(15)-|" options:0 metrics:nil views:self.viewsDictionary];
+            self.horizontalDTIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(15)-[_topImageView(==290)]-(15)-|" options:0 metrics:nil views:self.viewsDictionary];
             
-            self.verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(64)-[_draggableNowImageView(==230)]-(15)-[_draggableThenImageView(==200)]" options:0 metrics:nil views:self.viewsDictionary];
+            self.verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(64)-[_bottomImageView(==230)]-(15)-[_topImageView(==200)]" options:0 metrics:nil views:self.viewsDictionary];
             
-            self.horizontalDNIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_draggableNowImageView]|" options:0 metrics:nil views:self.viewsDictionary];
+            self.horizontalDNIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_bottomImageView]|" options:0 metrics:nil views:self.viewsDictionary];
             
             
             [self generateStandardToolBarConstraints];
@@ -218,20 +234,26 @@ typedef void(^ButtonReplacementBlock)(void);
         
         } completion:^(BOOL finished) {
             
-            self.draggableNowImageView.layer.shadowOffset = CGSizeMake(0,0);
-            self.draggableNowImageView.layer.shadowRadius = 0;
-            self.draggableNowImageView.layer.shadowOpacity = 0;
+            CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
+            anim.fromValue = [NSNumber numberWithFloat:1.0];
+            anim.toValue = [NSNumber numberWithFloat:0.0];
+            anim.duration = 0.3;
+            [self.draggableNowImageView.layer addAnimation:anim forKey:@"shadowOpacity"];
+            self.draggableNowImageView.layer.shadowOpacity = 0.0;
             
-        
-            
-              [UIView animateWithDuration:.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+              [UIView animateWithDuration:.15 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
                 
                   [self.view removeConstraints:self.horizontalDTIVConstraints];
                   [self.view removeConstraints:self.verticalIVConstraints];
                   
-                  self.horizontalDTIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_draggableThenImageView]|" options:0 metrics:nil views:self.viewsDictionary];
-                  self.verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(64)-[_draggableNowImageView(==230)][_draggableThenImageView(==230)]" options:0 metrics:nil views:self.viewsDictionary];
+                  self.horizontalDTIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_topImageView]|" options:0 metrics:nil views:self.viewsDictionary];
+                  self.verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(64)-[_bottomImageView(==230)][_topImageView(==230)]" options:0 metrics:nil views:self.viewsDictionary];
                   
+                  
+                  self.draggableNowImageView.layer.shadowOffset = CGSizeMake(0,0);
+//                  self.draggableNowImageView.layer.shadowRadius = 0;
+//                  self.draggableNowImageView.layer.shadowOpacity = 0;
+
                   
                   [self.view addConstraints:self.horizontalDTIVConstraints];
                   [self.view addConstraints:self.verticalIVConstraints];
@@ -239,8 +261,7 @@ typedef void(^ButtonReplacementBlock)(void);
                   [self.view layoutIfNeeded];
                 
                } completion:^(BOOL finished) {
-                
-                
+                   self.originalOrder = !self.originalOrder;
                }];
             
          }];
@@ -248,11 +269,14 @@ typedef void(^ButtonReplacementBlock)(void);
         
     }];
 
-    
-    
-}
+    CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
+    anim.fromValue = [NSNumber numberWithFloat:0.0];
+    anim.toValue = [NSNumber numberWithFloat:1.0];
+    anim.duration = 0.3;
+    [self.draggableNowImageView.layer addAnimation:anim forKey:@"shadowOpacity"];
+    self.draggableNowImageView.layer.shadowOpacity = 1.0;
 
--(void)reverseThenAndNowSwitch{
+    
     
 }
 
@@ -554,14 +578,24 @@ typedef void(^ButtonReplacementBlock)(void);
 
 -(NSDictionary *)viewsDictionary
 {
-    if (!_viewsDictionary)
+    id _cameraView = self.cameraContainerView;
+    id _topLayoutGuide = self.topLayoutGuide;
+    id _topImageView = self.draggableThenImageView;
+    id _bottomImageView = self.draggableNowImageView;
+    
+    if (self.originalOrder)
     {
-        id _cameraView = self.cameraContainerView;
-        id _topLayoutGuide = self.topLayoutGuide;
-        _viewsDictionary = NSDictionaryOfVariableBindings(_draggableThenImageView, _draggableNowImageView, _toolbar, _topLayoutGuide, _cameraView);
-        //_viewsDictionary = NSDictionaryOfVariableBindings( _topLayoutGuide, _cameraView);
-
+        _topImageView = self.draggableThenImageView;
+        _bottomImageView = self.draggableNowImageView;
     }
+    else
+    {
+        _bottomImageView = self.draggableThenImageView;
+        _topImageView = self.draggableNowImageView;
+    }
+    
+    _viewsDictionary = NSDictionaryOfVariableBindings(_topImageView, _bottomImageView, _toolbar, _topLayoutGuide, _cameraView);
+    
     
     return _viewsDictionary;
 }
