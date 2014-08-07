@@ -16,32 +16,30 @@ typedef void(^ButtonReplacementBlock)(void);
 
 @interface THViewController ()
 
-@property (strong, nonatomic) UIImage *thenImage;
-@property (strong, nonatomic) UIImage *nowImage;
-@property (nonatomic) BOOL takingPhoto;
+#pragma mark - Object Properties
 @property (strong, nonatomic) THDraggableImageView *draggableThenImageView;
 @property (strong, nonatomic) THDraggableImageView *draggableNowImageView;
-@property (nonatomic) CGRect originalThenImageFrame;
-@property (strong, nonatomic) UIBarButtonItem *cameraButton;
-@property (strong, nonatomic) UIView *cameraContainerView;
 @property (strong, nonatomic) THCamera2ViewController *cameraVC;
-@property (strong, nonatomic) NSDictionary *viewsDictionary;
+@property (strong, nonatomic) UIView *cameraContainerView;
+@property (strong, nonatomic) UIBarButtonItem *cameraButton;
 @property (strong, nonatomic) UIToolbar *toolbar;
+@property (strong, nonatomic) NSArray *toolbarButtonsArray;
+@property (strong, nonatomic) UIImage *thenImage;
+@property (strong, nonatomic) UIImage *nowImage;
 
+#pragma mark - LayoutConstraint Properties
+@property (strong, nonatomic) NSDictionary *viewsDictionary;
 @property (strong, nonatomic) NSArray *horizontalToolbarConstraints;
 @property (strong, nonatomic) NSArray *verticalToolbarConstraints;
-@property (strong, nonatomic) NSArray *toolbarButtonsArray;
-
 @property (strong, nonatomic) NSArray *verticalCameraConstraints;
 @property (strong, nonatomic) NSArray *horizontalCameraConstraints;
-
 @property (strong, nonatomic) NSArray *horizontalDTIVConstraints;
 @property (strong, nonatomic) NSArray *horizontalDNIVConstraints;
-
-
 @property (strong, nonatomic) NSArray *verticalIVConstraints;
 @property (strong, nonatomic) NSDictionary *metrics;
 
+#pragma mark - Other Properties
+@property (nonatomic) BOOL takingPhoto;
 
 @end
 
@@ -73,6 +71,8 @@ typedef void(^ButtonReplacementBlock)(void);
     
     [super viewDidLoad];
     
+    
+    
 	// Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -83,6 +83,8 @@ typedef void(^ButtonReplacementBlock)(void);
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
+    
     self.takingPhoto = NO;
     [self baseInit];
     [self setupPhotos];
@@ -103,21 +105,27 @@ typedef void(^ButtonReplacementBlock)(void);
     [self.view addSubview:self.toolbar];
     [self.view addSubview:self.cameraContainerView];
 
+//    UIImage *funnyBaby = [UIImage imageNamed:@"funnyBabyPNG"];
+//    self.nowImageView = [[UIImageView alloc] initWithImage:funnyBaby];
+//    [self.view addSubview:self.nowImageView];
+//    self.nowImageView.frame = CGRectMake(0,264,funnyBaby.size.width/2,funnyBaby.size.height/2);
+//    UIImage *funnyBabyWithText = [self applyOverlayToImage:funnyBaby Position:CGPointMake(250, 300) TextSize:20.0 Text:@"BABY"];
+//    
+//    
+//    self.nowImageView.image = funnyBabyWithText;
+//    [self.view bringSubviewToFront:self.nowImageView];
+//    self.nowImageView.layer.backgroundColor = [UIColor blueColor].CGColor;
     
     [self addChildViewController:self.cameraVC];
     [self.cameraContainerView addSubview:self.cameraVC.view];
     self.cameraContainerView.frame = self.view.bounds;
     self.cameraVC.view.frame = self.cameraContainerView.bounds;
-    self.cameraContainerView.backgroundColor = [UIColor blueColor];
-    self.cameraVC.view.backgroundColor = [UIColor orangeColor];
+    self.cameraVC.delegate = self;
     
     [self.toolbar setItems:self.toolbarButtonsArray];
     
     self.draggableNowImageView.layer.backgroundColor = [UIColor redColor].CGColor;
     self.draggableThenImageView.layer.backgroundColor = [UIColor yellowColor].CGColor;
-    self.cameraContainerView.backgroundColor = [UIColor greenColor];
-    self.cameraVC.view.backgroundColor = [UIColor orangeColor];
-    
     
 }
 
@@ -130,8 +138,6 @@ typedef void(^ButtonReplacementBlock)(void);
     
     self.draggableNowImageView.layer.backgroundColor = [UIColor redColor].CGColor;
     self.draggableThenImageView.layer.backgroundColor = [UIColor yellowColor].CGColor;
-    self.cameraContainerView.backgroundColor = [UIColor greenColor];
-    self.cameraVC.view.backgroundColor = [UIColor orangeColor];
     
     [self removeAllConstraints];
     
@@ -277,8 +283,8 @@ typedef void(^ButtonReplacementBlock)(void);
     
     self.draggableNowImageView.layer.backgroundColor = [UIColor redColor].CGColor;
     self.draggableThenImageView.layer.backgroundColor = [UIColor yellowColor].CGColor;
-    self.cameraContainerView.backgroundColor = [UIColor greenColor];
-    self.cameraVC.view.backgroundColor = [UIColor orangeColor];
+//    self.cameraContainerView.backgroundColor = [UIColor greenColor];
+//    self.cameraVC.view.backgroundColor = [UIColor orangeColor];
     self.cameraContainerView.hidden = NO;
 
     [self removeAllConstraints];
@@ -300,8 +306,8 @@ typedef void(^ButtonReplacementBlock)(void);
     
     [self.view layoutIfNeeded];
     
-    self.draggableThenImageView.hidden = YES;
-    self.draggableThenImageView.transform = CGAffineTransformMakeScale(0.4, 0.4);
+//    self.draggableThenImageView.hidden = YES;
+//    self.draggableThenImageView.transform = CGAffineTransformMakeScale(0.4, 0.4);
     
     [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         
@@ -363,17 +369,23 @@ typedef void(^ButtonReplacementBlock)(void);
     
     self.navigationItem.rightBarButtonItem = nil;
    // self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(setupPhotoAutoLayout)];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(resignCamera)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(returnToPhotosFromCamera)];
     
 
+}
+
+-(void)returnToPhotosFromCamera
+{
+    [self resignCamera];
+    [self setupPhotos];
 }
 
 -(void)resignCamera{
     
     self.draggableNowImageView.layer.backgroundColor = [UIColor redColor].CGColor;
     self.draggableThenImageView.layer.backgroundColor = [UIColor yellowColor].CGColor;
-    self.cameraContainerView.backgroundColor = [UIColor greenColor];
-    self.cameraVC.view.backgroundColor = [UIColor orangeColor];
+//    self.cameraContainerView.backgroundColor = [UIColor greenColor];
+//    self.cameraVC.view.backgroundColor = [UIColor orangeColor];
     self.cameraContainerView.hidden = NO;
     
     [self removeAllConstraints];
@@ -485,10 +497,10 @@ typedef void(^ButtonReplacementBlock)(void);
 
 - (void)replaceToolbarWithButtons:(ButtonReplacementBlock)buttonReplacementBlock
 {
-    
     [self slideToolbarDownWithCompletionBlock:^{
+        [self.toolbar setItems:self.toolbarButtonsArray animated:NO];
         [self slideToolbarUpWithCompletionBlock:^{
-            NSLog(@"Complete!");
+            NSLog(@"Completed toolbar button update.");
         }];
     }];
 }
@@ -686,7 +698,7 @@ typedef void(^ButtonReplacementBlock)(void);
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
             self.draggableThenImageView.alpha = 0;
             
-            self.draggableNowImageView.image = [self.draggableNowImageView applyOverlayToImage:self.draggableNowImageView.image withPostion:CGPointMake(0,0) withTextSize:200.0 withText:@"Now"];
+            self.draggableNowImageView.image = [self.draggableNowImageView applyOverlayToImage:self.draggableNowImageView.image withposition:CGPointMake(0,0) withTextSize:200.0 withText:@"Now"];
             
             
         } completion:^(BOOL finished) {
@@ -697,7 +709,7 @@ typedef void(^ButtonReplacementBlock)(void);
                 self.draggableThenImageView.transform = CGAffineTransformMakeTranslation(0, 504);
                 self.draggableThenImageView.transform = CGAffineTransformScale(self.draggableThenImageView.transform, 1,1);
                 
-                self.draggableThenImageView.image = [self.draggableThenImageView applyOverlayToImage:self.thenImage withPostion:CGPointMake(0,0) withTextSize:60.0 withText:@"Then"];
+                self.draggableThenImageView.image = [self.draggableThenImageView applyOverlayToImage:self.thenImage withposition:CGPointMake(0,0) withTextSize:60.0 withText:@"Then"];
                 
                 [UIView animateWithDuration:0.2 animations:^{
                     self.draggableThenImageView.alpha = 1;
@@ -739,8 +751,8 @@ typedef void(^ButtonReplacementBlock)(void);
         UIGraphicsBeginImageContextWithOptions(newImageSize, NO, [[UIScreen mainScreen] scale]);
     } else {
         UIGraphicsBeginImageContext(newImageSize);
-        
     }
+    
     [firstImage drawAtPoint:CGPointMake(0, 0)];
     
     [secondImage drawAtPoint:CGPointMake(firstImage.size.width,0 )];
@@ -761,4 +773,31 @@ typedef void(^ButtonReplacementBlock)(void);
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+-(UIImage *)applyOverlayToImage:(UIImage *)image Position:(CGPoint)position TextSize:(CGFloat)textSize Text:(NSString *)text{
+    
+    UIColor *textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+    UIFont *font = [UIFont systemFontOfSize:textSize];
+    NSDictionary *attr = @{NSForegroundColorAttributeName: textColor, NSFontAttributeName: font};
+
+    CGSize thetextSize = [text sizeWithAttributes:attr];
+
+    // Compute rect to draw the text inside
+    CGSize imageSize = image.size;
+    
+    CGRect textRect = CGRectMake(position.x, position.y, thetextSize.width, thetextSize.height);
+    
+    // Create the image
+    UIGraphicsBeginImageContextWithOptions(imageSize, NO, 0.0f);
+    [image drawInRect:CGRectMake(0, 0, imageSize.width, imageSize.height)];
+    [text drawInRect:CGRectIntegral(textRect) withAttributes:attr];
+    UIImage *resultImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return resultImage;
+    
+    
+    
+}
+
 @end

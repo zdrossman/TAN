@@ -21,16 +21,19 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.videoPreview = [[UIView alloc] initWithFrame:CGRectMake(34,0,self.view.bounds.size.height,self.view.bounds.size.width - 68)];
+    
+    CGFloat videoPreviewWidth = self.view.bounds.size.height / 2;
+    CGFloat excessSpacePerSide = (self.view.frame.size.width - videoPreviewWidth)/2;
+    self.videoPreview = [[UIView alloc] initWithFrame:CGRectMake(excessSpacePerSide,0,videoPreviewWidth,self.view.bounds.size.height)];
+    [self.view addSubview:self.videoPreview];
+    self.videoPreview.backgroundColor = [UIColor blackColor];
+    self.videoPreview.clipsToBounds = YES;
 	// Do any additional setup after loading the view, typically from a nib.
-    
-    
     self.frontCamera = YES;
     //cameraSwitch.selectedSegmentIndex = 0;
-//    self.takePhotoButton = [[UICameraButton alloc] init];
-    self.takePhotoButton.delegate = self;
-    
-   // [self.view addSubview:self.takePhotoButton];
+    self.takePhotoButton = [[UICameraButton alloc] initWithFrame:CGRectMake(105,430,70,70)];
+    [self.takePhotoButton addTarget:self action:@selector(takePhotoTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [self.videoPreview addSubview:self.takePhotoButton];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -82,8 +85,8 @@
     
     captureVideoPreviewLayer.backgroundColor = [UIColor clearColor].CGColor;
     self.view.backgroundColor = [UIColor clearColor];
-	[self.view.layer addSublayer:captureVideoPreviewLayer];
-
+	[self.videoPreview.layer addSublayer:captureVideoPreviewLayer];
+    [self.videoPreview bringSubviewToFront:self.takePhotoButton];
     CALayer *viewLayer = [self.view layer];
     [viewLayer setMasksToBounds:YES];
     

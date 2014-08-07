@@ -17,6 +17,6 @@
 @property (strong, nonatomic) NSString *imageText;
 
 - (void)loadImageView;
--(UIImage *)applyOverlayToImage:(UIImage *)image withPostion:(CGPoint)postion withTextSize:(CGFloat)textSize withText:(NSString *)text;
+-(UIImage *)applyOverlayToImage:(UIImage *)image withposition:(CGPoint)position withTextSize:(CGFloat)textSize withText:(NSString *)text;
 
 @end

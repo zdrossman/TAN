@@ -37,6 +37,7 @@
     return self;
 }
 
+
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if ((self = [super initWithCoder:aDecoder])) {
         
@@ -99,7 +100,7 @@
     self.imageView.contentMode = UIViewContentModeScaleAspectFill;
 }
 
--(UIImage *)applyOverlayToImage:(UIImage *)image withPostion:(CGPoint)postion withTextSize:(CGFloat)textSize withText:(NSString *)text{
+-(UIImage *)applyOverlayToImage:(UIImage *)image withposition:(CGPoint)position withTextSize:(CGFloat)textSize withText:(NSString *)text{
     
     NSString *textToDraw = text;
     UIColor *textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
@@ -113,7 +114,7 @@
     CGSize thetextSize = [textToDraw sizeWithAttributes:attr];
     
     
-    CGRect textRect = CGRectMake(imageSize.width - thetextSize.width -postion.x, imageSize.height - thetextSize.height - postion.y, thetextSize.width, thetextSize.height);
+    CGRect textRect = CGRectMake(imageSize.width - thetextSize.width -position.x, imageSize.height - thetextSize.height - position.y, thetextSize.width, thetextSize.height);
     
     
     
