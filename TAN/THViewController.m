@@ -146,17 +146,20 @@ typedef void(^ButtonReplacementBlock)(void);
 -(void)setupPhotos
 {
     
-//    if (self.nowImage)
-//    {
-//        self.nowImageView.image = self.nowImage;
-//    }
+    if (self.nowImage)
+    {
+        self.nowImageView.image = self.nowImage;
+    }
     
     
     self.cameraContainerView.hidden = YES;
     self.nowImageView.hidden = NO;
     self.toolbar.alpha = 1;
     self.toolbar.hidden = NO;
+    self.thenImageView.alpha =1.0;
     
+    
+
     self.nowImageView.layer.backgroundColor = [UIColor redColor].CGColor;
     self.thenImageView.layer.backgroundColor = [UIColor yellowColor].CGColor;
     
@@ -197,6 +200,7 @@ typedef void(^ButtonReplacementBlock)(void);
     
     
     self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(cameraTapped:)],testButton2, testButton4,testButton5];
+   // [self.toolbar setItems:self.toolbarButtonsArray animated:NO];
 }
 
 -(void)changePosition{
@@ -654,11 +658,12 @@ typedef void(^ButtonReplacementBlock)(void);
 
 -(void)resignCamera{
     
+    self.cameraContainerView.hidden = NO;
     self.nowImageView.layer.backgroundColor = [UIColor redColor].CGColor;
     self.thenImageView.layer.backgroundColor = [UIColor yellowColor].CGColor;
 //    self.cameraContainerView.backgroundColor = [UIColor greenColor];
 //    self.cameraVC.view.backgroundColor = [UIColor orangeColor];
-    self.cameraContainerView.hidden = NO;
+   
     
     [self removeAllConstraints];
     
@@ -724,13 +729,8 @@ typedef void(^ButtonReplacementBlock)(void);
             
         } completion:^(BOOL finished) {
             
-            //TODO: Add constraints for moving THENphoto to "preview"
-            //TODO: Change layout constraints and size of image to fit small image space. set alpha of then image view to 0.
-            //TODO: self.view bringSubviewToFront:thenImageView
-            [UIView animateWithDuration:0.2 animations:^{
-                //TODO - set alpha of thenImageView to 1.
-                
-            }];
+         self.thenImageView.alpha =1.0;
+            
         }];
     }];
 
@@ -747,7 +747,7 @@ typedef void(^ButtonReplacementBlock)(void);
     if (!self.nowImage)
     {
         self.thenImage = [UIImage imageNamed:@"funnyBabyPNG"];
-        self.nowImage = [UIImage imageNamed:@"blossom.jpg"];
+        //self.nowImage = [UIImage imageNamed:@"blossom.jpg"];
     }
     
     //    self.nowImageView.image = self.nowImage;
@@ -881,7 +881,7 @@ typedef void(^ButtonReplacementBlock)(void);
         
         
     } completion:^(BOOL finished) {
-        if (finished)
+        igif (finished)
         {
             
             
@@ -989,6 +989,7 @@ typedef void(^ButtonReplacementBlock)(void);
 -(void)didTakePhoto:(UIImage *)image
 {
     self.nowImage = image;
+    [self.toolbar setItems:self.toolbarButtonsArray animated:NO];
     [self setupPhotos];
 }
 

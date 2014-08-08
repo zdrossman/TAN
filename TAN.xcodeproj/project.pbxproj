@@ -37,7 +37,6 @@
 		3190CD6119914A8A0042C87F /* 1174-choose-font-toolbar-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 3190CD5F19914A8A0042C87F /* 1174-choose-font-toolbar-selected.png */; };
 		3190CD6219914A8A0042C87F /* 1174-choose-font-toolbar-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3190CD6019914A8A0042C87F /* 1174-choose-font-toolbar-selected@2x.png */; };
 		31F2E0401991262500B62321 /* THEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F2E03F1991262500B62321 /* THEditViewController.m */; };
-		31FD62D01993E5A400B9753F /* ImageCropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 31FD62CF1993E5A400B9753F /* ImageCropView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,8 +90,6 @@
 		3190CD6019914A8A0042C87F /* 1174-choose-font-toolbar-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1174-choose-font-toolbar-selected@2x.png"; sourceTree = "<group>"; };
 		31F2E03E1991262500B62321 /* THEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THEditViewController.h; sourceTree = "<group>"; };
 		31F2E03F1991262500B62321 /* THEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THEditViewController.m; sourceTree = "<group>"; };
-		31FD62CE1993E5A400B9753F /* ImageCropView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageCropView.h; sourceTree = "<group>"; };
-		31FD62CF1993E5A400B9753F /* ImageCropView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageCropView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,8 +157,6 @@
 				3161DEE6198A9CC500EA1064 /* THViewController.m */,
 				3161DF0B198AAFA200EA1064 /* THDraggableView.h */,
 				3161DF0C198AAFA200EA1064 /* THDraggableView.m */,
-				31FD62CE1993E5A400B9753F /* ImageCropView.h */,
-				31FD62CF1993E5A400B9753F /* ImageCropView.m */,
 				3161DF19198C459500EA1064 /* THDraggableImageView.h */,
 				3161DF1A198C459500EA1064 /* THDraggableImageView.m */,
 				312A0637198F15DB001E4FA6 /* UICameraButton.h */,
@@ -343,7 +338,6 @@
 				3161DEE7198A9CC500EA1064 /* THViewController.m in Sources */,
 				312A0639198F15DB001E4FA6 /* UICameraButton.m in Sources */,
 				31F2E0401991262500B62321 /* THEditViewController.m in Sources */,
-				31FD62D01993E5A400B9753F /* ImageCropView.m in Sources */,
 				3161DF0D198AAFA200EA1064 /* THDraggableView.m in Sources */,
 				3161DEE1198A9CC500EA1064 /* THAppDelegate.m in Sources */,
 				3161DF18198C020600EA1064 /* THCamera2ViewController.m in Sources */,
