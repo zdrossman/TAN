@@ -85,7 +85,7 @@
     
     captureVideoPreviewLayer.backgroundColor = [UIColor clearColor].CGColor;
     self.view.backgroundColor = [UIColor clearColor];
-	[self.videoPreview.layer addSublayer:captureVideoPreviewLayer];
+	//[self.videoPreview.layer addSublayer:captureVideoPreviewLayer];
     [self.videoPreview bringSubviewToFront:self.takePhotoButton];
     CALayer *viewLayer = [self.view layer];
     [viewLayer setMasksToBounds:YES];
