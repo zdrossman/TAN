@@ -20,14 +20,14 @@
 
 
 
-//TODO: Present user with cropped photo taker - WEEK 2
-//TODO: Crop resulting photo from camera at needed ratio of 2:1 - WEEK 2
+//TODO: Present user with cropped photo taker - WEEK 2 - ZACH
+//TODO: Crop resulting photo from camera at needed ratio of 2:1 - WEEK 2 - ZACH
 //TODO: Crop THEN photo at needed ratio of 2:1 - WEEK 2
-//TODO: Remainder of animations/layoutconstraints for all views - WEEK 2
-//TODO: Make "then" image preview larger in camera - WEEK 2
-//TODO: Manage text overlay - WEEK 2
-//TODO: Get photos to show on screen... - WEEK 2
-//TODO: PRESENTATION
+//TODO: Remainder of animations/layoutconstraints for all views - WEEK 2 - STEVE
+//TODO: Make "then" image preview larger in camera - WEEK 2 - STEVE
+//TODO: Manage text overlay - WEEK 2 - ???
+//TODO: Get photos to show on screen... - WEEK 2 - ???
+//TODO: PRESENTATION - ZACH
 
 //TODO: Integrate sticker example (with dragging?) - WEEK 2/3
 //TODO: Other features - timehop watermark color toggle, banner placement, full length banner - WEEK 2
