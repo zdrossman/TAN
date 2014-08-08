@@ -10,11 +10,12 @@
 #import "THDraggableView.h"
 #import "THCamera2ViewController.h"
 #import "THDraggableImageView.h"
+
 //#import "UIImage+Resize.h"
 
 typedef void(^ButtonReplacementBlock)(void);
 
-@interface THViewController ()
+@interface THViewController () <UINavigationControllerDelegate, THCameraDelegateProtocol>
 
 #pragma mark - Object Properties
 @property (strong, nonatomic) UIView *cropperContainerView;
@@ -44,7 +45,6 @@ typedef void(^ButtonReplacementBlock)(void);
 @end
 
 @implementation THViewController
-
 -(NSArray *)toolbarButtonsArray
 {
     UIBarButtonItem *alignmentButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1074-grid-2"] style:UIBarButtonItemStylePlain target:self action:nil];
@@ -99,12 +99,20 @@ typedef void(^ButtonReplacementBlock)(void);
     self.toolbar = [[UIToolbar alloc] init];
     self.cameraContainerView = [[UIView alloc] init];
     self.imageCropperVC = [[UIViewController alloc] init];
-    
+
     [self.view addSubview:self.thenImageView];
     [self.view addSubview:self.nowImageView];
     [self.view addSubview:self.toolbar];
     [self.view addSubview:self.cameraContainerView];
-
+    
+    [self addChildViewController:self.cameraVC];
+    [self.cameraContainerView addSubview:self.cameraVC.view];
+    self.cameraContainerView.frame = self.view.bounds;
+    self.cameraVC.view.frame = self.cameraContainerView.bounds;
+    self.cameraVC.delegate = self;
+    
+    [self.view layoutIfNeeded];
+    
 //    UIImage *funnyBaby = [UIImage imageNamed:@"funnyBabyPNG"];
 //    self.nowImageView = [[UIImageView alloc] initWithImage:funnyBaby];
 //    [self.view addSubview:self.nowImageView];
@@ -116,17 +124,12 @@ typedef void(^ButtonReplacementBlock)(void);
 //    [self.view bringSubviewToFront:self.nowImageView];
 //    self.nowImageView.layer.backgroundColor = [UIColor blueColor].CGColor;
     
-    [self addChildViewController:self.cameraVC];
-    [self.cameraContainerView addSubview:self.cameraVC.view];
-    self.cameraContainerView.frame = self.view.bounds;
-    self.cameraVC.view.frame = self.cameraContainerView.bounds;
-    self.cameraVC.delegate = self;
+    
     
     [self.toolbar setItems:self.toolbarButtonsArray];
     
     self.nowImageView.layer.backgroundColor = [UIColor redColor].CGColor;
     self.thenImageView.layer.backgroundColor = [UIColor yellowColor].CGColor;
-    
 }
 
 -(void)setupPhotos
@@ -486,7 +489,7 @@ typedef void(^ButtonReplacementBlock)(void);
 {
     if (!self.nowImage)
     {
-        self.thenImage = [UIImage imageNamed:@"funnyBabyPNG"];
+        self.thenImage = [UIImage imageNamed:@"coffee.jpg"];
         self.nowImage = [UIImage imageNamed:@"blossom.jpg"];
     }
     
@@ -500,7 +503,7 @@ typedef void(^ButtonReplacementBlock)(void);
     self.nowImageView.contentMode = UIViewContentModeScaleAspectFit;
     
     self.thenImageView.image = self.thenImage;
-
+    
 }
 
 
@@ -691,12 +694,21 @@ typedef void(^ButtonReplacementBlock)(void);
     //self.draggableNowImageView.hidden = !self.draggableNowImageView.hidden;
 }
 
-
 -(void)didTakePhoto:(UIImage *)image
 {
     self.nowImage = image;
     [self setupPhotos];
 }
+
+- (void)hideImagePicker{
+    [self resignCamera];
+}
+
+- (void)showPicker:(UIButton *)btn{
+    
+    self.cameraContainerView.hidden = NO;
+}
+
 
 - (void)returnToPhotoView
 {

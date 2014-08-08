@@ -10,7 +10,7 @@
 #import "THCamera2ViewController.h"
 #import "THDraggableImageView.h"
 
-@interface THViewController : UIViewController <THCameraDelegateProtocol>
+@interface THViewController : UIViewController
 
 @property (strong, nonatomic) UIImageView *thenImageView;
 @property (strong, nonatomic) UIImageView *nowImageView;
