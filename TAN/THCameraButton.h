@@ -1,5 +1,5 @@
 //
-//  UICameraButton.h
+//  THCameraButton.h
 //  cameraButton
 //
 //  Created by Heidi Anne Kaiulani Hansen on 8/3/14.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UICameraButton : UIButton
+@interface THCameraButton : UIButton
 
 @end

@@ -1,18 +1,18 @@
 //
-//  UICameraButton.m
+//  THCameraButton.m
 //  cameraButton
 //
 //  Created by Heidi Anne Kaiulani Hansen on 8/3/14.
 //  Copyright (c) 2014 Heidi Hansen. All rights reserved.
 //
 
-#import "UICameraButton.h"
+#import "THCameraButton.h"
 
-@interface UICameraButton ()
+@interface THCameraButton ()
 
 @end
 
-@implementation UICameraButton
+@implementation THCameraButton
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -40,7 +40,7 @@
 //    UIGraphicsBeginImageContext(canvasSize);
 //    CGContextRef ctx = UIGraphicsGetCurrentContext();
     
-    //code from UICameraButton(subclass of UIButton), testing in this new UIView subclass
+    //code from THCameraButton(subclass of UIButton), testing in this new UIView subclass
 //    self.backgroundColor = [UIColor blueColor];
     
 //    self.layer.borderWidth = 6;
