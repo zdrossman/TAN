@@ -10,7 +10,7 @@
 #import "THViewController.h"
 
 /*
- 
+ get text overlay + resize + combine image to work =result
  
  add bowtie to view
  show result with two polaroids in one screen
