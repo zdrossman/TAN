@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		312A0639198F15DB001E4FA6 /* UICameraButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 312A0638198F15DB001E4FA6 /* UICameraButton.m */; };
+		312A0639198F15DB001E4FA6 /* THCameraButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 312A0638198F15DB001E4FA6 /* THCameraButton.m */; };
 		312A063B198FF3E0001E4FA6 /* funnyBabyPNG.png in Resources */ = {isa = PBXBuildFile; fileRef = 312A063A198FF3E0001E4FA6 /* funnyBabyPNG.png */; };
 		3161DED1198A9CC400EA1064 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3161DED0198A9CC400EA1064 /* Foundation.framework */; };
 		3161DED3198A9CC400EA1064 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3161DED2198A9CC400EA1064 /* CoreGraphics.framework */; };
@@ -38,6 +38,9 @@
 		3190CD6219914A8A0042C87F /* 1174-choose-font-toolbar-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3190CD6019914A8A0042C87F /* 1174-choose-font-toolbar-selected@2x.png */; };
 		31F2E0401991262500B62321 /* THEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F2E03F1991262500B62321 /* THEditViewController.m */; };
 		31FD62EF1995424E00B9753F /* BASSquareCropperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31FD62EE1995424E00B9753F /* BASSquareCropperViewController.m */; };
+		31FD62F419955D7000B9753F /* testImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 31FD62F319955D7000B9753F /* testImage.png */; };
+		31FD62FB19958D2E00B9753F /* 1074-grid-2B rotated.png in Resources */ = {isa = PBXBuildFile; fileRef = 31FD62F919958D2E00B9753F /* 1074-grid-2B rotated.png */; };
+		31FD62FC19958D2E00B9753F /* 1074-grid-2B@2x rotated.png in Resources */ = {isa = PBXBuildFile; fileRef = 31FD62FA19958D2E00B9753F /* 1074-grid-2B@2x rotated.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,8 +54,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		312A0637198F15DB001E4FA6 /* UICameraButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICameraButton.h; sourceTree = "<group>"; };
-		312A0638198F15DB001E4FA6 /* UICameraButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICameraButton.m; sourceTree = "<group>"; };
+		312A0637198F15DB001E4FA6 /* THCameraButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THCameraButton.h; sourceTree = "<group>"; };
+		312A0638198F15DB001E4FA6 /* THCameraButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THCameraButton.m; sourceTree = "<group>"; };
 		312A063A198FF3E0001E4FA6 /* funnyBabyPNG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = funnyBabyPNG.png; sourceTree = "<group>"; };
 		3161DECD198A9CC400EA1064 /* TAN.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TAN.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3161DED0198A9CC400EA1064 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -93,6 +96,9 @@
 		31F2E03F1991262500B62321 /* THEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THEditViewController.m; sourceTree = "<group>"; };
 		31FD62ED1995424E00B9753F /* BASSquareCropperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BASSquareCropperViewController.h; sourceTree = "<group>"; };
 		31FD62EE1995424E00B9753F /* BASSquareCropperViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BASSquareCropperViewController.m; sourceTree = "<group>"; };
+		31FD62F319955D7000B9753F /* testImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testImage.png; sourceTree = "<group>"; };
+		31FD62F919958D2E00B9753F /* 1074-grid-2B rotated.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1074-grid-2B rotated.png"; sourceTree = "<group>"; };
+		31FD62FA19958D2E00B9753F /* 1074-grid-2B@2x rotated.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1074-grid-2B@2x rotated.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,27 +158,9 @@
 		3161DED6198A9CC400EA1064 /* TAN */ = {
 			isa = PBXGroup;
 			children = (
-				31FD62ED1995424E00B9753F /* BASSquareCropperViewController.h */,
-				31FD62EE1995424E00B9753F /* BASSquareCropperViewController.m */,
-				31F2E03E1991262500B62321 /* THEditViewController.h */,
-				31F2E03F1991262500B62321 /* THEditViewController.m */,
-				3161DEDF198A9CC400EA1064 /* THAppDelegate.h */,
-				3161DEE0198A9CC500EA1064 /* THAppDelegate.m */,
-				3161DEE5198A9CC500EA1064 /* THViewController.h */,
-				3161DEE6198A9CC500EA1064 /* THViewController.m */,
-				3161DF0B198AAFA200EA1064 /* THDraggableView.h */,
-				3161DF0C198AAFA200EA1064 /* THDraggableView.m */,
-				3161DF19198C459500EA1064 /* THDraggableImageView.h */,
-				3161DF1A198C459500EA1064 /* THDraggableImageView.m */,
-				312A0637198F15DB001E4FA6 /* UICameraButton.h */,
-				312A0638198F15DB001E4FA6 /* UICameraButton.m */,
-				3161DF16198C020600EA1064 /* THCamera2ViewController.h */,
-				3161DF17198C020600EA1064 /* THCamera2ViewController.m */,
-				3161DEE8198A9CC500EA1064 /* Images.xcassets */,
-				312A063A198FF3E0001E4FA6 /* funnyBabyPNG.png */,
-				3161DF05198A9DB200EA1064 /* blue.jpg */,
-				3161DF06198A9DB200EA1064 /* blossom.jpg */,
-				3161DF09198A9DED00EA1064 /* coffee.jpg */,
+				31FD62F0199556F900B9753F /* Controllers */,
+				31FD62F11995570D00B9753F /* Views */,
+				31FD62F21995572700B9753F /* Components */,
 				3190CD551991480B0042C87F /* Assets */,
 				3161DED7198A9CC400EA1064 /* Supporting Files */,
 			);
@@ -182,6 +170,8 @@
 		3161DED7198A9CC400EA1064 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				3161DEDF198A9CC400EA1064 /* THAppDelegate.h */,
+				3161DEE0198A9CC500EA1064 /* THAppDelegate.m */,
 				3161DED8198A9CC400EA1064 /* TAN-Info.plist */,
 				3161DED9198A9CC400EA1064 /* InfoPlist.strings */,
 				3161DEDC198A9CC400EA1064 /* main.m */,
@@ -211,6 +201,12 @@
 		3190CD551991480B0042C87F /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				3161DEE8198A9CC500EA1064 /* Images.xcassets */,
+				31FD62F319955D7000B9753F /* testImage.png */,
+				312A063A198FF3E0001E4FA6 /* funnyBabyPNG.png */,
+				3161DF05198A9DB200EA1064 /* blue.jpg */,
+				3161DF06198A9DB200EA1064 /* blossom.jpg */,
+				3161DF09198A9DED00EA1064 /* coffee.jpg */,
 				3190CD56199148120042C87F /* Images */,
 			);
 			name = Assets;
@@ -220,6 +216,8 @@
 			isa = PBXGroup;
 			children = (
 				3190CD51199148070042C87F /* 1074-grid-2.png */,
+				31FD62F919958D2E00B9753F /* 1074-grid-2B rotated.png */,
+				31FD62FA19958D2E00B9753F /* 1074-grid-2B@2x rotated.png */,
 				3190CD52199148070042C87F /* 1074-grid-2@2x.png */,
 				3190CD57199148450042C87F /* 1074-grid-2-selected.png */,
 				3190CD58199148450042C87F /* 1074-grid-2-selected@2x.png */,
@@ -229,6 +227,41 @@
 				3190CD6019914A8A0042C87F /* 1174-choose-font-toolbar-selected@2x.png */,
 			);
 			name = Images;
+			sourceTree = "<group>";
+		};
+		31FD62F0199556F900B9753F /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				31FD62ED1995424E00B9753F /* BASSquareCropperViewController.h */,
+				31FD62EE1995424E00B9753F /* BASSquareCropperViewController.m */,
+				31F2E03E1991262500B62321 /* THEditViewController.h */,
+				31F2E03F1991262500B62321 /* THEditViewController.m */,
+				3161DEE5198A9CC500EA1064 /* THViewController.h */,
+				3161DEE6198A9CC500EA1064 /* THViewController.m */,
+				3161DF16198C020600EA1064 /* THCamera2ViewController.h */,
+				3161DF17198C020600EA1064 /* THCamera2ViewController.m */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		31FD62F11995570D00B9753F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3161DF0B198AAFA200EA1064 /* THDraggableView.h */,
+				3161DF0C198AAFA200EA1064 /* THDraggableView.m */,
+				3161DF19198C459500EA1064 /* THDraggableImageView.h */,
+				3161DF1A198C459500EA1064 /* THDraggableImageView.m */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		31FD62F21995572700B9753F /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				312A0637198F15DB001E4FA6 /* THCameraButton.h */,
+				312A0638198F15DB001E4FA6 /* THCameraButton.m */,
+			);
+			name = Components;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -316,11 +349,14 @@
 				3190CD53199148070042C87F /* 1074-grid-2.png in Resources */,
 				3190CD54199148070042C87F /* 1074-grid-2@2x.png in Resources */,
 				3190CD5E19914A7C0042C87F /* 1174-choose-font-toolbar@2x.png in Resources */,
+				31FD62FC19958D2E00B9753F /* 1074-grid-2B@2x rotated.png in Resources */,
 				3161DF0A198A9DED00EA1064 /* coffee.jpg in Resources */,
 				3190CD5D19914A7C0042C87F /* 1174-choose-font-toolbar.png in Resources */,
 				3190CD6219914A8A0042C87F /* 1174-choose-font-toolbar-selected@2x.png in Resources */,
 				3190CD5A199148450042C87F /* 1074-grid-2-selected@2x.png in Resources */,
 				3161DF07198A9DB200EA1064 /* blue.jpg in Resources */,
+				31FD62F419955D7000B9753F /* testImage.png in Resources */,
+				31FD62FB19958D2E00B9753F /* 1074-grid-2B rotated.png in Resources */,
 				3190CD6119914A8A0042C87F /* 1174-choose-font-toolbar-selected.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -341,7 +377,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3161DEE7198A9CC500EA1064 /* THViewController.m in Sources */,
-				312A0639198F15DB001E4FA6 /* UICameraButton.m in Sources */,
+				312A0639198F15DB001E4FA6 /* THCameraButton.m in Sources */,
 				31F2E0401991262500B62321 /* THEditViewController.m in Sources */,
 				3161DF0D198AAFA200EA1064 /* THDraggableView.m in Sources */,
 				3161DEE1198A9CC500EA1064 /* THAppDelegate.m in Sources */,

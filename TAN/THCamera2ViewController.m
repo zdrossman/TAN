@@ -7,14 +7,15 @@
 //
 
 #import "THCamera2ViewController.h"
-#import "UICameraButton.h"
+#import "THCameraButton.h"
 
 #define DegreesToRadians(x) ((x) * M_PI / 180.0)
 
 @interface THCamera2ViewController ()
 
 @property (strong, nonatomic) UIView *videoPreview;
-
+//@property (nonatomic) CGFloat videoPreviewWidth;
+@property (nonatomic) CGFloat excessSpacePerSide;
 @end
 
 @implementation THCamera2ViewController
@@ -22,18 +23,32 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    CGFloat videoPreviewWidth = self.view.bounds.size.height / 2;
-    CGFloat excessSpacePerSide = (self.view.frame.size.width - videoPreviewWidth)/2;
-    self.videoPreview = [[UIView alloc] initWithFrame:CGRectMake(excessSpacePerSide,0,videoPreviewWidth,self.view.bounds.size.height)];
+    //self.videoPreviewWidth = (self.view.bounds.size.height - 64) / 2;
+    self.excessSpacePerSide = 60;
+    
+    UIView *leftCropView = [[UIView alloc] initWithFrame:CGRectMake(0, 44, self.excessSpacePerSide, 400)];
+    UIView *rightCropView = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.size.width - self.excessSpacePerSide, 44, self.excessSpacePerSide, 400)];
+    
+    leftCropView.backgroundColor = [UIColor blackColor];
+    leftCropView.alpha = 0.85;
+    
+    rightCropView.backgroundColor = [UIColor blackColor];
+    rightCropView.alpha = 0.85;
+    
+    self.videoPreview = [[UIView alloc] initWithFrame:CGRectMake(0,0,320,504)];
     [self.view addSubview:self.videoPreview];
+    NSLog(@"Self.view frame: %f %f %f %f ", self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
+    NSLog(@"self bounds: %f %f %f %f ", self.view.bounds.origin.x, self.view.bounds.origin.y, self.view.bounds.size.width, self.view.bounds.size.height);
     self.videoPreview.backgroundColor = [UIColor blackColor];
     self.videoPreview.clipsToBounds = YES;
 	// Do any additional setup after loading the view, typically from a nib.
     self.frontCamera = YES;
     //cameraSwitch.selectedSegmentIndex = 0;
-    self.takePhotoButton = [[UICameraButton alloc] initWithFrame:CGRectMake(105,430,70,70)];
+    self.takePhotoButton = [[THCameraButton alloc] initWithFrame:CGRectMake(125,430,70,70)];
     [self.takePhotoButton addTarget:self action:@selector(takePhotoTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self.videoPreview addSubview:self.takePhotoButton];
+    [self.view addSubview:self.takePhotoButton];
+    [self.view addSubview:leftCropView];
+    [self.view addSubview:rightCropView];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -81,11 +96,11 @@
     
 	AVCaptureVideoPreviewLayer *captureVideoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
 	captureVideoPreviewLayer.bounds = self.videoPreview.bounds;
-    [captureVideoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+    [captureVideoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspect];
     
     captureVideoPreviewLayer.backgroundColor = [UIColor clearColor].CGColor;
     self.view.backgroundColor = [UIColor clearColor];
-	//[self.videoPreview.layer addSublayer:captureVideoPreviewLayer];
+	[self.videoPreview.layer addSublayer:captureVideoPreviewLayer];
     [self.videoPreview bringSubviewToFront:self.takePhotoButton];
     CALayer *viewLayer = [self.view layer];
     [viewLayer setMasksToBounds:YES];
@@ -143,25 +158,18 @@
 
 - (void) processImage:(UIImage *)image { //process captured image, crop, resize and rotate
     
-    self.haveCapturedImage = YES;
-    
-    UIGraphicsBeginImageContext(CGSizeMake(768, 1022));
-    [image drawInRect: CGRectMake(0, 0, 768, 1022)];
-    //NSLog(@"Bounds Height:%f Bounds Width:%f",self.view.bounds.size.height, self.view.bounds.size.width);
+    UIGraphicsBeginImageContext(CGSizeMake(320, 400));
+    [image drawInRect: CGRectMake(0, 0, 320, 400)];
     UIImage *smallImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-    CGRect cropRect = CGRectMake(0, 130, 768, 768);
+    CGRect cropRect = CGRectMake(60,0,200,400);
     CGImageRef imageRef = CGImageCreateWithImageInRect([smallImage CGImage], cropRect);
     
     
     UIImage *croppedImage = [UIImage imageWithCGImage:imageRef];
     
-    
-    //self.nowImageView.image = croppedImage;
-    
-    [self.delegate didTakePhoto:croppedImage];
-    
+    self.stillImageOutput = nil;
     CGImageRelease(imageRef);
     
     //adjust image orientation based on device orientation
@@ -188,6 +196,8 @@
         [self adjustImageOrientationByDegrees:0];
     }
     
+    [self.delegate didTakePhoto:croppedImage];
+
 }
 
 - (void)adjustImageOrientationByDegrees:(NSInteger)integer

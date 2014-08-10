@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
-#import "UICameraButton.h"
+#import "THCameraButton.h"
 
 @protocol THCameraDelegateProtocol <NSObject>
 
@@ -21,14 +21,12 @@
 @property (strong, nonatomic) IBOutlet UIButton *flashButton;
 @property (nonatomic, weak) id <THCameraDelegateProtocol> delegate;
 
-@property (strong, nonatomic) IBOutlet UICameraButton *takePhotoButton;
+@property (strong, nonatomic) IBOutlet THCameraButton *takePhotoButton;
 
 @property(nonatomic, retain) AVCaptureStillImageOutput *stillImageOutput;
 
 @property (weak, nonatomic) IBOutlet UISegmentedControl *frontBackToggle;
-@property (strong, nonatomic) UIImage *photoToCapture;
 @property (nonatomic) BOOL frontCamera;
-@property (nonatomic) BOOL haveCapturedImage;
 
 @property (nonatomic) CGRect photoCropRect;
 - (IBAction)toggleBetweenCameras:(id)sender;
