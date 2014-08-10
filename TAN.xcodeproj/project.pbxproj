@@ -36,11 +36,15 @@
 		3190CD5E19914A7C0042C87F /* 1174-choose-font-toolbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3190CD5C19914A7C0042C87F /* 1174-choose-font-toolbar@2x.png */; };
 		3190CD6119914A8A0042C87F /* 1174-choose-font-toolbar-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 3190CD5F19914A8A0042C87F /* 1174-choose-font-toolbar-selected.png */; };
 		3190CD6219914A8A0042C87F /* 1174-choose-font-toolbar-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3190CD6019914A8A0042C87F /* 1174-choose-font-toolbar-selected@2x.png */; };
+		31EC3A121997D0CB008892F1 /* THViewController+Autolayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 31EC3A111997D0CB008892F1 /* THViewController+Autolayout.m */; };
 		31F2E0401991262500B62321 /* THEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F2E03F1991262500B62321 /* THEditViewController.m */; };
 		31FD62EF1995424E00B9753F /* BASSquareCropperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31FD62EE1995424E00B9753F /* BASSquareCropperViewController.m */; };
 		31FD62F419955D7000B9753F /* testImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 31FD62F319955D7000B9753F /* testImage.png */; };
 		31FD62FB19958D2E00B9753F /* 1074-grid-2B rotated.png in Resources */ = {isa = PBXBuildFile; fileRef = 31FD62F919958D2E00B9753F /* 1074-grid-2B rotated.png */; };
 		31FD62FC19958D2E00B9753F /* 1074-grid-2B@2x rotated.png in Resources */ = {isa = PBXBuildFile; fileRef = 31FD62FA19958D2E00B9753F /* 1074-grid-2B@2x rotated.png */; };
+		EB51837619974346002AB929 /* THPictureAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = EB51837519974346002AB929 /* THPictureAddition.m */; };
+		EB51837919974381002AB929 /* polaroidFrame.png in Resources */ = {isa = PBXBuildFile; fileRef = EB51837719974381002AB929 /* polaroidFrame.png */; };
+		EB51837A19974381002AB929 /* polaroidIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = EB51837819974381002AB929 /* polaroidIcon.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,6 +96,8 @@
 		3190CD5C19914A7C0042C87F /* 1174-choose-font-toolbar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1174-choose-font-toolbar@2x.png"; sourceTree = "<group>"; };
 		3190CD5F19914A8A0042C87F /* 1174-choose-font-toolbar-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1174-choose-font-toolbar-selected.png"; sourceTree = "<group>"; };
 		3190CD6019914A8A0042C87F /* 1174-choose-font-toolbar-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1174-choose-font-toolbar-selected@2x.png"; sourceTree = "<group>"; };
+		31EC3A101997D0CB008892F1 /* THViewController+Autolayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "THViewController+Autolayout.h"; sourceTree = "<group>"; };
+		31EC3A111997D0CB008892F1 /* THViewController+Autolayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "THViewController+Autolayout.m"; sourceTree = "<group>"; };
 		31F2E03E1991262500B62321 /* THEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THEditViewController.h; sourceTree = "<group>"; };
 		31F2E03F1991262500B62321 /* THEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THEditViewController.m; sourceTree = "<group>"; };
 		31FD62ED1995424E00B9753F /* BASSquareCropperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BASSquareCropperViewController.h; sourceTree = "<group>"; };
@@ -99,6 +105,10 @@
 		31FD62F319955D7000B9753F /* testImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testImage.png; sourceTree = "<group>"; };
 		31FD62F919958D2E00B9753F /* 1074-grid-2B rotated.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1074-grid-2B rotated.png"; sourceTree = "<group>"; };
 		31FD62FA19958D2E00B9753F /* 1074-grid-2B@2x rotated.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1074-grid-2B@2x rotated.png"; sourceTree = "<group>"; };
+		EB51837419974346002AB929 /* THPictureAddition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THPictureAddition.h; sourceTree = "<group>"; };
+		EB51837519974346002AB929 /* THPictureAddition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THPictureAddition.m; sourceTree = "<group>"; };
+		EB51837719974381002AB929 /* polaroidFrame.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = polaroidFrame.png; sourceTree = "<group>"; };
+		EB51837819974381002AB929 /* polaroidIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = polaroidIcon.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -201,6 +211,8 @@
 		3190CD551991480B0042C87F /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				EB51837719974381002AB929 /* polaroidFrame.png */,
+				EB51837819974381002AB929 /* polaroidIcon.png */,
 				3161DEE8198A9CC500EA1064 /* Images.xcassets */,
 				31FD62F319955D7000B9753F /* testImage.png */,
 				312A063A198FF3E0001E4FA6 /* funnyBabyPNG.png */,
@@ -238,6 +250,8 @@
 				31F2E03F1991262500B62321 /* THEditViewController.m */,
 				3161DEE5198A9CC500EA1064 /* THViewController.h */,
 				3161DEE6198A9CC500EA1064 /* THViewController.m */,
+				31EC3A101997D0CB008892F1 /* THViewController+Autolayout.h */,
+				31EC3A111997D0CB008892F1 /* THViewController+Autolayout.m */,
 				3161DF16198C020600EA1064 /* THCamera2ViewController.h */,
 				3161DF17198C020600EA1064 /* THCamera2ViewController.m */,
 			);
@@ -258,6 +272,8 @@
 		31FD62F21995572700B9753F /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				EB51837419974346002AB929 /* THPictureAddition.h */,
+				EB51837519974346002AB929 /* THPictureAddition.m */,
 				312A0637198F15DB001E4FA6 /* THCameraButton.h */,
 				312A0638198F15DB001E4FA6 /* THCameraButton.m */,
 			);
@@ -348,6 +364,7 @@
 				3190CD59199148450042C87F /* 1074-grid-2-selected.png in Resources */,
 				3190CD53199148070042C87F /* 1074-grid-2.png in Resources */,
 				3190CD54199148070042C87F /* 1074-grid-2@2x.png in Resources */,
+				EB51837A19974381002AB929 /* polaroidIcon.png in Resources */,
 				3190CD5E19914A7C0042C87F /* 1174-choose-font-toolbar@2x.png in Resources */,
 				31FD62FC19958D2E00B9753F /* 1074-grid-2B@2x rotated.png in Resources */,
 				3161DF0A198A9DED00EA1064 /* coffee.jpg in Resources */,
@@ -356,6 +373,7 @@
 				3190CD5A199148450042C87F /* 1074-grid-2-selected@2x.png in Resources */,
 				3161DF07198A9DB200EA1064 /* blue.jpg in Resources */,
 				31FD62F419955D7000B9753F /* testImage.png in Resources */,
+				EB51837919974381002AB929 /* polaroidFrame.png in Resources */,
 				31FD62FB19958D2E00B9753F /* 1074-grid-2B rotated.png in Resources */,
 				3190CD6119914A8A0042C87F /* 1174-choose-font-toolbar-selected.png in Resources */,
 			);
@@ -379,11 +397,13 @@
 				3161DEE7198A9CC500EA1064 /* THViewController.m in Sources */,
 				312A0639198F15DB001E4FA6 /* THCameraButton.m in Sources */,
 				31F2E0401991262500B62321 /* THEditViewController.m in Sources */,
+				31EC3A121997D0CB008892F1 /* THViewController+Autolayout.m in Sources */,
 				3161DF0D198AAFA200EA1064 /* THDraggableView.m in Sources */,
 				3161DEE1198A9CC500EA1064 /* THAppDelegate.m in Sources */,
 				3161DF18198C020600EA1064 /* THCamera2ViewController.m in Sources */,
 				3161DF1B198C459500EA1064 /* THDraggableImageView.m in Sources */,
 				31FD62EF1995424E00B9753F /* BASSquareCropperViewController.m in Sources */,
+				EB51837619974346002AB929 /* THPictureAddition.m in Sources */,
 				3161DEDD198A9CC400EA1064 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

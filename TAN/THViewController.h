@@ -9,10 +9,54 @@
 #import <UIKit/UIKit.h>
 #import "THCamera2ViewController.h"
 #import "THDraggableImageView.h"
-
+#import "THCamera2ViewController.h"
+#import "THDraggableImageView.h"
+#import "BASSquareCropperViewController.h"
+#import "THPictureAddition.h"
 @interface THViewController : UIViewController
 
+#pragma mark - Object Properties
+@property (strong, nonatomic) UIView *cropperContainerView;
+@property (strong, nonatomic) BASSquareCropperViewController *cropperVC;
+@property (strong, nonatomic) THCamera2ViewController *cameraVC;
+@property (strong, nonatomic) UIView *cameraContainerView;
+@property (strong, nonatomic) UIBarButtonItem *cameraButton;
+@property (strong, nonatomic) UIToolbar *toolbar;
+@property (strong, nonatomic) NSArray *toolbarButtonsArray;
+@property (strong, nonatomic) UIImage *thenImage;
+@property (strong, nonatomic) UIImage *nowImage;
+@property (strong, nonatomic) UIButton *thenImageView;
+@property (strong, nonatomic) UIButton *nowImageView;
+@property (strong, nonatomic) UIView *nowView;
+@property (strong, nonatomic) UIView *thenView;
 
+
+#pragma mark - LayoutConstraint Properties
+@property (strong, nonatomic) NSDictionary *viewsDictionary;
+@property (strong, nonatomic) NSDictionary *leftRightViewsDictionary;
+
+@property (strong, nonatomic) NSArray *horizontalToolbarConstraints;
+@property (strong, nonatomic) NSArray *verticalToolbarConstraints;
+@property (strong, nonatomic) NSArray *verticalCameraConstraints;
+@property (strong, nonatomic) NSArray *horizontalCameraConstraints;
+@property (strong, nonatomic) NSArray *horizontalDTIVConstraints;
+@property (strong, nonatomic) NSArray *horizontalDNIVConstraints;
+@property (strong, nonatomic) NSArray *verticalIVConstraints;
+@property (strong, nonatomic) NSDictionary *metrics;
+
+@property (strong, nonatomic) NSArray *horizontalIVConstraints;
+@property (strong, nonatomic) NSArray *verticalDTIVConstraints;
+@property (strong, nonatomic) NSArray *verticalDNIVConstraints;
+
+#pragma mark - Other Properties
+@property (nonatomic) BOOL takingPhoto;
+@property (nonatomic) BOOL originalOrder;
+@property (nonatomic) BOOL currentPosition;
+@property (strong, nonatomic) THPictureAddition *pictureAddition;
+
+
+- (void)removeAllConstraints;
+- (void)generateStandardToolbarConstraints;
 
 @end
 

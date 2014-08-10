@@ -13,7 +13,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.backgroundColor = [UIColor purpleColor];
+    self.window.backgroundColor = [UIColor blackColor];
     THViewController *mainViewController = [[THViewController alloc] init];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:mainViewController];
     self.window.rootViewController = navController;

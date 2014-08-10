@@ -108,8 +108,6 @@ typedef enum pushDirection {
             
         case UIGestureRecognizerStateChanged:{
             
-            NSInteger dangerZone = 20;
-
             self.center = CGPointMake(self.originalPoint.x + xDistance, self.originalPoint.y + yDistance);
             NSLog(@"Object: %@ Self.center.y = %f", self, self.center.y);
             
@@ -267,7 +265,6 @@ typedef enum pushDirection {
 
 - (void)checkSnapLogic
 {
-    NSInteger dangerZone = 20;
 
     CGPoint snapToFrameCenter = CGPointMake(self.snapToFrame.origin.x + self.snapToFrame.size.width / 2, self.snapToFrame.origin.y + self.snapToFrame.size.height / 2);
     

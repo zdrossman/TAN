@@ -18,17 +18,18 @@
 
 @interface THCamera2ViewController : UIViewController
 
-@property (strong, nonatomic) IBOutlet UIButton *flashButton;
+@property (strong, nonatomic) UIButton *flashButton;
 @property (nonatomic, weak) id <THCameraDelegateProtocol> delegate;
 
-@property (strong, nonatomic) IBOutlet THCameraButton *takePhotoButton;
+@property (strong, nonatomic) THCameraButton *takePhotoButton;
 
 @property(nonatomic, retain) AVCaptureStillImageOutput *stillImageOutput;
 
-@property (weak, nonatomic) IBOutlet UISegmentedControl *frontBackToggle;
+@property (weak, nonatomic) UISegmentedControl *frontBackToggle;
 @property (nonatomic) BOOL frontCamera;
 
 @property (nonatomic) CGRect photoCropRect;
-- (IBAction)toggleBetweenCameras:(id)sender;
+
+- (void)toggleBetweenCameras:(id)sender;
 
 @end

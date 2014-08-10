@@ -28,13 +28,17 @@
     UIBezierPath *circleRect = [UIBezierPath bezierPathWithOvalInRect:self.bounds];
     [circleRect addClip];
     
-    [[UIColor whiteColor] setFill];
-    UIRectFill(self.bounds);
-    
-    [[UIColor blueColor] setStroke];
+    [[UIColor whiteColor] setStroke];
     [circleRect setLineWidth:6];
     
     [circleRect stroke];
+    
+    CGRect insideCircleRect = CGRectMake(self.bounds.origin.x + 8, self.bounds.origin.y + 8, self.bounds.size.width - 16, self.bounds.size.height - 16);
+    UIBezierPath *insideCircle = [UIBezierPath bezierPathWithOvalInRect:insideCircleRect];
+    
+    [[UIColor whiteColor] setFill];
+    [insideCircle fill];
+    
 }
 
 //    UIGraphicsBeginImageContext(canvasSize);

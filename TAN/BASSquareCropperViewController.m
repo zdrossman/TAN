@@ -239,7 +239,7 @@
     
     croppedImageRect.size = (CGSize){(CGFloat)round(CGRectGetWidth(self.croppingOverlayView.bounds)/self.zoomScale), (CGFloat)round(CGRectGetHeight(self.croppingOverlayView.bounds)/self.zoomScale)};
     
-    croppedImageRect.origin = (CGPoint){(CGFloat)round((CGRectGetMinX(self.croppingOverlayView.bounds) + self.contentOffset.x)/self.zoomScale), (CGFloat)round(CGRectGetMinY(self.croppingOverlayView.bounds) + self.contentOffset.y/self.zoomScale)};
+ //   croppedImageRect.origin = (CGPoint){(CGFloat)round((CGRectGetMinX(self.croppingOverlayView.bounds) - self.contentOffset.x)/self.zoomScale), (CGFloat)round(CGRectGetMinY(self.croppingOverlayView.bounds) + self.contentOffset.y/self.zoomScale)};
     
     UIGraphicsBeginImageContextWithOptions(croppedImageRect.size, YES, [[UIScreen mainScreen] scale]);
     
