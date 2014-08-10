@@ -12,8 +12,7 @@
 
 @interface THViewController : UIViewController
 
-@property (strong, nonatomic) UIImageView *thenImageView;
-@property (strong, nonatomic) UIImageView *nowImageView;
+
 
 @end
 

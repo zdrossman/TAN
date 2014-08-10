@@ -28,8 +28,8 @@ typedef void(^ButtonReplacementBlock)(void);
 @property (strong, nonatomic) NSArray *toolbarButtonsArray;
 @property (strong, nonatomic) UIImage *thenImage;
 @property (strong, nonatomic) UIImage *nowImage;
-@property (strong, nonatomic) UIButton *thenButton;
-@property (strong, nonatomic) UIButton *nowButton;
+@property (strong, nonatomic) UIButton *thenImageView;
+@property (strong, nonatomic) UIButton *nowImageView;
 
 #pragma mark - LayoutConstraint Properties
 @property (strong, nonatomic) NSDictionary *viewsDictionary;
@@ -114,12 +114,9 @@ typedef void(^ButtonReplacementBlock)(void);
 }
 - (void)baseInit
 {
-    self.thenImageView = [[UIImageView alloc] init];
-    self.nowImageView = [[UIImageView alloc] init];
-    
-    self.thenButton = [[UIButton alloc] init];
-    self.nowButton = [[UIButton alloc] init];
-    
+    self.thenImageView = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.nowImageView = [UIButton buttonWithType:UIButtonTypeCustom];
+
     self.toolbar = [[UIToolbar alloc] init];
     self.imageCropperVC = [[UIViewController alloc] init];
     self.cameraContainerView = [[UIView alloc] init];
@@ -138,7 +135,11 @@ typedef void(^ButtonReplacementBlock)(void);
     
     if (self.nowImage)
     {
-        self.nowImageView.image = self.nowImage;
+        [self.nowImageView.imageView setContentMode:UIViewContentModeScaleAspectFit];
+        [self.nowImageView setImage:self.nowImage forState:UIControlStateNormal];
+        [self.nowImageView addTarget:self
+                              action:@selector(setupCropper)
+                    forControlEvents:UIControlEventTouchUpInside];
     }
     
     
@@ -726,13 +727,14 @@ typedef void(^ButtonReplacementBlock)(void);
     
 //    self.thenImageView.frame = CGRectMake(0,self.view.frame.origin.y + 64, self.view.frame.size.width, (self.view.frame.size.height - 64)/2);
     
+    [self.thenImageView.imageView setContentMode:UIViewContentModeScaleAspectFit];
     self.thenImageView.clipsToBounds = YES;
     
-    self.thenImageView.contentMode = UIViewContentModeScaleAspectFit;
-    self.nowImageView.contentMode = UIViewContentModeScaleAspectFit;
+//    self.thenImageView.contentMode = UIViewContentModeScaleAspectFit;
+//    self.nowImageView.contentMode = UIViewContentModeScaleAspectFit;
     
-    self.thenImageView.image = self.thenImage;
-    
+    [self.thenImageView setImage:self.thenImage forState:UIControlStateNormal];
+    [self.thenImageView addTarget:self action:@selector(setupCropper) forControlEvents:UIControlEventTouchUpInside];
 }
 
 
@@ -980,7 +982,7 @@ typedef void(^ButtonReplacementBlock)(void);
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
             self.thenImageView.alpha = 0;
             
-            self.nowImageView.image = [self applyOverlayToImage:self.nowImageView.image Position:CGPointMake(0,0) TextSize:200.0 Text:@"Now"];
+//            self.nowImageView.image = [self applyOverlayToImage:self.nowImageView.image Position:CGPointMake(0,0) TextSize:200.0 Text:@"Now"];
             
             
         } completion:^(BOOL finished) {
@@ -991,7 +993,7 @@ typedef void(^ButtonReplacementBlock)(void);
                 self.thenImageView.transform = CGAffineTransformMakeTranslation(0, 504);
                 self.thenImageView.transform = CGAffineTransformScale(self.thenImageView.transform, 1,1);
                 
-                self.nowImageView.image = [self applyOverlayToImage:self.thenImageView.image Position:CGPointMake(0,0) TextSize:200.0 Text:@"Now"];
+//                self.nowImageView.image = [self applyOverlayToImage:self.thenImageView.image Position:CGPointMake(0,0) TextSize:200.0 Text:@"Now"];
                 
                 [UIView animateWithDuration:0.2 animations:^{
                     self.thenImageView.alpha = 1;
@@ -1081,7 +1083,7 @@ typedef void(^ButtonReplacementBlock)(void);
 
 - (void)squareCropperDidCropImage:(UIImage *)croppedImage inCropper:(BASSquareCropperViewController *)cropper
 {
-    self.nowImageView.image = croppedImage;
+    [self.nowImageView setImage:croppedImage forState:UIControlStateNormal];
     [cropper dismissViewControllerAnimated:YES completion:nil];
     
 }
