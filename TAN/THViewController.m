@@ -59,7 +59,8 @@ typedef void(^ButtonReplacementBlock)(void);
 
 -(NSArray *)toolbarButtonsArray
 {
-    UIBarButtonItem *alignmentButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1074-grid-2"] style:UIBarButtonItemStylePlain target:self action:nil];
+    UIBarButtonItem *alignmentButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1074-grid-2"] style:UIBarButtonItemStylePlain target:self action:@selector(changePosition)];
+    
     
     UIBarButtonItem *textOverlay = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1174-choose-font-toolbar"] style:UIBarButtonItemStylePlain target:self action:nil];
     
@@ -72,7 +73,8 @@ typedef void(^ButtonReplacementBlock)(void);
  
     if (!_metrics)
     {
-        _metrics = @{};
+        _metrics = @{@"cameraViewTop":@64, @"cameraViewBottom":@0, @"toolbarHeight":@44, @"cameraViewBottomAnimated":@460};
+
     }
     
     return _metrics;
@@ -194,19 +196,22 @@ typedef void(^ButtonReplacementBlock)(void);
     
     UIBarButtonItem *testButton2 = [[UIBarButtonItem alloc] initWithTitle:@"Test2" style:UIBarButtonItemStylePlain target:self action:@selector(replaceToolbarWithButtons:)];
     
-   // UIBarButtonItem *testButton3 = [[UIBarButtonItem alloc] initWithTitle:@"Test3" style:UIBarButtonItemStylePlain target:self action:@selector(thenAndNowswitch)];
     UIBarButtonItem *testButton4 = [[UIBarButtonItem alloc] initWithTitle:@"Animate" style:UIBarButtonItemStylePlain target:self action:@selector(performAnimation)];
-    UIBarButtonItem *testButton5 = [[UIBarButtonItem alloc] initWithTitle:@"Change" style:UIBarButtonItemStylePlain target:self action:@selector(changePosition)];
+    UIBarButtonItem *testButton5 = [[UIBarButtonItem alloc] initWithTitle:@"Change" style:UIBarButtonItemStylePlain target:self action:nil];
     
     
     self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(cameraTapped:)],testButton2, testButton4,testButton5];
-   // [self.toolbar setItems:self.toolbarButtonsArray animated:NO];
+  
+  
 }
 
 -(void)changePosition{
    
-    if (self.currentPosition ==YES) {
-        
+     NSLog(@"change position called");
+    
+    
+    
+    
     
     //Top to Bottom Animation Transition
     [UIView animateWithDuration:.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
@@ -214,7 +219,8 @@ typedef void(^ButtonReplacementBlock)(void);
         
         
             [self removeAllConstraints];
-            self.verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(64)-[_topImageView(==230)][_bottomImageView(==_topImageView)]" options:0 metrics:nil views:self.viewsDictionary];
+        
+        self.verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(64)-[_topImageView(==230)][_bottomImageView(==_topImageView)]" options:0 metrics:nil views:self.viewsDictionary];
         
             self.horizontalDTIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_topImageView]|" options:0 metrics:nil views:self.viewsDictionary];
         
@@ -231,11 +237,18 @@ typedef void(^ButtonReplacementBlock)(void);
         
     } completion:^(BOOL finished) {
         
-        self.currentPosition = NO;
+        self.currentPosition = YES;
         
     }];
+ 
+        //[self leftAndRightSwitch];
+        
+        
+        
     
-    }else{
+
+    /*
+    else{
         
         //Left to Right Animation Transition
         [UIView animateWithDuration:.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
@@ -261,7 +274,7 @@ typedef void(^ButtonReplacementBlock)(void);
         }];
         
     }
-    
+    */
     
 }
 
@@ -519,61 +532,59 @@ typedef void(^ButtonReplacementBlock)(void);
     [self.toolbar removeConstraints:self.toolbar.constraints];
 }
 
+-(NSArray *)verticalCameraConstraints
+{
+    
+    if (!_verticalCameraConstraints)
+    {
+        _verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(cameraViewTop)-[_cameraView(==cameraViewBottom)]" options:0 metrics:self.metrics views:self.viewsDictionary];
+    }
+    
+    return _verticalCameraConstraints;
+}
+
+-(NSArray *)horizontalCameraConstraints
+{
+    if (!_horizontalCameraConstraints)
+    {
+        _horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:self.metrics views:self.viewsDictionary];
+    }
+
+    return _horizontalCameraConstraints;
+
+}
+
+
 - (void)setupCameraAutolayout
 {
     
     self.nowImageView.layer.backgroundColor = [UIColor redColor].CGColor;
     self.thenImageView.layer.backgroundColor = [UIColor yellowColor].CGColor;
-//    self.cameraContainerView.backgroundColor = [UIColor greenColor];
-//    self.cameraVC.view.backgroundColor = [UIColor orangeColor];
     self.cameraContainerView.hidden = NO;
 
-    [self removeAllConstraints];
+    [self.view removeConstraints:self.verticalCameraConstraints];
+    [self.view removeConstraints:self.horizontalCameraConstraints];
     
-    NSDictionary *metrics = @{@"cameraViewTop":@64, @"cameraViewBottom":@0, @"toolbarHeight":@44, @"cameraViewBottomAnimated":@460};
 
-    __block NSArray *horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:metrics views:self.viewsDictionary];
-    
-    __block NSArray *verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide]-(cameraViewTop)-[_cameraView(==cameraViewBottom)]" options:0 metrics:metrics views:self.viewsDictionary];
-    
-    __block NSArray *horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
-    
-    __block NSArray *verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==44)]|" options:0 metrics:nil views:self.viewsDictionary];
-    [self.view addConstraints:verticalToolbarConstraints];
-    [self.view addConstraints:horizontalToolbarConstraints];
-
-    //[self generateStandardToolBarConstraints];
-    
-    [self.view addConstraints:horizontalCameraConstraints];
-    [self.view addConstraints:verticalCameraConstraints];
-    [self.view addConstraints:horizontalToolbarConstraints];
-    [self.view addConstraints:verticalToolbarConstraints];
+    [self.view addConstraints:self.horizontalCameraConstraints];
+    [self.view addConstraints:self.verticalCameraConstraints];
     
     [self.view layoutIfNeeded];
     
-//    self.thenImageView.hidden = YES;
-//    self.thenImageView.transform = CGAffineTransformMakeScale(0.4, 0.4);
     
     [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         
-        [self removeAllConstraints];
+        [self.view removeConstraints:self.horizontalCameraConstraints];
+        [self.view removeConstraints:self.verticalCameraConstraints];
         
-        horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:metrics views:self.viewsDictionary];
+        self.horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:self.metrics views:self.viewsDictionary];
         
-        verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide]-(cameraViewTop)-[_cameraView(==cameraViewBottomAnimated)]" options:0 metrics:metrics views:self.viewsDictionary];
+        self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(cameraViewTop)-[_cameraView(==cameraViewBottomAnimated)]" options:0 metrics:self.metrics views:self.viewsDictionary];
 
-//        verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==toolbarHeight)]|" options:0 metrics:metrics views:self.viewsDictionary];
-//        
-//        horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:metrics views:self.viewsDictionary];
-   
-//        [self.view addConstraints:verticalToolbarConstraints];
-//        [self.view addConstraints:horizontalToolbarConstraints];
+
         
-        
-        [self generateStandardToolBarConstraints];
-        
-        [self.view addConstraints:horizontalCameraConstraints];
-        [self.view addConstraints:verticalCameraConstraints];
+        [self.view addConstraints:self.horizontalCameraConstraints];
+        [self.view addConstraints:self.verticalCameraConstraints];
         
         
         [self.view layoutIfNeeded];
@@ -589,20 +600,22 @@ typedef void(^ButtonReplacementBlock)(void);
         
         [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
             
-        
-            [self removeAllConstraints];
+            [self.view removeConstraints:self.horizontalCameraConstraints];
+            [self.view removeConstraints:self.verticalCameraConstraints];
+            [self.view removeConstraints:self.horizontalToolbarConstraints];
+            [self.view removeConstraints:self.verticalToolbarConstraints];
             
             [self.toolbar setItems:nil animated:YES];
-            horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:nil views:self.viewsDictionary];
+            self.horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:nil views:self.viewsDictionary];
             
-            verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide]-(44)-[_cameraView(==524)]" options:0 metrics:nil views:self.viewsDictionary];
+            self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(64)-[_cameraView(==524)]" options:0 metrics:nil views:self.viewsDictionary];
             
             self.horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
             
             self.verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==0)]|" options:0 metrics:nil views:self.viewsDictionary];
             
-            [self.view addConstraints:horizontalCameraConstraints];
-            [self.view addConstraints:verticalCameraConstraints];
+            [self.view addConstraints:self.horizontalCameraConstraints];
+            [self.view addConstraints:self.verticalCameraConstraints];
             [self.view addConstraints:self.horizontalToolbarConstraints];
             [self.view addConstraints:self.verticalToolbarConstraints];
             
@@ -620,8 +633,8 @@ typedef void(^ButtonReplacementBlock)(void);
                 [self.view removeConstraints:self.horizontalDTIVConstraints];
                 [self.view removeConstraints:self.verticalIVConstraints];
                 
-                self.horizontalDTIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(52)-[_topImageView]-(222)-|" options:0 metrics:nil views:self.viewsDictionary];
-                self.verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(470)-[_topImageView]-(55)-|" options:0 metrics:nil views:self.viewsDictionary];
+                self.horizontalDTIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(25)-[_topImageView]-(142)-|" options:0 metrics:nil views:self.viewsDictionary];
+                self.verticalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(400)-[_topImageView]-(15)-|" options:0 metrics:nil views:self.viewsDictionary];
                 [self.view addConstraints:self.horizontalDTIVConstraints];
                 [self.view addConstraints:self.verticalIVConstraints];
                 
@@ -664,11 +677,15 @@ typedef void(^ButtonReplacementBlock)(void);
 //    self.cameraContainerView.backgroundColor = [UIColor greenColor];
 //    self.cameraVC.view.backgroundColor = [UIColor orangeColor];
    
+    //[self removeAllConstraints];
     
-    [self removeAllConstraints];
+    [self.view removeConstraints:self.horizontalCameraConstraints];
+    [self.view removeConstraints:self.verticalCameraConstraints];
+    [self.view removeConstraints:self.horizontalToolbarConstraints];
+    [self.view removeConstraints:self.verticalToolbarConstraints];
     
     self.horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:nil views:self.viewsDictionary];
-    self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide]-(44)-[_cameraView(==524)]" options:0 metrics:nil views:self.viewsDictionary];
+    self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(44)-[_cameraView(==524)]" options:0 metrics:nil views:self.viewsDictionary];
     
     self.horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.viewsDictionary];
      self.verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==0)]|" options:0 metrics:nil views:self.viewsDictionary];
@@ -683,25 +700,26 @@ typedef void(^ButtonReplacementBlock)(void);
 //    self.thenImageView.hidden = YES;
 //    self.thenImageView.transform = CGAffineTransformMakeScale(0.4, 0.4);
     
-    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         
         NSLog(@"Animation called");
         [self removeAllConstraints];
     
-        [self.toolbar setItems:self.toolbarButtonsArray animated:NO];
+//        [self.view removeConstraints:self.horizontalCameraConstraints];
+//        [self.view removeConstraints:self.verticalCameraConstraints];
+//        [self.view removeConstraints:self.horizontalToolbarConstraints];
+//        [self.view removeConstraints:self.verticalToolbarConstraints];
         
-
+        [self.toolbar setItems:self.toolbarButtonsArray animated:NO];
         
         self.horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:nil views:self.viewsDictionary];
         
-        self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide]-(44)-[_cameraView(==480)]" options:0 metrics:nil views:self.viewsDictionary];
+        self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(44)-[_cameraView(==480)]" options:0 metrics:nil views:self.viewsDictionary];
         
        
         [self generateStandardToolBarConstraints];
         [self.view addConstraints:self.horizontalCameraConstraints];
         [self.view addConstraints:self.verticalCameraConstraints];
-        
-
         
         [self.view layoutIfNeeded];
         
@@ -710,12 +728,16 @@ typedef void(^ButtonReplacementBlock)(void);
         
         [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
             
-            [self removeAllConstraints];
+            //[self removeAllConstraints];
             
+            [self.view removeConstraints:self.horizontalCameraConstraints];
+            [self.view removeConstraints:self.verticalCameraConstraints];
+            [self.view removeConstraints:self.horizontalToolbarConstraints];
+            [self.view removeConstraints:self.verticalToolbarConstraints];
         
             self.horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:nil views:self.viewsDictionary];
             
-            self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topLayoutGuide]-(44)-[_cameraView(==0)]" options:0 metrics:nil views:self.viewsDictionary];
+            self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(44)-[_cameraView(==0)]" options:0 metrics:nil views:self.viewsDictionary];
 
             
             [self generateStandardToolBarConstraints];
@@ -738,7 +760,7 @@ typedef void(^ButtonReplacementBlock)(void);
 
     self.navigationItem.rightBarButtonItem = nil;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(setupPhotos)];
-    //[self setupPhotos];
+    
 }
 
 
@@ -881,7 +903,7 @@ typedef void(^ButtonReplacementBlock)(void);
         
         
     } completion:^(BOOL finished) {
-        igif (finished)
+        if (finished)
         {
             
             
