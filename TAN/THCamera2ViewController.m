@@ -26,8 +26,8 @@
     //self.videoPreviewWidth = (self.view.bounds.size.height - 64) / 2;
     self.excessSpacePerSide = 60;
     
-    UIView *leftCropView = [[UIView alloc] initWithFrame:CGRectMake(0, 44, self.excessSpacePerSide, 400)];
-    UIView *rightCropView = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.size.width - self.excessSpacePerSide, 44, self.excessSpacePerSide, 400)];
+    UIView *leftCropView = [[UIView alloc] initWithFrame:CGRectMake(0, 94, self.excessSpacePerSide, 400)];
+    UIView *rightCropView = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.size.width - self.excessSpacePerSide, 94, self.excessSpacePerSide, 400)];
     
     leftCropView.backgroundColor = [UIColor blackColor];
     leftCropView.alpha = 0.85;

@@ -10,6 +10,11 @@
 
 @interface THViewController (Autolayout)
 
--(void)performAnimation;
+- (void)leftAndRightSwitch;
+- (void)topAndBottomSwitch;
+- (void)setVerticalSplit;
+- (void)setHorizontalSplit;
+- (void)generateStandardToolbarConstraints;
+- (void)removeAllConstraints;
 
 @end

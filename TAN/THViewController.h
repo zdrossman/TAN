@@ -13,46 +13,56 @@
 #import "THDraggableImageView.h"
 #import "BASSquareCropperViewController.h"
 #import "THPictureAddition.h"
+
 @interface THViewController : UIViewController
 
 #pragma mark - Object Properties
 @property (strong, nonatomic) UIView *cropperContainerView;
 @property (strong, nonatomic) BASSquareCropperViewController *cropperVC;
+
 @property (strong, nonatomic) THCamera2ViewController *cameraVC;
 @property (strong, nonatomic) UIView *cameraContainerView;
 @property (strong, nonatomic) UIBarButtonItem *cameraButton;
+
 @property (strong, nonatomic) UIToolbar *toolbar;
 @property (strong, nonatomic) NSArray *toolbarButtonsArray;
-@property (strong, nonatomic) UIImage *thenImage;
-@property (strong, nonatomic) UIImage *nowImage;
-@property (strong, nonatomic) UIButton *thenImageView;
-@property (strong, nonatomic) UIButton *nowImageView;
+
 @property (strong, nonatomic) UIView *nowView;
 @property (strong, nonatomic) UIView *thenView;
+@property (strong, nonatomic) UIButton *thenButton;
+@property (strong, nonatomic) UIButton *nowButton;
+@property (strong, nonatomic) UIImage *thenImage;
+@property (strong, nonatomic) UIImage *nowImage;
 
 
 #pragma mark - LayoutConstraint Properties
-@property (strong, nonatomic) NSDictionary *viewsDictionary;
+@property (strong, nonatomic) NSDictionary *topBottomViewsDictionary;
 @property (strong, nonatomic) NSDictionary *leftRightViewsDictionary;
+@property (strong, nonatomic) NSDictionary *subviewsDictionary;
 
 @property (strong, nonatomic) NSArray *horizontalToolbarConstraints;
 @property (strong, nonatomic) NSArray *verticalToolbarConstraints;
 @property (strong, nonatomic) NSArray *verticalCameraConstraints;
 @property (strong, nonatomic) NSArray *horizontalCameraConstraints;
-@property (strong, nonatomic) NSArray *horizontalDTIVConstraints;
-@property (strong, nonatomic) NSArray *horizontalDNIVConstraints;
-@property (strong, nonatomic) NSArray *verticalIVConstraints;
+@property (strong, nonatomic) NSArray *horizontalThenViewConstraints;
+@property (strong, nonatomic) NSArray *horizontalNowViewConstraints;
+@property (strong, nonatomic) NSArray *verticalICVConstraints;
+@property (strong, nonatomic) NSArray *verticalNowImageConstraints;
+@property (strong, nonatomic) NSArray *verticalThenImageConstraints;
+@property (strong, nonatomic) NSArray *horizontalNowImageConstraints;
+@property (strong, nonatomic) NSArray *horizontalThenImageConstraints;
+
 @property (strong, nonatomic) NSDictionary *metrics;
 
-@property (strong, nonatomic) NSArray *horizontalIVConstraints;
-@property (strong, nonatomic) NSArray *verticalDTIVConstraints;
-@property (strong, nonatomic) NSArray *verticalDNIVConstraints;
+@property (strong, nonatomic) NSArray *horizontalICVConstraints;
+@property (strong, nonatomic) NSArray *verticalThenViewConstraints;
+@property (strong, nonatomic) NSArray *verticalNowViewConstraints;
 
 #pragma mark - Other Properties
 @property (nonatomic) BOOL takingPhoto;
 @property (nonatomic) BOOL originalOrder;
 @property (nonatomic) BOOL currentPosition;
-@property (strong, nonatomic) THPictureAddition *pictureAddition;
+//@property (strong, nonatomic) THPictureAddition *pictureAddition;
 
 
 - (void)removeAllConstraints;
