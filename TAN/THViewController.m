@@ -20,7 +20,7 @@ typedef void(^ButtonReplacementBlock)(void);
 
 #pragma mark - Object Properties
 @property (strong, nonatomic) UIView *cropperContainerView;
-@property (strong, nonatomic) UIViewController *imageCropperVC;
+@property (strong, nonatomic) BASSquareCropperViewController *cropperVC;
 @property (strong, nonatomic) THCamera2ViewController *cameraVC;
 @property (strong, nonatomic) UIView *cameraContainerView;
 @property (strong, nonatomic) UIBarButtonItem *cameraButton;
@@ -96,10 +96,23 @@ typedef void(^ButtonReplacementBlock)(void);
 
 -(void)setupCropper
 {
-    BASSquareCropperViewController *cropperViewController = [[BASSquareCropperViewController alloc] initWithImage:self.thenImage minimumCroppedImageSideLength:20.0f];
-    cropperViewController.squareCropperDelegate = self;
-    [self presentViewController:cropperViewController animated:NO completion:^{
-        //TODO?
+
+//    self.cropperContainerView = [[UIView alloc] initWithFrame:self.view.bounds];
+//    self.cropperContainerView.backgroundColor = [UIColor greenColor];
+//    [self.view addSubview:self.cropperContainerView];
+//    self.cropperContainerView.hidden = NO;
+    
+    UIImage *image = [UIImage imageNamed:@"testImage"];
+    BASSquareCropperViewController *cropperVC = [[BASSquareCropperViewController alloc] initWithImage:image minimumCroppedImageSideLength:20];
+    
+    cropperVC.squareCropperDelegate = self;
+
+//        [self addChildViewController:self.cropperVC];
+//    self.cropperVC.view.frame = self.cropperContainerView.bounds;
+
+    //[self.cropperContainerView addSubview:self.cropperVC.view];
+    
+    [self presentViewController:cropperVC animated:YES completion:^{
     }];
 }
 
@@ -121,7 +134,6 @@ typedef void(^ButtonReplacementBlock)(void);
     self.nowImageView = [UIButton buttonWithType:UIButtonTypeCustom];
 
     self.toolbar = [[UIToolbar alloc] init];
-    self.imageCropperVC = [[UIViewController alloc] init];
     self.cameraContainerView = [[UIView alloc] init];
     [self.view addSubview:self.cameraContainerView];
 
@@ -224,9 +236,6 @@ typedef void(^ButtonReplacementBlock)(void);
 
 - (void)setVerticalSplit
 {
-    
-    
-    
         [self removeAllConstraints];
         
         self.horizontalIVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_leftImageView(==160)][_rightImageView(==_leftImageView)]" options:0 metrics:nil views:self.leftRightViewsDictionary];
@@ -247,9 +256,9 @@ typedef void(^ButtonReplacementBlock)(void);
     if (self.currentPosition == YES) {
         
         [self leftAndRightSwitch];
-    }else{
-        
-        [self thenAndNowswitch];
+    }else
+    {
+        [self topAndBottomSwitch];
     }
     
 }
@@ -266,7 +275,6 @@ typedef void(^ButtonReplacementBlock)(void);
         [self.view bringSubviewToFront:self.nowImageView];
     }
 
-    
     [UIView animateWithDuration:.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
       
         [self.view removeConstraints:self.verticalDTIVConstraints];
@@ -329,23 +337,13 @@ typedef void(^ButtonReplacementBlock)(void);
                 
             }];
             
-            
-            
         }];
-        
-        
-        
         
     }];
     
-    
-    
-    
-    
-    
 }
 
--(void)thenAndNowswitch{
+-(void)topAndBottomSwitch{
     
     if (!self.originalOrder)
     {
@@ -457,8 +455,6 @@ typedef void(^ButtonReplacementBlock)(void);
     
 }
 
-
-
 -(void)generateStandardToolBarConstraints{
     
     self.verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==44)]|" options:0 metrics:nil views:self.viewsDictionary];
@@ -475,9 +471,9 @@ typedef void(^ButtonReplacementBlock)(void);
     [self.view removeConstraints:self.view.constraints];
     self.view.translatesAutoresizingMaskIntoConstraints = YES;
 
-    [self.cameraContainerView removeConstraints:self.cameraContainerView.constraints];
     self.cameraContainerView.translatesAutoresizingMaskIntoConstraints = NO;
-    
+    [self.cameraContainerView removeConstraints:self.cameraContainerView.constraints];
+
     self.thenImageView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.thenImageView removeConstraints:self.thenImageView.constraints];
     
@@ -486,6 +482,9 @@ typedef void(^ButtonReplacementBlock)(void);
 
     self.toolbar.translatesAutoresizingMaskIntoConstraints = NO;
     [self.toolbar removeConstraints:self.toolbar.constraints];
+    
+    self.cropperContainerView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.cropperContainerView removeConstraints:self.cropperContainerView.constraints];
 }
 
 -(NSArray *)verticalCameraConstraints
@@ -635,7 +634,6 @@ typedef void(^ButtonReplacementBlock)(void);
     self.nowImageView.layer.backgroundColor = [UIColor redColor].CGColor;
     self.thenImageView.layer.backgroundColor = [UIColor yellowColor].CGColor;
 //    self.cameraContainerView.backgroundColor = [UIColor greenColor];
-//    self.cameraVC.view.backgroundColor = [UIColor orangeColor];
    
     //[self removeAllConstraints];
     
@@ -687,8 +685,6 @@ typedef void(^ButtonReplacementBlock)(void);
         
         [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
             
-            //[self removeAllConstraints];
-            
             [self.view removeConstraints:self.horizontalCameraConstraints];
             [self.view removeConstraints:self.verticalCameraConstraints];
             [self.view removeConstraints:self.horizontalToolbarConstraints];
@@ -726,7 +722,7 @@ typedef void(^ButtonReplacementBlock)(void);
 {
     if (!self.nowImage)
     {
-        self.thenImage = [UIImage imageNamed:@"funnyBabyPNG"];
+        self.thenImage = [UIImage imageNamed:@"testImage"];
         //self.nowImage = [UIImage imageNamed:@"blossom.jpg"];
     }
     
@@ -1028,8 +1024,6 @@ typedef void(^ButtonReplacementBlock)(void);
     if ([segue.identifier isEqualToString:@"cameraSegue"])
     {
         self.cameraVC = segue.destinationViewController;
-        //self.cameraVC.photoCropRect = AVMakeRectWithAspectRatioInsideRect(self.thenImageView.image.size, self.thenImageView.frame);
-       // NSLog(@"%f %f %f %f",self.cameraVC.photoCropRect.origin.x, self.cameraVC.photoCropRect.origin.y, self.cameraVC.photoCropRect.size.width, self.cameraVC.photoCropRect.size.height);
         self.cameraVC.delegate = self;
     }
 }
@@ -1091,14 +1085,13 @@ typedef void(^ButtonReplacementBlock)(void);
 
 - (void)squareCropperDidCropImage:(UIImage *)croppedImage inCropper:(BASSquareCropperViewController *)cropper
 {
-    [self.nowImageView setImage:croppedImage forState:UIControlStateNormal];
-    [cropper dismissViewControllerAnimated:YES completion:nil];
-    
+    [self.thenImageView setImage:croppedImage forState:UIControlStateNormal];
+    [cropper dismissViewControllerAnimated:NO completion:nil];
 }
 
 - (void)squareCropperDidCancelCropInCropper:(BASSquareCropperViewController *)cropper
 {
-    [cropper dismissViewControllerAnimated:YES completion:nil];
+    [cropper dismissViewControllerAnimated:NO completion:nil];
 }
 
 @end
