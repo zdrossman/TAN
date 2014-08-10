@@ -41,6 +41,9 @@
 		31FD62F419955D7000B9753F /* testImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 31FD62F319955D7000B9753F /* testImage.png */; };
 		31FD62FB19958D2E00B9753F /* 1074-grid-2B rotated.png in Resources */ = {isa = PBXBuildFile; fileRef = 31FD62F919958D2E00B9753F /* 1074-grid-2B rotated.png */; };
 		31FD62FC19958D2E00B9753F /* 1074-grid-2B@2x rotated.png in Resources */ = {isa = PBXBuildFile; fileRef = 31FD62FA19958D2E00B9753F /* 1074-grid-2B@2x rotated.png */; };
+		EB4E75621997223600309612 /* THPictureAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E75611997223600309612 /* THPictureAddition.m */; };
+		EB4E75661997335100309612 /* polaroidFrame.png in Resources */ = {isa = PBXBuildFile; fileRef = EB4E75641997335100309612 /* polaroidFrame.png */; };
+		EB4E75671997335100309612 /* polaroidIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = EB4E75651997335100309612 /* polaroidIcon.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,6 +102,10 @@
 		31FD62F319955D7000B9753F /* testImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testImage.png; sourceTree = "<group>"; };
 		31FD62F919958D2E00B9753F /* 1074-grid-2B rotated.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1074-grid-2B rotated.png"; sourceTree = "<group>"; };
 		31FD62FA19958D2E00B9753F /* 1074-grid-2B@2x rotated.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1074-grid-2B@2x rotated.png"; sourceTree = "<group>"; };
+		EB4E75611997223600309612 /* THPictureAddition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THPictureAddition.m; sourceTree = "<group>"; };
+		EB4E75631997223D00309612 /* THPictureAddition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = THPictureAddition.h; sourceTree = "<group>"; };
+		EB4E75641997335100309612 /* polaroidFrame.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = polaroidFrame.png; sourceTree = "<group>"; };
+		EB4E75651997335100309612 /* polaroidIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = polaroidIcon.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -204,6 +211,8 @@
 				3161DEE8198A9CC500EA1064 /* Images.xcassets */,
 				31FD62F319955D7000B9753F /* testImage.png */,
 				312A063A198FF3E0001E4FA6 /* funnyBabyPNG.png */,
+				EB4E75641997335100309612 /* polaroidFrame.png */,
+				EB4E75651997335100309612 /* polaroidIcon.png */,
 				3161DF05198A9DB200EA1064 /* blue.jpg */,
 				3161DF06198A9DB200EA1064 /* blossom.jpg */,
 				3161DF09198A9DED00EA1064 /* coffee.jpg */,
@@ -260,6 +269,8 @@
 			children = (
 				312A0637198F15DB001E4FA6 /* THCameraButton.h */,
 				312A0638198F15DB001E4FA6 /* THCameraButton.m */,
+				EB4E75631997223D00309612 /* THPictureAddition.h */,
+				EB4E75611997223600309612 /* THPictureAddition.m */,
 			);
 			name = Components;
 			sourceTree = "<group>";
@@ -348,6 +359,7 @@
 				3190CD59199148450042C87F /* 1074-grid-2-selected.png in Resources */,
 				3190CD53199148070042C87F /* 1074-grid-2.png in Resources */,
 				3190CD54199148070042C87F /* 1074-grid-2@2x.png in Resources */,
+				EB4E75671997335100309612 /* polaroidIcon.png in Resources */,
 				3190CD5E19914A7C0042C87F /* 1174-choose-font-toolbar@2x.png in Resources */,
 				31FD62FC19958D2E00B9753F /* 1074-grid-2B@2x rotated.png in Resources */,
 				3161DF0A198A9DED00EA1064 /* coffee.jpg in Resources */,
@@ -356,6 +368,7 @@
 				3190CD5A199148450042C87F /* 1074-grid-2-selected@2x.png in Resources */,
 				3161DF07198A9DB200EA1064 /* blue.jpg in Resources */,
 				31FD62F419955D7000B9753F /* testImage.png in Resources */,
+				EB4E75661997335100309612 /* polaroidFrame.png in Resources */,
 				31FD62FB19958D2E00B9753F /* 1074-grid-2B rotated.png in Resources */,
 				3190CD6119914A8A0042C87F /* 1174-choose-font-toolbar-selected.png in Resources */,
 			);
@@ -384,6 +397,7 @@
 				3161DF18198C020600EA1064 /* THCamera2ViewController.m in Sources */,
 				3161DF1B198C459500EA1064 /* THDraggableImageView.m in Sources */,
 				31FD62EF1995424E00B9753F /* BASSquareCropperViewController.m in Sources */,
+				EB4E75621997223600309612 /* THPictureAddition.m in Sources */,
 				3161DEDD198A9CC400EA1064 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

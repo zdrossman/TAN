@@ -11,6 +11,7 @@
 #import "THCamera2ViewController.h"
 #import "THDraggableImageView.h"
 #import "BASSquareCropperViewController.h"
+#import "THPictureAddition.h"
 
 //#import "UIImage+Resize.h"
 
@@ -52,6 +53,7 @@ typedef void(^ButtonReplacementBlock)(void);
 @property (nonatomic) BOOL takingPhoto;
 @property (nonatomic) BOOL originalOrder;
 @property (nonatomic) BOOL currentPosition;
+@property (strong, nonatomic) THPictureAddition *pictureAddition;
 
 @end
 
@@ -62,9 +64,11 @@ typedef void(^ButtonReplacementBlock)(void);
     
     UIBarButtonItem *verticalSplitButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1074-grid-2B rotated"] style:UIBarButtonItemStylePlain target:self action:nil];
 
-    UIBarButtonItem *textOverlay = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1174-choose-font-toolbar"] style:UIBarButtonItemStylePlain target:self action:nil];
+    UIBarButtonItem *textOverlay = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1174-choose-font-toolbar"] style:UIBarButtonItemStylePlain target:self action:@selector(setTextOverlayToImages)];
     
-    _toolbarButtonsArray = @[horizontalSplitButton, verticalSplitButton, textOverlay];
+    UIBarButtonItem *polaroidFrameButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"polaroidIcon.png"] style:UIBarButtonItemStylePlain target:self action:@selector(didTapPolaroidIcon:)];
+    
+    _toolbarButtonsArray = @[horizontalSplitButton, verticalSplitButton, textOverlay, polaroidFrameButton];
     
     return _toolbarButtonsArray;
 }
@@ -123,6 +127,7 @@ typedef void(^ButtonReplacementBlock)(void);
     self.toolbar = [[UIToolbar alloc] init];
     self.imageCropperVC = [[UIViewController alloc] init];
     self.cameraContainerView = [[UIView alloc] init];
+    self.pictureAddition = [[THPictureAddition alloc] init];
     [self.view addSubview:self.cameraContainerView];
 
     [self.view addSubview:self.thenImageView];
@@ -980,7 +985,7 @@ typedef void(^ButtonReplacementBlock)(void);
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
             self.thenImageView.alpha = 0;
             
-            self.nowImageView.image = [self applyOverlayToImage:self.nowImageView.image Position:CGPointMake(0,0) TextSize:200.0 Text:@"Now"];
+            self.nowImageView.image = [self.pictureAddition applyTextOverlayToImage:self.nowImageView.image Position:CGPointMake(0,0) TextSize:200.0 Text:@"Now"];
             
             
         } completion:^(BOOL finished) {
@@ -991,7 +996,7 @@ typedef void(^ButtonReplacementBlock)(void);
                 self.thenImageView.transform = CGAffineTransformMakeTranslation(0, 504);
                 self.thenImageView.transform = CGAffineTransformScale(self.thenImageView.transform, 1,1);
                 
-                self.nowImageView.image = [self applyOverlayToImage:self.thenImageView.image Position:CGPointMake(0,0) TextSize:200.0 Text:@"Now"];
+                self.nowImageView.image = [self.pictureAddition applyTextOverlayToImage:self.thenImageView.image Position:CGPointMake(0,0) TextSize:200.0 Text:@"Now"];
                 
                 [UIView animateWithDuration:0.2 animations:^{
                     self.thenImageView.alpha = 1;
@@ -1056,29 +1061,6 @@ typedef void(^ButtonReplacementBlock)(void);
     // Dispose of any resources that can be recreated.
 }
 
--(UIImage *)applyOverlayToImage:(UIImage *)image Position:(CGPoint)position TextSize:(CGFloat)textSize Text:(NSString *)text{
-    
-    UIColor *textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
-    UIFont *font = [UIFont systemFontOfSize:textSize];
-    NSDictionary *attr = @{NSForegroundColorAttributeName: textColor, NSFontAttributeName: font};
-
-    CGSize thetextSize = [text sizeWithAttributes:attr];
-
-    // Compute rect to draw the text inside
-    CGSize imageSize = image.size;
-    
-    CGRect textRect = CGRectMake(position.x, position.y, thetextSize.width, thetextSize.height);
-    
-    // Create the image
-    UIGraphicsBeginImageContextWithOptions(imageSize, NO, 0.0f);
-    [image drawInRect:CGRectMake(0, 0, imageSize.width, imageSize.height)];
-    [text drawInRect:CGRectIntegral(textRect) withAttributes:attr];
-    UIImage *resultImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return resultImage;
-}
-
 - (void)squareCropperDidCropImage:(UIImage *)croppedImage inCropper:(BASSquareCropperViewController *)cropper
 {
     self.nowImageView.image = croppedImage;
@@ -1091,4 +1073,25 @@ typedef void(^ButtonReplacementBlock)(void);
     [cropper dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)setTextOverlayToImages
+{
+    self.thenImageView.image = [self.pictureAddition applyTextOverlayToImage:self.thenImageView.image Position:CGPointMake(0,0) TextSize:200.0 Text:@"Then"];
+    
+    self.nowImageView.image = [self.pictureAddition applyTextOverlayToImage:self.nowImageView.image Position:CGPointMake(0,0) TextSize:100.0 Text:@"Now"];
+
+}
+
+- (void)didTapPolaroidIcon:(id)sender
+{
+    CGRect rect = CGRectMake(0, 0, 320, 320);
+    
+    UIImageView *combinedImageView = [[UIImageView alloc] initWithFrame:rect];
+    
+    UIImage *resizedimage = [self.pictureAddition resizeImage:self.nowImageView.image ForPolaroidFrame:rect];
+    
+    UIImage *combinedImage = [self.pictureAddition imageByCombiningImage:[UIImage imageNamed:@"polaroidFrame.png"] withImage:resizedimage secondImagePlacement:CGPointMake(20.0,16.0)];
+    
+    combinedImageView.image = combinedImage;
+    [self.view addSubview:combinedImageView];
+}
 @end
