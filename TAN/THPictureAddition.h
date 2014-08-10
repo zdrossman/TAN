@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "THViewController.h"
 
+//save images into an array so you can return to it.
+
 @interface THPictureAddition : NSObject
 
 @property (strong, nonatomic) UIImage *thenImage;
@@ -16,7 +18,6 @@
 
 
 - (UIImage*)imageByCombiningImage:(UIImage*)firstImage withImage:(UIImage*)secondImage secondImagePlacement:(CGPoint) xy;
-
--(UIImage *)applyTextOverlayToImage:(UIImage *)image Position:(CGPoint)position TextSize:(CGFloat)textSize Text:(NSString *)text;
--(UIImage *)resizeImage:(UIImage *)image ForPolaroidFrame:(CGRect)rect;
+- (UIImage *)applyTextOverlayToImage:(UIImage *)image Position:(CGPoint)position TextSize:(CGFloat)textSize Text:(NSString *)text;
+- (UIImage *)resizeImage:(UIImage *)image ForPolaroidFrame:(CGRect)rect;
 @end

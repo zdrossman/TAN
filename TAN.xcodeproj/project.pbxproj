@@ -245,10 +245,10 @@
 				31FD62EE1995424E00B9753F /* BASSquareCropperViewController.m */,
 				31F2E03E1991262500B62321 /* THEditViewController.h */,
 				31F2E03F1991262500B62321 /* THEditViewController.m */,
-				3161DEE5198A9CC500EA1064 /* THViewController.h */,
-				3161DEE6198A9CC500EA1064 /* THViewController.m */,
 				3161DF16198C020600EA1064 /* THCamera2ViewController.h */,
 				3161DF17198C020600EA1064 /* THCamera2ViewController.m */,
+				3161DEE5198A9CC500EA1064 /* THViewController.h */,
+				3161DEE6198A9CC500EA1064 /* THViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";

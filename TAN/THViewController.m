@@ -58,6 +58,7 @@ typedef void(^ButtonReplacementBlock)(void);
 @end
 
 @implementation THViewController
+
 -(NSArray *)toolbarButtonsArray
 {
     UIBarButtonItem *horizontalSplitButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1074-grid-2"] style:UIBarButtonItemStylePlain target:self action:nil];
@@ -73,7 +74,8 @@ typedef void(^ButtonReplacementBlock)(void);
     return _toolbarButtonsArray;
 }
 
--(NSDictionary *)metrics{
+-(NSDictionary *)metrics
+{
  
     if (!_metrics)
     {
@@ -83,6 +85,7 @@ typedef void(^ButtonReplacementBlock)(void);
     return _metrics;
     
 }
+
 - (void)viewDidLoad
 {
     
@@ -116,6 +119,7 @@ typedef void(^ButtonReplacementBlock)(void);
 
 
 }
+
 - (void)baseInit
 {
     self.thenImageView = [[UIImageView alloc] init];
@@ -172,7 +176,8 @@ typedef void(^ButtonReplacementBlock)(void);
 
 }
 
--(void)choosePosition{
+-(void)choosePosition
+{
     
     if (self.currentPosition ==YES) {
         
@@ -222,7 +227,6 @@ typedef void(^ButtonReplacementBlock)(void);
 
 }
 
-
 - (void)setVerticalSplit
 {
     
@@ -241,7 +245,9 @@ typedef void(^ButtonReplacementBlock)(void);
         [self.view layoutIfNeeded];
     
 }
--(void)performAnimation{
+
+-(void)performAnimation
+{
     
     if (self.currentPosition == YES) {
         
@@ -253,7 +259,8 @@ typedef void(^ButtonReplacementBlock)(void);
     
 }
 
--(void)leftAndRightSwitch{
+-(void)leftAndRightSwitch
+{
    
     
     if (!self.originalOrder)
@@ -344,7 +351,8 @@ typedef void(^ButtonReplacementBlock)(void);
     
 }
 
--(void)thenAndNowswitch{
+-(void)thenAndNowswitch
+{
     
     if (!self.originalOrder)
     {
@@ -456,9 +464,8 @@ typedef void(^ButtonReplacementBlock)(void);
     
 }
 
-
-
--(void)generateStandardToolBarConstraints{
+-(void)generateStandardToolBarConstraints
+{
     
     self.verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==44)]|" options:0 metrics:nil views:self.viewsDictionary];
     
@@ -629,7 +636,8 @@ typedef void(^ButtonReplacementBlock)(void);
     //[self setupPhotos];
 }
 
--(void)resignCamera{
+-(void)resignCamera
+{
     
 //    self.nowImageView.layer.backgroundColor = [UIColor redColor].CGColor;
 //    self.thenImageView.layer.backgroundColor = [UIColor yellowColor].CGColor;
@@ -718,7 +726,6 @@ typedef void(^ButtonReplacementBlock)(void);
     //[self setupPhotos];
 }
 
-
 - (void)setupInitialStateOfImageViews
 {
     if (!self.nowImage)
@@ -739,7 +746,6 @@ typedef void(^ButtonReplacementBlock)(void);
     self.thenImageView.image = self.thenImage;
     
 }
-
 
 - (void)replaceToolbarWithButtons:(ButtonReplacementBlock)buttonReplacementBlock
 {
@@ -813,7 +819,8 @@ typedef void(^ButtonReplacementBlock)(void);
     return _viewsDictionary;
 }
 
--(NSDictionary *)leftRightViewsDictionary{
+-(NSDictionary *)leftRightViewsDictionary
+{
     
     id _leftImageView = self.thenImageView;
     id _rightImageView = self.nowImageView;
@@ -872,7 +879,9 @@ typedef void(^ButtonReplacementBlock)(void);
     }];
 
 }
-- (void)cameraTapped:(id)sender {
+
+- (void)cameraTapped:(id)sender
+{
     
     [self setupCameraAutolayout];
     
@@ -966,15 +975,15 @@ typedef void(^ButtonReplacementBlock)(void);
     [self setupPhotos];
 }
 
-- (void)hideImagePicker{
+- (void)hideImagePicker
+{
     [self resignCamera];
 }
 
-- (void)showPicker:(UIButton *)btn{
-    
+- (void)showPicker:(UIButton *)btn
+{
     self.cameraContainerView.hidden = NO;
 }
-
 
 - (void)returnToPhotoView
 {
@@ -1015,8 +1024,6 @@ typedef void(^ButtonReplacementBlock)(void);
     
 }
 
-
-
 #pragma mark - Segue
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -1030,7 +1037,8 @@ typedef void(^ButtonReplacementBlock)(void);
 }
 
 #pragma mark - CoreGraphics
-- (UIImage*)imageByCombiningImage:(UIImage*)firstImage withImage:(UIImage*)secondImage {
+- (UIImage*)imageByCombiningImage:(UIImage*)firstImage withImage:(UIImage*)secondImage
+{
     UIImage *image = nil;
     
     CGSize newImageSize = CGSizeMake(firstImage.size.width + secondImage.size.width, MAX(firstImage.size.height, secondImage.size.height));

@@ -9,39 +9,19 @@
 #import "THPictureAddition.h"
 #import "THViewController.h"
 
-/*
- get text overlay + resize + combine image to work =result
- 
- add bowtie to view
- show result with two polaroids in one screen
- fix camera button in subclass
- clean up the code and make it work seamlessly
- import code to current github repo
- 
- 
- */
 
 
+// add bowtie to view
+// show result with two polaroids in one screen
+// refactor combine images method so it is reuseable and different image features can be added before saving combined image
+// change text to have black border
 
-
-//TODO HEIDI: Manage text overlay - WEEK 2 -consider trying this. when button at bottom is pressed, should add then and now words to the two images, when pressed again should take it away.  can do more extensible version of text once it's working.
+// when textOverlayButton is pressed again should remove the text.  can do more extensible version of text once it's working.
+//reset image to previous image, have a boolean with tap method based on the boolean
 // also take then image and now image, add polaroids to them, show them on new view combined.
 
 
 @implementation THPictureAddition
-
-/*  Tap textOverlayButton
-call textOverlayButtonTapped method
- calls steves
- 
- create image with text set equal to text property
- 
- //add text to image by giving xy coordinates of 2nd image being the text image.
- //combine images
- 
- 
- */
-
 
 #pragma mark - CoreGraphics
 - (UIImage*)imageByCombiningImage:(UIImage*)firstImage withImage:(UIImage*)secondImage secondImagePlacement:(CGPoint) xy
@@ -95,21 +75,6 @@ call textOverlayButtonTapped method
     
     return resizedImage;
 }
-/*
-- (void)didTapTextButton:(id)sender
-{
-    NSLog(@"Tapped TextButton");
-    CGRect rect = CGRectMake(0, 0, 320, 320);
-    UIImageView *combinedImageView = [[UIImageView alloc] initWithFrame:rect];
-    
-    UIImage *blossomImage = [UIImage imageNamed:@"blossom.jpg"];
-    CGPoint secondImagePlacement = CGPointMake(20.0,16.0);
-    
-    UIImage *combinedImage = [self imageByCombiningImage:[UIImage imageNamed:@"polaroidFrame.png"] withImage:resizedBabyImage secondImagePlacement:secondImagePlacement];
-    
-    combinedImageView.image = combinedImage;
-    [self.view addSubview:combinedImageView];
-}*/
 
 -(UIImage *)applyTextOverlayToImage:(UIImage *)image Position:(CGPoint)position TextSize:(CGFloat)textSize Text:(NSString *)text
 {
