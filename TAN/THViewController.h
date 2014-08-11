@@ -67,9 +67,8 @@
 @property (nonatomic) BOOL horizontalSplit;
 @property (nonatomic) BOOL thenOnLeftOrTop;
 
-@property (nonatomic) THPictureAddition *pictureAddition;
+//@property (nonatomic) THPictureAddition *pictureAddition;
 
-- (void)removeAllConstraints;
 - (void)cameraTapped:(id)sender;
 
 @end

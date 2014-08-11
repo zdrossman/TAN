@@ -10,7 +10,64 @@
 
 @implementation THViewController (Autolayout)
 
-- (void)setHorizontalSplit {
+#pragma mark - Container View Layout
+- (void)layoutThenAndNowContainerViews
+{
+    self.cameraContainerView.hidden = YES;
+    self.nowView.hidden = NO;
+    self.toolbar.alpha = 1;
+    self.toolbar.hidden = NO;
+    self.currentPosition = YES;
+    
+    [self.view removeConstraints:self.view.constraints];
+    self.view.translatesAutoresizingMaskIntoConstraints = YES;
+    
+    self.cameraContainerView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.cameraContainerView removeConstraints:self.cameraContainerView.constraints];
+    
+    self.toolbar.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.toolbar removeConstraints:self.toolbar.constraints];
+    
+    self.cropperContainerView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.cropperContainerView removeConstraints:self.cropperContainerView.constraints];
+    
+    if (self.horizontalSplit) {
+        [self layoutHorizontalSplitOfContainerViews];
+    }
+    else {
+        [self layoutVerticalSplitOfContainerViews];
+    }
+    
+    [self removeSubviewConstraints];
+    
+    [self layoutThenSubviews];
+    [self layoutNowSubviews];
+    
+    [self.view layoutIfNeeded];
+}
+
+- (void)layoutThenSubviews
+{
+    self.verticalThenImageConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_thenButton]|" options:0 metrics:nil views:self.subviewsDictionary];
+    
+    self.horizontalThenImageConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_thenButton]|" options:0 metrics:nil views:self.subviewsDictionary];
+    
+    [self.thenView addConstraints:self.verticalThenImageConstraints];
+    [self.thenView addConstraints:self.horizontalThenImageConstraints];
+}
+
+- (void)layoutNowSubviews
+{
+    self.verticalNowImageConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_nowButton]|" options:0 metrics:nil views:self.subviewsDictionary];
+    
+    self.horizontalNowImageConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_nowButton]|" options:0 metrics:nil views:self.subviewsDictionary];
+    
+    [self.nowView addConstraints:self.verticalNowImageConstraints];
+    [self.nowView addConstraints:self.horizontalNowImageConstraints];
+}
+
+
+- (void)layoutHorizontalSplitOfContainerViews {
     
     [self removeThenViewAndNowViewConstraints];
     
@@ -25,7 +82,7 @@
     [self.view layoutIfNeeded];
 }
 
-- (void)setVerticalSplit {
+- (void)layoutVerticalSplitOfContainerViews {
     
     self.horizontalICVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_leftImageView(==160)][_rightImageView(==_leftImageView)]" options:0 metrics:nil views:self.leftRightViewsDictionary];
     self.verticalThenViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(64)-[_leftImageView]-(44)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
@@ -37,6 +94,8 @@
     
 }
 
+
+#pragma mark - Container View Vertical Split Animations
 - (void)switchImagesAcrossVerticalSplit{
     
     [self bringLeftSubviewToFront];
@@ -138,19 +197,47 @@
     }];
 }
 
-
-
-- (void)bringLeftSubviewToFront
-{
-    if (!self.thenOnLeftOrTop)
-    {
-        [self.view bringSubviewToFront:self.thenView];
-    }
-    else
-    {
-        [self.view bringSubviewToFront:self.nowView];
-    }
+#pragma mark - Container View Horizontal Split Animations
+- (void)switchImagesAcrossHorizontalSplit{
+    
+    [self bringLeftSubviewToFront];
+    
+    self.nowButton.layer.shadowOffset = CGSizeMake(0,0);
+    self.nowButton.layer.shadowRadius = 25;
+    
+    [self animateLayoutHorizontalSplitThenViewOnDifferentPlaneThanNowViewWithCompletion:^{
+        
+        //        self.thenImageView.layer.shadowOffset = CGSizeMake(20,50);
+        //        self.thenImageView.layer.shadowRadius = 50;
+        //        self.thenImageView.layer.shadowOpacity = 1;
+        //
+        
+        [self animateLayoutHorizontalSplitThenViewOnDifferentPlaneThanNowViewAndSwitchedPlacesWithCompletion:^{
+            
+            NSLog(@"Animation for setupPhotos called");
+            
+            CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
+            anim.fromValue = [NSNumber numberWithFloat:1.0];
+            anim.toValue = [NSNumber numberWithFloat:0.0];
+            anim.duration = 0.3;
+            [self.nowButton.layer addAnimation:anim forKey:@"shadowOpacity"];
+            self.nowButton.layer.shadowOpacity = 0.0;
+            
+            [self animateLayoutHorizontalSplitThenViewSwitchedWithNowViewOnSamePlaneWithCompletion:^{
+                self.thenOnLeftOrTop = !self.thenOnLeftOrTop;
+            }];
+        }];
+    }];
+    
+    CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
+    anim.fromValue = [NSNumber numberWithFloat:0.0];
+    anim.toValue = [NSNumber numberWithFloat:1.0];
+    anim.duration = 0.3;
+    [self.nowButton.layer addAnimation:anim forKey:@"shadowOpacity"];
+    self.nowButton.layer.shadowOpacity = 1.0;
+    
 }
+
 
 - (void)layoutHorizontalSplitThenViewOnDifferentPlaneThanNowViewWithCompletion {
     
@@ -246,46 +333,22 @@
 }
 
 
-- (void)switchImagesAcrossHorizontalSplit{
-    
-    [self bringLeftSubviewToFront];
-    
-    self.nowButton.layer.shadowOffset = CGSizeMake(0,0);
-    self.nowButton.layer.shadowRadius = 25;
-    
-    [self animateLayoutHorizontalSplitThenViewOnDifferentPlaneThanNowViewWithCompletion:^{
-        
-        //        self.thenImageView.layer.shadowOffset = CGSizeMake(20,50);
-        //        self.thenImageView.layer.shadowRadius = 50;
-        //        self.thenImageView.layer.shadowOpacity = 1;
-        //
-        
-        [self animateLayoutHorizontalSplitThenViewOnDifferentPlaneThanNowViewAndSwitchedPlacesWithCompletion:^{
 
-            NSLog(@"Animation for setupPhotos called");
-            
-            CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
-            anim.fromValue = [NSNumber numberWithFloat:1.0];
-            anim.toValue = [NSNumber numberWithFloat:0.0];
-            anim.duration = 0.3;
-            [self.nowButton.layer addAnimation:anim forKey:@"shadowOpacity"];
-            self.nowButton.layer.shadowOpacity = 0.0;
-            
-            [self animateLayoutHorizontalSplitThenViewSwitchedWithNowViewOnSamePlaneWithCompletion:^{
-                self.thenOnLeftOrTop = !self.thenOnLeftOrTop;
-            }];
-        }];
-    }];
-    
-    CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
-    anim.fromValue = [NSNumber numberWithFloat:0.0];
-    anim.toValue = [NSNumber numberWithFloat:1.0];
-    anim.duration = 0.3;
-    [self.nowButton.layer addAnimation:anim forKey:@"shadowOpacity"];
-    self.nowButton.layer.shadowOpacity = 1.0;
-    
+
+- (void)bringLeftSubviewToFront
+{
+    if (!self.thenOnLeftOrTop)
+    {
+        [self.view bringSubviewToFront:self.thenView];
+    }
+    else
+    {
+        [self.view bringSubviewToFront:self.nowView];
+    }
 }
 
+
+#pragma mark - Camera Layout and Animations
 - (void)layoutCameraFromTopOfScreenToToolbar
 {
     [self removeCameraConstraints];
@@ -400,12 +463,78 @@
     }];
 }
 
+
 - (void)layoutCameraNavigationBar
 {
     self.navigationItem.rightBarButtonItem = nil;
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(returnToPhotosFromCamera)];
 }
 
+
+#pragma mark - Toolbar layout and animation
+- (void)animateToolbarOfHeightZeroAtBottomOfScreenWithCompletion:(void (^)(void))completionBlock
+{
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        
+        [self layoutToolbarOfHeightZeroAtBottomOfScreen];
+        [self.view layoutIfNeeded];
+        
+    } completion:^(BOOL finished) {
+        if (completionBlock)
+        {
+            completionBlock();
+        }
+    }];
+}
+
+- (void)layoutToolbarOfHeightZeroAtBottomOfScreen {
+    [self removeToolbarConstraints];
+    
+    [self.toolbar setItems:nil animated:YES]; //Where does this line of code belong?
+    
+    self.horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
+    
+    self.verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==0)]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
+    
+    [self addToolbarConstraints];
+}
+
+- (void)layoutToolbarOfStandardHeight {
+    
+    [self removeToolbarConstraints];
+    
+    self.verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==44)]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
+    
+    self.horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
+    
+    [self addToolbarConstraints];
+    
+    [self.view layoutIfNeeded];
+    
+}
+
+-(void)animateLayoutToolbarOfStandardHeight:(void (^)(void))completionBlock;
+{
+    [UIView animateWithDuration:0.3 animations:^{
+        
+    } completion:^(BOOL finished) {
+        if (completionBlock)
+        {
+            completionBlock();
+        };
+    }];
+}
+
+
+#pragma mark - Navbar Layout
+- (void)layoutBaseNavbar
+{
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStylePlain target:self action:nil];
+    self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(cameraTapped:)]];
+}
+
+#pragma mark - Constraint Addition and Removal
 - (void)removeThenViewAndNowViewConstraints {
     if (self.horizontalSplit)
     {
@@ -452,63 +581,6 @@
     }
 }
 
-
-- (void)animateToolbarOfHeightZeroAtBottomOfScreenWithCompletion:(void (^)(void))completionBlock
-{
-    
-    [UIView animateWithDuration:0.3 animations:^{
-        
-        [self layoutToolbarOfHeightZeroAtBottomOfScreen];
-        [self.view layoutIfNeeded];
-        
-    } completion:^(BOOL finished) {
-        if (completionBlock)
-        {
-            completionBlock();
-        }
-    }];
-}
-
-- (void)layoutToolbarOfHeightZeroAtBottomOfScreen {
-    [self removeToolbarConstraints];
-    
-    [self.toolbar setItems:nil animated:YES]; //Where does this line of code belong?
-    
-    self.horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
-    
-    self.verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==0)]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
-    
-    [self addToolbarConstraints];
-}
-
-- (void)layoutToolbarOfStandardHeight {
-
-    [self removeToolbarConstraints];
-    
-    self.verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==44)]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
-    
-    self.horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
-    
-    [self addToolbarConstraints];
-    
-    [self.view layoutIfNeeded];
-
-}
-
--(void)animateLayoutToolbarOfStandardHeight:(void (^)(void))completionBlock;
-{
-    [UIView animateWithDuration:0.3 animations:^{
-        
-            } completion:^(BOOL finished) {
-        if (completionBlock)
-        {
-            completionBlock();
-        };
-    }];
-}
-
-
-
 - (void)removeCameraConstraints {
     if (self.verticalCameraConstraints) {
         [self.view removeConstraints:self.verticalCameraConstraints];
@@ -518,6 +590,12 @@
     [self.view removeConstraints:self.horizontalToolbarConstraints];
     }
 }
+
+- (void)addCameraConstraints {
+    [self.view addConstraints:self.horizontalCameraConstraints];
+    [self.view addConstraints:self.verticalCameraConstraints];
+}
+
 
 - (void)removeToolbarConstraints {
     if (self.horizontalToolbarConstraints) {
@@ -529,20 +607,45 @@
     }
 }
 
-- (void)addCameraConstraints {
-    [self.view addConstraints:self.horizontalCameraConstraints];
-    [self.view addConstraints:self.verticalCameraConstraints];
-}
-
 - (void)addToolbarConstraints {
     [self.view addConstraints:self.horizontalToolbarConstraints];
     [self.view addConstraints:self.verticalToolbarConstraints];
 }
 
-- (void)layoutBaseNavbar
-{
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStylePlain target:self action:nil];
-    self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(cameraTapped:)]];
+
+- (void)removeAllTopLevelViewConstraints {
+    [self.view removeConstraints:self.view.constraints];
+    self.view.translatesAutoresizingMaskIntoConstraints = YES;
+    
+    self.cameraContainerView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.cameraContainerView removeConstraints:self.cameraContainerView.constraints];
+    
+    self.toolbar.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.toolbar removeConstraints:self.toolbar.constraints];
+    
+    self.cropperContainerView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.cropperContainerView removeConstraints:self.cropperContainerView.constraints];
 }
 
+- (void)removeSubviewConstraints {
+    self.nowView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.nowView removeConstraints:self.nowView.constraints];
+    
+    self.thenView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.thenView removeConstraints:self.thenView.constraints];
+    
+    self.thenButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.thenButton removeConstraints:self.thenButton.constraints];
+    
+    self.nowButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.nowButton removeConstraints:self.nowButton.constraints];
+    
+}
+
+//- (void)addSubviewConstraints {
+//
+//    [self.nowView addConstraints:self.c];
+//    [self.thenView addConstraints:self.thenButton];
+//    
+//}
 @end

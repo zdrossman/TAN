@@ -10,15 +10,27 @@
 
 @interface THViewController (Autolayout)
 
-- (void)switchImagesAcrossVerticalSplit;
-- (void)switchImagesAcrossHorizontalSplit;
-- (void)setVerticalSplit;
-- (void)setHorizontalSplit;
+/* ************************************************************
+
+//NOTES
+//Must set boolean values for horizontalSplit and leftOrTopThen
+//
+************************************************************ */
+
 - (void)removeAllConstraints;
 - (void)layoutCamera;
 - (void)layoutToolbarOfStandardHeight;
 - (void)animateToolbarOfHeightZeroAtBottomOfScreenWithCompletion:(void (^)(void))completionBlock;
 - (void)animateLayoutToolbarOfStandardHeight:(void (^)(void))completionBlock;
 - (void)layoutBaseNavbar;
+- (void)removeAllTopLevelViewConstraints;
+- (void)removeSubviewConstraints;
+
+- (void)layoutThenAndNowContainerViews;
+- (void)layoutHorizontalSplitOfContainerViews;
+- (void)layoutVerticalSplitOfContainerViews;
+- (void)switchImagesAcrossVerticalSplit;
+- (void)switchImagesAcrossHorizontalSplit;
+
 
 @end
