@@ -60,10 +60,7 @@
 
 #pragma mark - Other Properties
 @property (nonatomic) BOOL takingPhoto;
-@property (nonatomic) BOOL originalOrder;
-@property (nonatomic) BOOL currentPosition;
 @property (nonatomic) BOOL editMode;
-
 @property (nonatomic) BOOL horizontalSplit;
 @property (nonatomic) BOOL thenOnLeftOrTop;
 

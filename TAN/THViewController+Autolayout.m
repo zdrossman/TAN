@@ -17,7 +17,6 @@
     self.nowView.hidden = NO;
     self.toolbar.alpha = 1;
     self.toolbar.hidden = NO;
-    self.currentPosition = YES;
     
     [self.view removeConstraints:self.view.constraints];
     self.view.translatesAutoresizingMaskIntoConstraints = YES;

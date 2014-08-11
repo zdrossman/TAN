@@ -85,8 +85,6 @@ typedef void(^ButtonReplacementBlock)(void);
 
 - (void)setupPreviewViews
 {
-    self.originalOrder = YES;
-    
     self.thenImage = [UIImage imageNamed:@"funnyBabyPNG"];
     
     self.navigationController.navigationBar.alpha = 0;
@@ -151,8 +149,6 @@ typedef void(^ButtonReplacementBlock)(void);
     self.navigationController.navigationBar.hidden = NO;
     self.navigationController.navigationBar.alpha = 1;
     self.takingPhoto = NO;
-    self.originalOrder = YES;
-    self.currentPosition =YES;
     [self baseInit];
     [self setupEditView];
     [self setupInitialStateOfImageViews];
@@ -276,20 +272,6 @@ typedef void(^ButtonReplacementBlock)(void);
     [self layoutThenAndNowContainerViews];
     [self layoutBaseNavbar];
     [self setupCamera];
-}
-
-
-
-#pragma mark - Layout and Animations
--(void)performAnimation{
-    
-    if (self.currentPosition == YES) {
-        
-        [self switchImagesAcrossVerticalSplit];
-    }else
-    {
-        [self switchImagesAcrossHorizontalSplit];
-    }
 }
 
 -(NSArray *)verticalCameraConstraints
