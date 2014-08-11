@@ -26,8 +26,7 @@ typedef void(^ButtonReplacementBlock)(void);
 
 #pragma mark - Getters
 
-- (NSArray *)baseToolbarItems
-{
+-(NSArray *)baseToolbarItems {
     UIImage *switchIcon;
     SEL splitSelector;
     
@@ -51,7 +50,7 @@ typedef void(^ButtonReplacementBlock)(void);
 }
 
 
--(NSDictionary *)metrics{
+-(NSDictionary *)metrics {
  
     if (!_metrics)
     {
@@ -61,6 +60,99 @@ typedef void(^ButtonReplacementBlock)(void);
     
     return _metrics;
     
+}
+
+- (UIButton *)nowButton {
+    
+    if (self.nowImage)
+    {
+        [_nowButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
+        [_nowButton setImage:self.nowImage forState:UIControlStateNormal];
+        [_nowButton addTarget:self
+                       action:@selector(setupCropper:)
+             forControlEvents:UIControlEventTouchUpInside];
+    }
+    
+    return _nowButton;
+}
+
+-(NSArray *)verticalCameraConstraints {
+
+    if (!_verticalCameraConstraints)
+    {
+        _verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_cameraView(==0)]" options:0 metrics:self.metrics views:self.topBottomViewsDictionary];
+    }
+    
+    return _verticalCameraConstraints;
+}
+
+- (NSArray *)horizontalCameraConstraints {
+    if (!_horizontalCameraConstraints)
+    {
+        _horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:self.metrics views:self.topBottomViewsDictionary];
+    }
+    
+    return _horizontalCameraConstraints;
+}
+    
+-(NSDictionary *)topBottomViewsDictionary
+{
+    id _cameraView = self.cameraContainerView;
+    id _topLayoutGuide = self.topLayoutGuide;
+    id _topImageView = self.thenView;
+    id _bottomImageView = self.nowView;
+    
+    if (self.thenOnLeftOrTop)
+    {
+        
+        _topImageView = self.thenView;
+        _bottomImageView = self.nowView;
+        
+    }
+    else
+    {
+        _bottomImageView = self.thenView;
+        _topImageView = self.nowView;
+    }
+    
+    _topBottomViewsDictionary = NSDictionaryOfVariableBindings(_topImageView, _bottomImageView, _toolbar, _topLayoutGuide, _cameraView);
+    
+    
+    return _topBottomViewsDictionary;
+}
+
+-(NSDictionary *)leftRightViewsDictionary{
+    
+    id _leftImageView = self.thenView;
+    id _rightImageView = self.nowView;
+    id _cameraView = self.cameraContainerView;
+    
+    if (self.thenOnLeftOrTop)
+    {
+        
+        _leftImageView = self.thenView;
+        _rightImageView = self.nowView;
+        
+    }
+    else
+    {
+        _rightImageView = self.thenView;
+        _leftImageView = self.nowView;
+    }
+    
+    _leftRightViewsDictionary = NSDictionaryOfVariableBindings(_leftImageView, _rightImageView,_cameraView,_toolbar);
+    
+    return _leftRightViewsDictionary;
+}
+
+-(NSDictionary *)subviewsDictionary
+{
+    if (!_subviewsDictionary)
+    {
+        _subviewsDictionary = NSDictionaryOfVariableBindings(_thenButton, _nowButton);
+    }
+    
+    return _subviewsDictionary;
 }
 
 #pragma mark - Lifecycle
@@ -76,91 +168,29 @@ typedef void(^ButtonReplacementBlock)(void);
     
 }
 
-- (void)initPreviewPanel
-{
-    [self setupCropper:nil];
-//    [self setupPreviewViews];
-//    [self layoutPreviewPanel];
-}
-
-- (void)setupPreviewViews
-{
-    self.thenImage = [UIImage imageNamed:@"funnyBabyPNG"];
-    
-    self.navigationController.navigationBar.alpha = 0;
-    self.navigationController.navigationBar.hidden = YES;
-
-    self.thenView = [[UIView alloc] init];
-    [self.view addSubview:self.thenView];
-    
-    self.thenButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.thenButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
-    self.thenButton.clipsToBounds = YES;
-    [self.thenButton setImage:self.thenImage forState:UIControlStateNormal];
-    [self.thenButton addTarget:self action:@selector(setupCropper:) forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.thenView addSubview:self.thenButton];
-}
-
-- (void)layoutPreviewPanel
-{
-    
-    [self.view removeConstraints:self.view.constraints];
-    self.view.translatesAutoresizingMaskIntoConstraints = YES;
-    
-    [self.thenView removeConstraints:self.thenView.constraints];
-    self.thenView.translatesAutoresizingMaskIntoConstraints = NO;
-    
-    [self.thenButton removeConstraints:self.thenButton.constraints];
-    self.thenButton.translatesAutoresizingMaskIntoConstraints = NO;
-    
-    [self.editButton removeConstraints:self.editButton.constraints];
-    self.editButton.translatesAutoresizingMaskIntoConstraints = NO;
-    
-    id _leftImageView = self.thenView;
-    
-    NSDictionary *layoutDictionary = NSDictionaryOfVariableBindings(_thenButton, _leftImageView, _editButton);
-    
-    self.horizontalThenImageConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_thenButton]|" options:0 metrics:nil views:layoutDictionary];
-    
-    self.verticalThenImageConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_thenButton]|" options:0 metrics:nil views:layoutDictionary];
-    
-    self.horizontalThenViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_leftImageView]|" options:0 metrics:nil views:layoutDictionary];
-    
-    self.verticalThenViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(64)-[_leftImageView]-(64)-|" options:0 metrics:nil views:layoutDictionary];
-    
-    NSArray *verticalEditButtonConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(500)-[_editButton]" options:0 metrics:nil views:layoutDictionary];
-    
-    NSArray *horizontalEditButtonConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(150)-[_editButton]" options:0 metrics:nil views:layoutDictionary];
-    
-    [self.view addConstraints:self.horizontalThenViewConstraints];
-    [self.view addConstraints:self.verticalThenViewConstraints];
-    
-    [self.view addConstraints:verticalEditButtonConstraints];
-    [self.view addConstraints:horizontalEditButtonConstraints];
-    
-    [self.thenView addConstraints:self.verticalThenImageConstraints];
-    [self.thenView addConstraints:self.horizontalThenImageConstraints];
-    
-    [self.view layoutIfNeeded];
-    
-}
 - (void)layoutEditingPanel{
     self.navigationController.navigationBar.hidden = NO;
     self.navigationController.navigationBar.alpha = 1;
     self.takingPhoto = NO;
     [self baseInit];
+    [self removeAllTopLevelViewConstraints];
     [self setupEditView];
+    [self setupCamera];
     [self setupInitialStateOfImageViews];
-    //[self layoutCamera];
-
-
+    [self.view layoutIfNeeded];
 }
+
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
     //[self setupInitialStateOfImageViews];
     
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
 
 - (void)baseInit{
@@ -179,9 +209,6 @@ typedef void(^ButtonReplacementBlock)(void);
     [self.view addSubview:self.toolbar];
     [self.view addSubview:self.cameraContainerView];
 
-//    self.nowImageView.frame = self.nowView.frame;
-//    self.thenImageView.frame = self.thenView.frame;
-    
     [self.nowView addSubview:self.nowButton];
     [self.thenView addSubview:self.thenButton];
     
@@ -189,7 +216,7 @@ typedef void(^ButtonReplacementBlock)(void);
 }
 
 
-#pragma mark - setup
+#pragma mark - Setup
 -(void)setupCropper:(id)sender
 {
 
@@ -244,141 +271,18 @@ typedef void(^ButtonReplacementBlock)(void);
     self.cameraVC.delegate = self;
 }
 
--(void)setupSubviewAutolayout
-{
-        //TODO: STEVE
-}
-
-- (UIButton *)nowButton
-{
-    if (self.nowImage)
-    {
-        [_nowButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
-        [_nowButton setImage:self.nowImage forState:UIControlStateNormal];
-        [_nowButton addTarget:self
-                           action:@selector(setupCropper:)
-                 forControlEvents:UIControlEventTouchUpInside];
-    }
-    
-    return _nowButton;
-}
-
 -(void)setupEditView
 {
     self.nowView.layer.backgroundColor = [UIColor redColor].CGColor;
     self.thenView.layer.backgroundColor = [UIColor yellowColor].CGColor;
-
+    self.cameraContainerView.hidden = YES;
+    
     //FIXIT: Should i keep this line? self.thenImageView.alpha =1.0;
     [self layoutThenAndNowContainerViews];
     [self layoutBaseNavbar];
-    [self setupCamera];
-}
-
--(NSArray *)verticalCameraConstraints
-{
-    
-    if (!_verticalCameraConstraints)
-    {
-        _verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_cameraView(==cameraViewBottom)]" options:0 metrics:self.metrics views:self.topBottomViewsDictionary];
-    }
-    
-    return _verticalCameraConstraints;
-}
-
--(NSArray *)horizontalCameraConstraints
-{
-    if (!_horizontalCameraConstraints)
-    {
-        _horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:self.metrics views:self.topBottomViewsDictionary];
-    }
-    
-    return _horizontalCameraConstraints;
-    
     
 }
 
-
--(void)returnToPhotosFromCamera
-{
-    [self resignCamera];
-    
-    //[self setupEditView];
-}
-
--(void)resignCamera{
-    
-    [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
-        self.thenView.alpha = 0;
-    } completion:^(BOOL finished) {
-        [self.view bringSubviewToFront:self.cameraContainerView];
-        self.thenView.alpha = 1;
-        self.thenView.transform = CGAffineTransformMakeScale(1, 1);
-        self.nowView.hidden = NO;
-        if (self.horizontalICVConstraints)
-        {
-        [self.view removeConstraints:self.horizontalICVConstraints];
-        }
-        
-        if (self.horizontalNowViewConstraints)
-        {
-        [self.view removeConstraints:self.horizontalNowViewConstraints];
-        }
-        
-        if (self.horizontalThenViewConstraints)
-        {
-            [self.view removeConstraints:self.horizontalThenViewConstraints];
-        }
-        
-        if (self.verticalICVConstraints)
-        {
-        [self.view removeConstraints:self.verticalICVConstraints];
-        }
-        
-        if (self.verticalNowViewConstraints)
-        {
-        [self.view removeConstraints:self.verticalNowViewConstraints];
-        }
-        
-        if (self.verticalThenImageConstraints)
-        {
-        [self.view removeConstraints:self.verticalThenViewConstraints];
-        }
-        
-        [self layoutThenAndNowContainerViews];
-        
-        self.thenView.backgroundColor = [UIColor yellowColor];
-        
-        self.nowView.hidden = NO;
-        [self.view layoutIfNeeded];
-
-        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
-            
-            [self layoutToolbar];
-
-        } completion:^(BOOL finished) {
-
-            [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
-                [self layoutToolbar];
-                
-                    [self.view removeConstraints:self.horizontalCameraConstraints];
-                    [self.view removeConstraints:self.verticalCameraConstraints];
-                    
-                    
-                    self.horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
-                    
-                    self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_cameraView(==0)]" options:0 metrics:nil views:self.topBottomViewsDictionary];
-                    
-                    [self.view addConstraints:self.horizontalCameraConstraints];
-                    [self.view addConstraints:self.verticalCameraConstraints];
-                    
-                    [self.view layoutIfNeeded];
-            } completion:nil];
-            [self.toolbar setItems:self.baseToolbarItems animated:YES]; //technically not a property...
-            [self layoutBaseNavbar];
-        }];
-    }];
-    
-}
 
 - (void)setupInitialStateOfImageViews
 {
@@ -393,197 +297,24 @@ typedef void(^ButtonReplacementBlock)(void);
 
 - (void)replaceToolbarWithButtons:(ButtonReplacementBlock)buttonReplacementBlock
 {
-    [self animateToolbarOfHeightZeroAtBottomOfScreenWithCompletion:^{
+    [self animateLayoutToolbarOfHeightZeroAtBottomOfScreenWithCompletion:^{
         [self.toolbar setItems:self.toolbarButtonsArray animated:NO];
-        [self animateLayoutToolbarOfStandardHeight:^{
+        [self animateLayoutToolbarOfStandardHeightWithCompletion:^{
             NSLog(@"Completed toolbar button update.");
         }];
     }];
 }
 
 
-- (void)layoutToolbar
+- (void)resignCamera
 {
-    if (self.toolbar.frame.size.height > 0)
-    {
-        [self.view removeConstraints:self.horizontalToolbarConstraints];
-        [self.view removeConstraints:self.verticalToolbarConstraints];
-        [self.toolbar setItems:nil animated:YES];
-        self.horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
-        
-        self.verticalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_toolbar(==0)]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
-        
-        [self.view addConstraints:self.horizontalToolbarConstraints];
-        [self.view addConstraints:self.verticalToolbarConstraints];
-        [self.view layoutIfNeeded];
-    }
-    else
-    {
-        [self.view removeConstraints:self.horizontalToolbarConstraints];
-        [self.view removeConstraints:self.verticalToolbarConstraints];
-        
-        [self layoutToolbarOfStandardHeight];
-        
-        [self.view layoutIfNeeded];
-    }
-}
-
-
--(NSDictionary *)topBottomViewsDictionary
-{
-    id _cameraView = self.cameraContainerView;
-    id _topLayoutGuide = self.topLayoutGuide;
-    id _topImageView = self.thenView;
-    id _bottomImageView = self.nowView;
-    
-    if (self.thenOnLeftOrTop)
-    {
-
-        _topImageView = self.thenView;
-        _bottomImageView = self.nowView;
-
-    }
-    else
-    {
-        _bottomImageView = self.thenView;
-        _topImageView = self.nowView;
-    }
-    
-    _topBottomViewsDictionary = NSDictionaryOfVariableBindings(_topImageView, _bottomImageView, _toolbar, _topLayoutGuide, _cameraView);
-    
-    
-    return _topBottomViewsDictionary;
-}
-
--(NSDictionary *)leftRightViewsDictionary{
-    
-    id _leftImageView = self.thenView;
-    id _rightImageView = self.nowView;
-    id _cameraView = self.cameraContainerView;
-    
-    if (self.thenOnLeftOrTop)
-    {
-        
-        _leftImageView = self.thenView;
-        _rightImageView = self.nowView;
-        
-    }
-    else
-    {
-        _rightImageView = self.thenView;
-        _leftImageView = self.nowView;
-    }
-    
-       _leftRightViewsDictionary = NSDictionaryOfVariableBindings(_leftImageView, _rightImageView,_cameraView,_toolbar);
-    
-    return _leftRightViewsDictionary;
-}
-
-- (void)goBackToBeginning
-{
-    self.takingPhoto = !self.takingPhoto;
-
-    UIBarButtonItem *cameraButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(cameraTapped:)];
-    
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:nil];
-    
-    self.navigationItem.rightBarButtonItem = cameraButton;
-    self.navigationItem.leftBarButtonItem = doneButton;
-    [self toggleCamera];
-    
-    //CGRect initialFrame = CGRectMake(0,64,self.view.frame.size.width,(self.view.frame.size.height - 64)/2);
-    
-    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
-        self.thenButton.alpha = 0;
-        
-        
-    } completion:^(BOOL finished) {
-        if (finished)
-        {
-            
-            
-            self.thenButton.transform = CGAffineTransformMakeTranslation(0, 0);
-            self.thenButton.transform = CGAffineTransformScale(self.thenButton.transform, 1,1);
-            
-            [UIView animateWithDuration:0.2 animations:^{
-                self.thenButton.alpha = 1;
-                
-                
-            }];
-        }
-    }];
-
-}
-
-- (void)cameraTapped:(id)sender {
-    
-    [self layoutCamera];
-}
-
--(void)toggleCamera
-{
-    //self.cameraContainerView.hidden = !self.cameraContainerView.hidden;
-    //self.nowImageView.hidden = !self.nowImageView.hidden;
-}
-
--(void)didTakePhoto:(UIImage *)image
-{
-    self.nowImage = image;
     [self.toolbar setItems:self.toolbarButtonsArray animated:NO];
-    [self resignCamera];
-    [self setupEditView];
+    [self animateCameraResignWithSetupViewsBlock:^{
+        [self setupEditView];
+    } AndCompletion:^{
+        [self setupCamera];
+    }];
 }
-
-- (void)hideImagePicker{
-    [self resignCamera];
-}
-
-- (void)showPicker:(UIButton *)btn{
-    
-    self.cameraContainerView.hidden = NO;
-}
-
-
-- (void)returnToPhotoView
-{
-    if (YES) //replace with bool property pictureTaken
-    {
-        self.nowView.hidden = NO;
-        
-        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
-            self.thenButton.alpha = 0;
-        
-//            [self.nowImageView setImage:[self.pictureAddition applyTextOverlayToImage:self.nowImage Position:CGPointMake(0,0) TextSize:200.0 Text:@"Now"] forState:UIControlStateNormal];
-            
-            
-        } completion:^(BOOL finished) {
-            if (finished)
-            {
-                
-                
-                self.thenButton.transform = CGAffineTransformMakeTranslation(0, 504);
-                self.thenButton.transform = CGAffineTransformScale(self.thenButton.transform, 1,1);
-                
-//                [self.nowImageView setImage:[self.pictureAddition applyTextOverlayToImage:self.nowImage Position:CGPointMake(0,0) TextSize:200.0 Text:@"Now"] forState:UIControlStateNormal];
-
-                
-                [UIView animateWithDuration:0.2 animations:^{
-                    self.thenButton.alpha = 1;
-                    
-                    
-                }];
-            }
-        }];
-        
-    }
-    else
-    {
-        
-    }
-    
-    
-}
-
 
 
 #pragma mark - Segue
@@ -622,10 +353,23 @@ typedef void(^ButtonReplacementBlock)(void);
     return image;
 }
 
-- (void)didReceiveMemoryWarning
+- (void)setupCameraNavigationBar
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    self.navigationItem.rightBarButtonItem = nil;
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(resignCamera)];
+}
+
+#pragma mark - buttonTaps
+- (void)cameraTapped:(id)sender {
+    
+    [self layoutCamera];
+    [self setupCameraNavigationBar];
+}
+
+#pragma mark - CropperDelegate
+- (void)squareCropperDidCancelCropInCropper:(BASSquareCropperViewController *)cropper
+{
+    [cropper dismissViewControllerAnimated:NO completion:nil];
 }
 
 - (void)squareCropperDidCropImage:(UIImage *)croppedImage withImageName:(NSString *)name inCropper:(BASSquareCropperViewController *)cropper
@@ -643,7 +387,7 @@ typedef void(^ButtonReplacementBlock)(void);
         [self layoutEditingPanel];
         [self.thenButton setImage:croppedImage forState:UIControlStateNormal];
     }
-        
+    
     [cropper dismissViewControllerAnimated:NO completion:^{
         if (self.editMode == NO)
         {
@@ -654,42 +398,40 @@ typedef void(^ButtonReplacementBlock)(void);
 
 
 
-- (void)squareCropperDidCancelCropInCropper:(BASSquareCropperViewController *)cropper
-{
-    [cropper dismissViewControllerAnimated:NO completion:nil];
-}
-
-- (void)setTextOverlayToImages
-{
-//    [self.thenImageView setImage:[self.pictureAddition applyTextOverlayToImage:self.thenImage Position:CGPointMake(0,0) TextSize:200.0 Text:@"Then"] forState:UIControlStateNormal];
-
-//    [self.nowImageView setImage:[self.pictureAddition applyTextOverlayToImage:self.nowImage Position:CGPointMake(0,0) TextSize:200.0 Text:@"Now"] forState:UIControlStateNormal];
-
-}
-
+#pragma mark - FrameDelegate
 - (void)didTapPolaroidIcon:(id)sender
 {
     CGRect rect = CGRectMake(0, 0, 320, 320);
     
     UIImageView *combinedImageView = [[UIImageView alloc] initWithFrame:rect];
     
-//    UIImage *resizedimage = [self.pictureAddition resizeImage:self.nowImage ForPolaroidFrame:rect];
+    //    UIImage *resizedimage = [self.pictureAddition resizeImage:self.nowImage ForPolaroidFrame:rect];
     
-//    UIImage *combinedImage = [self.pictureAddition imageByCombiningImage:[UIImage imageNamed:@"polaroidFrame.png"] withImage:resizedimage secondImagePlacement:CGPointMake(20.0,16.0)];
+    //    UIImage *combinedImage = [self.pictureAddition imageByCombiningImage:[UIImage imageNamed:@"polaroidFrame.png"] withImage:resizedimage secondImagePlacement:CGPointMake(20.0,16.0)];
     
-//    combinedImageView.image = combinedImage;
+    //    combinedImageView.image = combinedImage;
     [self.view addSubview:combinedImageView];
 }
 
-
--(NSDictionary *)subviewsDictionary
+#pragma mark - CameraDelegate
+-(void)takePhotoTapped:(UIImage *)image
 {
-  if (!_subviewsDictionary)
-  {
-      _subviewsDictionary = NSDictionaryOfVariableBindings(_thenButton, _nowButton);
-  }
+    if (image)
+    {
+        self.nowImage = image;
+    }
     
-    return _subviewsDictionary;
+    [self resignCamera];
 }
+
+#pragma mark - TextOverlayDelegate
+- (void)setTextOverlayToImages
+{
+    //    [self.thenImageView setImage:[self.pictureAddition applyTextOverlayToImage:self.thenImage Position:CGPointMake(0,0) TextSize:200.0 Text:@"Then"] forState:UIControlStateNormal];
+    
+    //    [self.nowImageView setImage:[self.pictureAddition applyTextOverlayToImage:self.nowImage Position:CGPointMake(0,0) TextSize:200.0 Text:@"Now"] forState:UIControlStateNormal];
+    
+}
+
 
 @end

@@ -13,23 +13,11 @@
 #pragma mark - Container View Layout
 - (void)layoutThenAndNowContainerViews
 {
-    self.cameraContainerView.hidden = YES;
     self.nowView.hidden = NO;
+    
     self.toolbar.alpha = 1;
     self.toolbar.hidden = NO;
-    
-    [self.view removeConstraints:self.view.constraints];
-    self.view.translatesAutoresizingMaskIntoConstraints = YES;
-    
-    self.cameraContainerView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.cameraContainerView removeConstraints:self.cameraContainerView.constraints];
-    
-    self.toolbar.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.toolbar removeConstraints:self.toolbar.constraints];
-    
-    self.cropperContainerView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.cropperContainerView removeConstraints:self.cropperContainerView.constraints];
-    
+        
     if (self.horizontalSplit) {
         [self layoutHorizontalSplitOfContainerViews];
     }
@@ -41,8 +29,6 @@
     
     [self layoutThenSubviews];
     [self layoutNowSubviews];
-    
-    [self.view layoutIfNeeded];
 }
 
 - (void)layoutThenSubviews
@@ -78,7 +64,6 @@
     
     [self layoutToolbarOfStandardHeight];
     
-    [self.view layoutIfNeeded];
 }
 
 - (void)layoutVerticalSplitOfContainerViews {
@@ -125,7 +110,7 @@
 
 - (void)animateLayoutVerticalSplitThenViewOnDifferentPlaneThanNowViewWithCompletion:(void (^)(void))completionBlock {
     
-    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+    [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         
         [self layoutVerticalSplitThenViewOnDifferentPlaneThanNowViewWithCompletion];
         
@@ -155,7 +140,7 @@
 
 - (void)animateLayoutVerticalSplitThenViewOnDifferentPlaneThanNowViewAndSwitchedPlacesWithCompletion:(void (^)(void))completionBlock {
     
-    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         
         [self layoutVerticalSplitThenViewOnDifferentPlaneThanNowViewAndSwitchedPlaces];
         
@@ -184,7 +169,7 @@
 
 - (void)animateLayoutVerticalSplitThenViewSwitchedWithNowViewOnSamePlaneWithCompletion:(void (^)(void))completionBlock {
     
-    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+    [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         
         [self layoutVerticalSplitThenViewSwitchedWithNowViewOnSamePlane];
         
@@ -331,9 +316,6 @@
     }];
 }
 
-
-
-
 - (void)bringLeftSubviewToFront
 {
     if (!self.thenOnLeftOrTop)
@@ -354,7 +336,7 @@
     
     self.horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:self.metrics views:self.topBottomViewsDictionary];
     
-    self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_cameraView(==cameraViewBottomAnimated)]" options:0 metrics:self.metrics views:self.topBottomViewsDictionary];
+    self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_cameraView(==568)]" options:0 metrics:self.metrics views:self.topBottomViewsDictionary];
     
     [self addCameraConstraints];
     
@@ -370,7 +352,7 @@
     [self.toolbar setItems:nil animated:YES];
     self.horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
     
-    self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_cameraView(==524)]" options:0 metrics:nil views:self.topBottomViewsDictionary];
+    //self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_cameraView(==524)]" options:0 metrics:nil views:self.topBottomViewsDictionary];
     
     self.horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
     
@@ -450,28 +432,100 @@
     
     [self removeCameraConstraints]; //necessary in case calling from a place where there were previous constraints!
     [self addCameraConstraints]; //resets the constraints using getter methods, since the layout arrays will be nil
+    [self layoutToolbarOfStandardHeight];
     [self.view layoutIfNeeded];
-    
-    [self animateLayoutCameraFromTopOfScreenToToolbarWithCompletion:^{
-        
-        [self animateLayoutCameraFromTopOfScreenToBottomOfScreenPlusHideToolbarWithCompletion:^{
 
+    [self animateLayoutCameraFromTopOfScreenToToolbarWithCompletion:^{
+        [self animateLayoutCameraFromTopOfScreenToBottomOfScreenPlusHideToolbarWithCompletion:^{
             [self layoutCameraPIP];
-            [self layoutCameraNavigationBar];
         }];
     }];
 }
 
 
-- (void)layoutCameraNavigationBar
+- (void)animateThenViewFadeInWithCompletion:(void (^)(void))completionBlock
 {
-    self.navigationItem.rightBarButtonItem = nil;
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(returnToPhotosFromCamera)];
+    [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+        self.thenView.alpha = 1;
+    } completion:^(BOOL finished) {
+        if (completionBlock)
+        {
+            completionBlock();
+        }
+    }];
 }
 
 
+- (void)animateThenViewFadeOutWithCompletion:(void (^)(void))completionBlock
+{
+    [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+        self.thenView.alpha = 0;
+        [self.view layoutIfNeeded];
+    } completion:^(BOOL finished) {
+        if (completionBlock)
+        {
+            completionBlock();
+        }
+    }];
+}
+
+- (void)animateCameraResignWithSetupViewsBlock:(void (^)(void))setupViewsBehindCameraBlock AndCompletion:(void (^)(void))completionBlock {
+    
+    [self animateThenViewFadeOutWithCompletion:^{
+        
+        [self.view bringSubviewToFront:self.cameraContainerView];
+        self.nowView.hidden = NO;
+        self.thenView.transform = CGAffineTransformIdentity;
+        self.thenView.alpha = 1;
+        
+        if (setupViewsBehindCameraBlock)
+        {
+            setupViewsBehindCameraBlock();
+        }
+        
+        [self.view layoutIfNeeded];
+        [self layoutBaseNavbar];
+
+//        [self animateLayoutToolbarOfHeightZeroAtBottomOfScreenWithCompletion:^{
+//            
+//            [self.toolbar setItems:self.baseToolbarItems animated:NO]; //technically not a property...
+//
+//            [self animateLayoutToolbarOfStandardHeightWithCompletion:^{
+//                
+//                [UIView animateWithDuration:0.25 animations:^{
+//                    [self removeCameraConstraints];
+//                    self.horizontalCameraConstraints = nil;
+//                    self.verticalCameraConstraints = nil;
+//                    [self addCameraConstraints]; //resets to default from getter
+//                    
+//                    [self.view layoutIfNeeded];
+//                    
+//                    if(completionBlock)
+//                    {
+//                        completionBlock();
+//                    }
+//                }];
+//            }];
+//        }];
+    }];
+}
+
 #pragma mark - Toolbar layout and animation
-- (void)animateToolbarOfHeightZeroAtBottomOfScreenWithCompletion:(void (^)(void))completionBlock
+
+- (void)layoutToolbar
+{
+    if (self.toolbar.frame.size.height > 0)
+    {
+        [self layoutToolbarOfHeightZeroAtBottomOfScreen];
+    }
+    else
+    {
+        [self layoutToolbarOfStandardHeight];
+    }
+}
+
+
+- (void)animateLayoutToolbarOfHeightZeroAtBottomOfScreenWithCompletion:(void (^)(void))completionBlock
 {
     
     [UIView animateWithDuration:0.3 animations:^{
@@ -508,15 +562,14 @@
     self.horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
     
     [self addToolbarConstraints];
-    
-    [self.view layoutIfNeeded];
-    
 }
 
--(void)animateLayoutToolbarOfStandardHeight:(void (^)(void))completionBlock;
+-(void)animateLayoutToolbarOfStandardHeightWithCompletion:(void (^)(void))completionBlock;
 {
     [UIView animateWithDuration:0.3 animations:^{
-        
+
+        [self layoutToolbarOfStandardHeight];
+
     } completion:^(BOOL finished) {
         if (completionBlock)
         {

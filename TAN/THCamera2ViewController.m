@@ -35,7 +35,7 @@
     rightCropView.backgroundColor = [UIColor blackColor];
     rightCropView.alpha = 0.85;
     
-    self.videoPreview = [[UIView alloc] initWithFrame:CGRectMake(0,0,320,504)];
+    self.videoPreview = [[UIView alloc] initWithFrame:CGRectMake(0,0,320,568)];
     [self.view addSubview:self.videoPreview];
     NSLog(@"Self.view frame: %f %f %f %f ", self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
     NSLog(@"self bounds: %f %f %f %f ", self.view.bounds.origin.x, self.view.bounds.origin.y, self.view.bounds.size.width, self.view.bounds.size.height);
@@ -196,7 +196,7 @@
         [self adjustImageOrientationByDegrees:0];
     }
     
-    [self.delegate didTakePhoto:croppedImage];
+    [self.delegate takePhotoTapped:croppedImage];
 
 }
 

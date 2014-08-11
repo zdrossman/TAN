@@ -37,6 +37,7 @@
 		3190CD6119914A8A0042C87F /* 1174-choose-font-toolbar-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 3190CD5F19914A8A0042C87F /* 1174-choose-font-toolbar-selected.png */; };
 		3190CD6219914A8A0042C87F /* 1174-choose-font-toolbar-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3190CD6019914A8A0042C87F /* 1174-choose-font-toolbar-selected@2x.png */; };
 		31EC3A121997D0CB008892F1 /* THViewController+Autolayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 31EC3A111997D0CB008892F1 /* THViewController+Autolayout.m */; };
+		31FA6ACA199936F4008AD9F8 /* CodeSnips in Resources */ = {isa = PBXBuildFile; fileRef = 31FA6AC9199936F4008AD9F8 /* CodeSnips */; };
 		31FD62EF1995424E00B9753F /* BASSquareCropperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31FD62EE1995424E00B9753F /* BASSquareCropperViewController.m */; };
 		31FD62F419955D7000B9753F /* testImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 31FD62F319955D7000B9753F /* testImage.png */; };
 		31FD62FB19958D2E00B9753F /* 1074-grid-2B rotated.png in Resources */ = {isa = PBXBuildFile; fileRef = 31FD62F919958D2E00B9753F /* 1074-grid-2B rotated.png */; };
@@ -97,6 +98,7 @@
 		3190CD6019914A8A0042C87F /* 1174-choose-font-toolbar-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1174-choose-font-toolbar-selected@2x.png"; sourceTree = "<group>"; };
 		31EC3A101997D0CB008892F1 /* THViewController+Autolayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "THViewController+Autolayout.h"; sourceTree = "<group>"; };
 		31EC3A111997D0CB008892F1 /* THViewController+Autolayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "THViewController+Autolayout.m"; sourceTree = "<group>"; };
+		31FA6AC9199936F4008AD9F8 /* CodeSnips */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CodeSnips; sourceTree = "<group>"; };
 		31FD62ED1995424E00B9753F /* BASSquareCropperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BASSquareCropperViewController.h; sourceTree = "<group>"; };
 		31FD62EE1995424E00B9753F /* BASSquareCropperViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BASSquareCropperViewController.m; sourceTree = "<group>"; };
 		31FD62F319955D7000B9753F /* testImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testImage.png; sourceTree = "<group>"; };
@@ -245,6 +247,7 @@
 				31FD62EE1995424E00B9753F /* BASSquareCropperViewController.m */,
 				3161DEE5198A9CC500EA1064 /* THViewController.h */,
 				3161DEE6198A9CC500EA1064 /* THViewController.m */,
+				31FA6AC9199936F4008AD9F8 /* CodeSnips */,
 				31EC3A101997D0CB008892F1 /* THViewController+Autolayout.h */,
 				31EC3A111997D0CB008892F1 /* THViewController+Autolayout.m */,
 				3161DF16198C020600EA1064 /* THCamera2ViewController.h */,
@@ -353,6 +356,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3161DEE9198A9CC500EA1064 /* Images.xcassets in Resources */,
+				31FA6ACA199936F4008AD9F8 /* CodeSnips in Resources */,
 				3161DF08198A9DB200EA1064 /* blossom.jpg in Resources */,
 				3161DEDB198A9CC400EA1064 /* InfoPlist.strings in Resources */,
 				312A063B198FF3E0001E4FA6 /* funnyBabyPNG.png in Resources */,

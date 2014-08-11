@@ -12,7 +12,7 @@
 
 @protocol THCameraDelegateProtocol <NSObject>
 
--(void)didTakePhoto:(UIImage *)image;
+-(void)takePhotoTapped:(UIImage *)image;
 
 @end
 

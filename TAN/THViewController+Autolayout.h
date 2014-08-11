@@ -20,8 +20,8 @@
 - (void)removeAllConstraints;
 - (void)layoutCamera;
 - (void)layoutToolbarOfStandardHeight;
-- (void)animateToolbarOfHeightZeroAtBottomOfScreenWithCompletion:(void (^)(void))completionBlock;
-- (void)animateLayoutToolbarOfStandardHeight:(void (^)(void))completionBlock;
+- (void)animateLayoutToolbarOfHeightZeroAtBottomOfScreenWithCompletion:(void (^)(void))completionBlock;
+- (void)animateLayoutToolbarOfStandardHeightWithCompletion:(void (^)(void))completionBlock;
 - (void)layoutBaseNavbar;
 - (void)removeAllTopLevelViewConstraints;
 - (void)removeSubviewConstraints;
@@ -31,6 +31,6 @@
 - (void)layoutVerticalSplitOfContainerViews;
 - (void)switchImagesAcrossVerticalSplit;
 - (void)switchImagesAcrossHorizontalSplit;
-
+- (void)animateCameraResignWithSetupViewsBlock:(void (^)(void))setupViewsBehindCameraBlock AndCompletion:(void (^)(void))completionBlock;
 
 @end

@@ -1,0 +1,146 @@
+- (void)initPreviewPanel
+{
+    [self setupCropper:nil];
+//    [self setupPreviewViews];
+//    [self layoutPreviewPanel];
+}
+
+//- (void)setupPreviewViews
+//{
+//    self.thenImage = [UIImage imageNamed:@"funnyBabyPNG"];
+//    
+//    self.navigationController.navigationBar.alpha = 0;
+//    self.navigationController.navigationBar.hidden = YES;
+//
+//    self.thenView = [[UIView alloc] init];
+//    [self.view addSubview:self.thenView];
+//    
+//    self.thenButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [self.thenButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
+//    self.thenButton.clipsToBounds = YES;
+//    [self.thenButton setImage:self.thenImage forState:UIControlStateNormal];
+//    [self.thenButton addTarget:self action:@selector(setupCropper:) forControlEvents:UIControlEventTouchUpInside];
+//    
+//    [self.thenView addSubview:self.thenButton];
+//}
+//
+//- (void)layoutPreviewPanel
+//{
+//    
+//    [self.view removeConstraints:self.view.constraints];
+//    self.view.translatesAutoresizingMaskIntoConstraints = YES;
+//    
+//    [self.thenView removeConstraints:self.thenView.constraints];
+//    self.thenView.translatesAutoresizingMaskIntoConstraints = NO;
+//    
+//    [self.thenButton removeConstraints:self.thenButton.constraints];
+//    self.thenButton.translatesAutoresizingMaskIntoConstraints = NO;
+//    
+//    [self.editButton removeConstraints:self.editButton.constraints];
+//    self.editButton.translatesAutoresizingMaskIntoConstraints = NO;
+//    
+//    id _leftImageView = self.thenView;
+//    
+//    NSDictionary *layoutDictionary = NSDictionaryOfVariableBindings(_thenButton, _leftImageView, _editButton);
+//    
+//    self.horizontalThenImageConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_thenButton]|" options:0 metrics:nil views:layoutDictionary];
+//    
+//    self.verticalThenImageConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_thenButton]|" options:0 metrics:nil views:layoutDictionary];
+//    
+//    self.horizontalThenViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_leftImageView]|" options:0 metrics:nil views:layoutDictionary];
+//    
+//    self.verticalThenViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(64)-[_leftImageView]-(64)-|" options:0 metrics:nil views:layoutDictionary];
+//    
+//    NSArray *verticalEditButtonConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(500)-[_editButton]" options:0 metrics:nil views:layoutDictionary];
+//    
+//    NSArray *horizontalEditButtonConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(150)-[_editButton]" options:0 metrics:nil views:layoutDictionary];
+//    
+//    [self.view addConstraints:self.horizontalThenViewConstraints];
+//    [self.view addConstraints:self.verticalThenViewConstraints];
+//    
+//    [self.view addConstraints:verticalEditButtonConstraints];
+//    [self.view addConstraints:horizontalEditButtonConstraints];
+//    
+//    [self.thenView addConstraints:self.verticalThenImageConstraints];
+//    [self.thenView addConstraints:self.horizontalThenImageConstraints];
+//    
+//    [self.view layoutIfNeeded];
+//    
+//}
+
+- (void)returnToPhotoView
+{
+    if (YES) //replace with bool property pictureTaken
+    {
+        self.nowView.hidden = NO;
+        
+        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+            self.thenButton.alpha = 0;
+        
+//            [self.nowImageView setImage:[self.pictureAddition applyTextOverlayToImage:self.nowImage Position:CGPointMake(0,0) TextSize:200.0 Text:@"Now"] forState:UIControlStateNormal];
+            
+            
+        } completion:^(BOOL finished) {
+            if (finished)
+            {
+                
+                
+                self.thenButton.transform = CGAffineTransformMakeTranslation(0, 504);
+                self.thenButton.transform = CGAffineTransformScale(self.thenButton.transform, 1,1);
+                
+//                [self.nowImageView setImage:[self.pictureAddition applyTextOverlayToImage:self.nowImage Position:CGPointMake(0,0) TextSize:200.0 Text:@"Now"] forState:UIControlStateNormal];
+
+                
+                [UIView animateWithDuration:0.2 animations:^{
+                    self.thenButton.alpha = 1;
+                    
+                    
+                }];
+            }
+        }];
+        
+    }
+    else
+    {
+        
+    }
+    
+    
+}
+
+- (void)goBackToBeginning
+{
+    self.takingPhoto = !self.takingPhoto;
+
+    UIBarButtonItem *cameraButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(cameraTapped:)];
+    
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:nil];
+    
+    self.navigationItem.rightBarButtonItem = cameraButton;
+    self.navigationItem.leftBarButtonItem = doneButton;
+    [self toggleCamera];
+    
+    //CGRect initialFrame = CGRectMake(0,64,self.view.frame.size.width,(self.view.frame.size.height - 64)/2);
+    
+    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+        self.thenButton.alpha = 0;
+        
+        
+    } completion:^(BOOL finished) {
+        if (finished)
+        {
+            
+            
+            self.thenButton.transform = CGAffineTransformMakeTranslation(0, 0);
+            self.thenButton.transform = CGAffineTransformScale(self.thenButton.transform, 1,1);
+            
+            [UIView animateWithDuration:0.2 animations:^{
+                self.thenButton.alpha = 1;
+                
+                
+            }];
+        }
+    }];
+
+}
+

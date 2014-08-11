@@ -18,22 +18,25 @@
 
 #pragma mark - Object Properties
 @property (strong, nonatomic) UIView *cropperContainerView;
-@property (strong, nonatomic) BASSquareCropperViewController *cropperVC;
-
-@property (strong, nonatomic) THCamera2ViewController *cameraVC;
 @property (strong, nonatomic) UIView *cameraContainerView;
+@property (strong, nonatomic) UIView *nowView;
+@property (strong, nonatomic) UIView *thenView;
+
+@property (strong, nonatomic) BASSquareCropperViewController *cropperVC;
+@property (strong, nonatomic) THCamera2ViewController *cameraVC;
+
 @property (strong, nonatomic) UIBarButtonItem *cameraButton;
+@property (strong, nonatomic) UIButton *thenButton;
+@property (strong, nonatomic) UIButton *nowButton;
+@property (strong, nonatomic) UIButton *editButton;
+
+@property (strong, nonatomic) UIImage *thenImage;
+@property (strong, nonatomic) UIImage *nowImage;
+@property (strong, nonatomic) UIImage *previouslyCroppedNowImage;
 
 @property (strong, nonatomic) UIToolbar *toolbar;
 @property (strong, nonatomic) NSArray *toolbarButtonsArray;
-
-@property (strong, nonatomic) UIView *nowView;
-@property (strong, nonatomic) UIView *thenView;
-@property (strong, nonatomic) UIButton *thenButton;
-@property (strong, nonatomic) UIButton *nowButton;
-@property (strong, nonatomic) UIImage *thenImage;
-@property (strong, nonatomic) UIImage *nowImage;
-@property (strong, nonatomic) UIButton *editButton;
+@property (strong, nonatomic) NSArray *baseToolbarItems;
 
 #pragma mark - LayoutConstraint Properties
 @property (strong, nonatomic) NSDictionary *topBottomViewsDictionary;
@@ -51,12 +54,13 @@
 @property (strong, nonatomic) NSArray *verticalThenImageConstraints;
 @property (strong, nonatomic) NSArray *horizontalNowImageConstraints;
 @property (strong, nonatomic) NSArray *horizontalThenImageConstraints;
-
-@property (strong, nonatomic) NSDictionary *metrics;
-
 @property (strong, nonatomic) NSArray *horizontalICVConstraints;
 @property (strong, nonatomic) NSArray *verticalThenViewConstraints;
 @property (strong, nonatomic) NSArray *verticalNowViewConstraints;
+
+@property (strong, nonatomic) NSDictionary *metrics;
+
+
 
 #pragma mark - Other Properties
 @property (nonatomic) BOOL takingPhoto;
@@ -67,11 +71,8 @@
 //@property (nonatomic) THPictureAddition *pictureAddition;
 
 - (void)cameraTapped:(id)sender;
-
+- (void)setupCameraNavigationBar;
 @end
-
-
-
 
 //TODO: Present user with cropped photo taker - WEEK 2 - ZACH
 //TODO: Crop resulting photo from camera at needed ratio of 2:1 - WEEK 2 - ZACH
