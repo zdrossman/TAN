@@ -38,6 +38,7 @@
 		3190CD6219914A8A0042C87F /* 1174-choose-font-toolbar-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3190CD6019914A8A0042C87F /* 1174-choose-font-toolbar-selected@2x.png */; };
 		31EC3A121997D0CB008892F1 /* THViewController+Autolayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 31EC3A111997D0CB008892F1 /* THViewController+Autolayout.m */; };
 		31FA6ACA199936F4008AD9F8 /* CodeSnips in Resources */ = {isa = PBXBuildFile; fileRef = 31FA6AC9199936F4008AD9F8 /* CodeSnips */; };
+		31FA6ACD199959E0008AD9F8 /* THTextOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 31FA6ACC199959E0008AD9F8 /* THTextOverlay.m */; };
 		31FD62EF1995424E00B9753F /* BASSquareCropperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31FD62EE1995424E00B9753F /* BASSquareCropperViewController.m */; };
 		31FD62F419955D7000B9753F /* testImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 31FD62F319955D7000B9753F /* testImage.png */; };
 		31FD62FB19958D2E00B9753F /* 1074-grid-2B rotated.png in Resources */ = {isa = PBXBuildFile; fileRef = 31FD62F919958D2E00B9753F /* 1074-grid-2B rotated.png */; };
@@ -99,6 +100,8 @@
 		31EC3A101997D0CB008892F1 /* THViewController+Autolayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "THViewController+Autolayout.h"; sourceTree = "<group>"; };
 		31EC3A111997D0CB008892F1 /* THViewController+Autolayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "THViewController+Autolayout.m"; sourceTree = "<group>"; };
 		31FA6AC9199936F4008AD9F8 /* CodeSnips */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CodeSnips; sourceTree = "<group>"; };
+		31FA6ACB199959E0008AD9F8 /* THTextOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THTextOverlay.h; sourceTree = "<group>"; };
+		31FA6ACC199959E0008AD9F8 /* THTextOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THTextOverlay.m; sourceTree = "<group>"; };
 		31FD62ED1995424E00B9753F /* BASSquareCropperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BASSquareCropperViewController.h; sourceTree = "<group>"; };
 		31FD62EE1995424E00B9753F /* BASSquareCropperViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BASSquareCropperViewController.m; sourceTree = "<group>"; };
 		31FD62F319955D7000B9753F /* testImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testImage.png; sourceTree = "<group>"; };
@@ -271,6 +274,8 @@
 			isa = PBXGroup;
 			children = (
 				EB51837419974346002AB929 /* THPictureAddition.h */,
+				31FA6ACB199959E0008AD9F8 /* THTextOverlay.h */,
+				31FA6ACC199959E0008AD9F8 /* THTextOverlay.m */,
 				EB51837519974346002AB929 /* THPictureAddition.m */,
 				312A0637198F15DB001E4FA6 /* THCameraButton.h */,
 				312A0638198F15DB001E4FA6 /* THCameraButton.m */,
@@ -403,6 +408,7 @@
 				31FD62EF1995424E00B9753F /* BASSquareCropperViewController.m in Sources */,
 				EB51837619974346002AB929 /* THPictureAddition.m in Sources */,
 				3161DEDD198A9CC400EA1064 /* main.m in Sources */,
+				31FA6ACD199959E0008AD9F8 /* THTextOverlay.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

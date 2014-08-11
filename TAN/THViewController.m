@@ -13,6 +13,7 @@
 #import "BASSquareCropperViewController.h"
 #import "THPictureAddition.h"
 #import "THViewController+Autolayout.h"
+#import "THTextOverlay.h"
 
 //#import "UIImage+Resize.h"
 
@@ -42,7 +43,7 @@ typedef void(^ButtonReplacementBlock)(void);
     }
     UIBarButtonItem *switchSubviewsButton = [[UIBarButtonItem alloc] initWithImage:switchIcon style:UIBarButtonItemStylePlain target:self action:splitSelector];
    
-    UIBarButtonItem *textOverlay = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1174-choose-font-toolbar"] style:UIBarButtonItemStylePlain target:self action:@selector(setTextOverlayToImages)];
+    UIBarButtonItem *textOverlay = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1174-choose-font-toolbar"] style:UIBarButtonItemStylePlain target:self action:@selector(textOverlayTapped)];
     
     UIBarButtonItem *polaroidFrameButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"polaroidIcon.png"] style:UIBarButtonItemStylePlain target:self action:@selector(didTapPolaroidIcon:)];
     
@@ -54,8 +55,8 @@ typedef void(^ButtonReplacementBlock)(void);
  
     if (!_metrics)
     {
+    
         _metrics = @{@"cameraViewTop":@64, @"cameraViewBottom":@0, @"toolbarHeight":@44, @"cameraViewBottomAnimated":@460};
-
     }
     
     return _metrics;
@@ -97,6 +98,8 @@ typedef void(^ButtonReplacementBlock)(void);
     
 -(NSDictionary *)topBottomViewsDictionary
 {
+   
+    
     id _cameraView = self.cameraContainerView;
     id _topLayoutGuide = self.topLayoutGuide;
     id _topImageView = self.thenView;
@@ -104,10 +107,8 @@ typedef void(^ButtonReplacementBlock)(void);
     
     if (self.thenOnLeftOrTop)
     {
-        
         _topImageView = self.thenView;
         _bottomImageView = self.nowView;
-        
     }
     else
     {
@@ -116,6 +117,7 @@ typedef void(^ButtonReplacementBlock)(void);
     }
     
     _topBottomViewsDictionary = NSDictionaryOfVariableBindings(_topImageView, _bottomImageView, _toolbar, _topLayoutGuide, _cameraView);
+    
     
     
     return _topBottomViewsDictionary;
@@ -180,13 +182,6 @@ typedef void(^ButtonReplacementBlock)(void);
     [self.view layoutIfNeeded];
 }
 
-- (void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    
-    //[self setupInitialStateOfImageViews];
-    
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -203,6 +198,10 @@ typedef void(^ButtonReplacementBlock)(void);
     self.nowButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.toolbar = [[UIToolbar alloc] init];
 //    self.pictureAddition = [[THPictureAddition alloc] init];
+    
+    
+    self.nowTextImageView.hidden = YES;
+    self.thenTextImageView.hidden = YES;
     
     [self.view addSubview:self.nowView];
     [self.view addSubview:self.thenView];
@@ -282,6 +281,7 @@ typedef void(^ButtonReplacementBlock)(void);
     [self layoutBaseNavbar];
     
 }
+
 
 
 - (void)setupInitialStateOfImageViews
@@ -364,6 +364,33 @@ typedef void(^ButtonReplacementBlock)(void);
     
     [self layoutCamera];
     [self setupCameraNavigationBar];
+}
+
+- (void)textOverlayTapped {
+    
+    self.thenTextImageView = [[UIImageView alloc] init];
+    THTextOverlay *thenTextOverlay = [[THTextOverlay alloc] initWithImageText:@"Then" Font:[UIFont systemFontOfSize:20] FontSize:20 TextAlignment:NSTextAlignmentLeft ForViewFrameToDrawIn:self.thenButton.frame];
+    self.thenTextImage = [thenTextOverlay imageFromText];
+    self.thenTextImageView.image = self.thenTextImage;
+    
+    self.nowTextImageView = [[UIImageView alloc] init];
+    THTextOverlay *nowTextOverlay = [[THTextOverlay alloc] initWithImageText:@"Now" Font:[UIFont systemFontOfSize:20] FontSize:20 TextAlignment:NSTextAlignmentRight ForViewFrameToDrawIn:self.thenButton.frame];
+    self.nowTextImage = [nowTextOverlay imageFromText];
+    self.nowTextImageView.image = self.nowTextImage;
+    
+    
+    [self.nowView addSubview:self.nowTextImageView];
+    [self.thenView addSubview:self.thenTextImageView];
+    
+    //self.thenTextImageView.backgroundColor = [UIColor orangeColor];
+    //self.nowTextImageView.backgroundColor = [UIColor whiteColor];
+
+    self.textImageViewsDictionary = NSDictionaryOfVariableBindings(_thenTextImageView, _nowTextImageView);
+    [self layoutTextImageViews];
+    
+    self.nowTextImageView.hidden = !self.nowTextImageView.hidden;
+    self.thenTextImageView.hidden = !self.thenTextImageView.hidden;
+
 }
 
 #pragma mark - CropperDelegate

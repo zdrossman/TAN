@@ -32,16 +32,24 @@
 
 @property (strong, nonatomic) UIImage *thenImage;
 @property (strong, nonatomic) UIImage *nowImage;
-@property (strong, nonatomic) UIImage *previouslyCroppedNowImage;
+@property (strong, nonatomic) UIImage *thenImageCropped;
+@property (strong, nonatomic) UIImage *nowImageCropped;
 
 @property (strong, nonatomic) UIToolbar *toolbar;
 @property (strong, nonatomic) NSArray *toolbarButtonsArray;
 @property (strong, nonatomic) NSArray *baseToolbarItems;
 
+@property (strong, nonatomic) UIImage *thenTextImage;
+@property (strong, nonatomic) UIImage *nowTextImage;
+
+@property (strong, nonatomic) UIImageView *thenTextImageView;
+@property (strong, nonatomic) UIImageView *nowTextImageView;
+
 #pragma mark - LayoutConstraint Properties
 @property (strong, nonatomic) NSDictionary *topBottomViewsDictionary;
 @property (strong, nonatomic) NSDictionary *leftRightViewsDictionary;
 @property (strong, nonatomic) NSDictionary *subviewsDictionary;
+@property (strong, nonatomic) NSDictionary *textImageViewsDictionary;
 
 @property (strong, nonatomic) NSArray *horizontalToolbarConstraints;
 @property (strong, nonatomic) NSArray *verticalToolbarConstraints;
