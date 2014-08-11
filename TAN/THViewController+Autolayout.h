@@ -10,11 +10,15 @@
 
 @interface THViewController (Autolayout)
 
-- (void)leftAndRightSwitch;
-- (void)topAndBottomSwitch;
+- (void)switchImagesAcrossVerticalSplit;
+- (void)switchImagesAcrossHorizontalSplit;
 - (void)setVerticalSplit;
 - (void)setHorizontalSplit;
-- (void)generateStandardToolbarConstraints;
 - (void)removeAllConstraints;
+- (void)layoutCamera;
+- (void)layoutToolbarOfStandardHeight;
+- (void)animateToolbarOfHeightZeroAtBottomOfScreenWithCompletion:(void (^)(void))completionBlock;
+- (void)animateLayoutToolbarOfStandardHeight:(void (^)(void))completionBlock;
+- (void)layoutBaseNavbar;
 
 @end

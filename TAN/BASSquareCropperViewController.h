@@ -12,7 +12,7 @@
 
 @protocol BASSquareCropperDelegate <NSObject>
 
-- (void)squareCropperDidCropImage:(UIImage *)croppedImage inCropper:(BASSquareCropperViewController *)cropper;
+- (void)squareCropperDidCropImage:(UIImage *)croppedImage withImageName:(NSString *)name inCropper:(BASSquareCropperViewController *)cropper;
 - (void)squareCropperDidCancelCropInCropper:(BASSquareCropperViewController *)cropper;
 
 @end
@@ -29,8 +29,9 @@
 @property (nonatomic, strong) UIColor  *cancelColor;
 @property (nonatomic, copy)   NSString *cancelText;
 @property (nonatomic, assign) id<BASSquareCropperDelegate>squareCropperDelegate;
-
+@property (nonatomic, assign) NSString *name;
 @property (nonatomic, assign, readonly) CGRect cropRect;
+@property (nonatomic) BOOL editMode;
 
 /**
  *  Standard initializer
@@ -40,6 +41,6 @@
  *
  *  @return BASSquareCropperViewController
  */
-- (instancetype)initWithImage:(UIImage *)image minimumCroppedImageSideLength:(CGFloat)minimumCroppedImageSideLength;
+- (instancetype)initWithImage:(UIImage *)image ImageName:(NSString *)name MinimumCroppedImageSideLength:(CGFloat)minimumCroppedImageSideLength;
 
 @end
