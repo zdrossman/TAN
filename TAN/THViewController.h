@@ -62,7 +62,7 @@
 @property (nonatomic) BOOL takingPhoto;
 @property (nonatomic) BOOL originalOrder;
 @property (nonatomic) BOOL currentPosition;
-//@property (strong, nonatomic) THPictureAddition *pictureAddition;
+@property (nonatomic) THPictureAddition *pictureAddition;
 
 
 - (void)removeAllConstraints;

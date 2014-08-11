@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "THViewController.h"
 
 @interface THPictureAddition : NSObject
 
