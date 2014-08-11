@@ -28,8 +28,8 @@ typedef void(^ButtonReplacementBlock)(void);
 
 - (NSArray *)layoutBaseToolbar
 {
-    UIBarButtonItem *horizontalSplitButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1074-grid-2"] style:UIBarButtonItemStylePlain target:self action:@selector(leftAndRightSwitch)];
-    UIBarButtonItem *verticalSplitButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1074-grid-2B rotated"] style:UIBarButtonItemStylePlain target:self action:@selector(topAndBottomSwitch)];
+    UIBarButtonItem *horizontalSplitButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1074-grid-2"] style:UIBarButtonItemStylePlain target:self action:@selector(switchImagesAcrossHorizontalSplit)];
+    UIBarButtonItem *verticalSplitButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1074-grid-2B rotated"] style:UIBarButtonItemStylePlain target:self action:@selector(switchImagesAcrossVerticalSplit)];
 
     
     UIBarButtonItem *textOverlay = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1174-choose-font-toolbar"] style:UIBarButtonItemStylePlain target:self action:@selector(setTextOverlayToImages)];
@@ -664,7 +664,7 @@ typedef void(^ButtonReplacementBlock)(void);
     return image;
 }
 
-- (void)didReceiveMemoryWarning
+ - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -703,9 +703,10 @@ typedef void(^ButtonReplacementBlock)(void);
 
 - (void)setTextOverlayToImages
 {
-//    [self.thenImageView setImage:[self.pictureAddition applyTextOverlayToImage:self.thenImage Position:CGPointMake(0,0) TextSize:200.0 Text:@"Then"] forState:UIControlStateNormal];
+    NSLog(@"textOverlayButton tapped");
+    [self.thenButton setImage:[self.pictureAddition applyTextOverlayToImage:self.thenImage Position:CGPointMake(0,0) TextSize:200.0 Text:@"Then"] forState:UIControlStateNormal];
 
-//    [self.nowImageView setImage:[self.pictureAddition applyTextOverlayToImage:self.nowImage Position:CGPointMake(0,0) TextSize:200.0 Text:@"Now"] forState:UIControlStateNormal];
+    [self.thenButton setImage:[self.pictureAddition applyTextOverlayToImage:self.nowImage Position:CGPointMake(0,0) TextSize:200.0 Text:@"Now"] forState:UIControlStateNormal];
 
 }
 
@@ -715,11 +716,11 @@ typedef void(^ButtonReplacementBlock)(void);
     
     UIImageView *combinedImageView = [[UIImageView alloc] initWithFrame:rect];
     
-//    UIImage *resizedimage = [self.pictureAddition resizeImage:self.nowImage ForPolaroidFrame:rect];
+    UIImage *resizedimage = [self.pictureAddition resizeImage:self.nowImage ForPolaroidFrame:rect];
     
-//    UIImage *combinedImage = [self.pictureAddition imageByCombiningImage:[UIImage imageNamed:@"polaroidFrame.png"] withImage:resizedimage secondImagePlacement:CGPointMake(20.0,16.0)];
+    UIImage *combinedImage = [self.pictureAddition imageByCombiningImage:[UIImage imageNamed:@"polaroidFrame.png"] withImage:resizedimage secondImagePlacement:CGPointMake(20.0,16.0)];
     
-//    combinedImageView.image = combinedImage;
+    combinedImageView.image = combinedImage;
     [self.view addSubview:combinedImageView];
 }
 
@@ -748,8 +749,9 @@ typedef void(^ButtonReplacementBlock)(void);
         } completion:^(BOOL finished) {
             
             self.currentPosition = YES;
-            
         }];
+        
+        
     }
 }
 
@@ -811,7 +813,6 @@ typedef void(^ButtonReplacementBlock)(void);
   {
       _subviewsDictionary = NSDictionaryOfVariableBindings(_thenButton, _nowButton);
   }
-    
     return _subviewsDictionary;
 }
 
