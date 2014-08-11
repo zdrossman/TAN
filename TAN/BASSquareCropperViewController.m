@@ -20,6 +20,7 @@
 @property (nonatomic, strong) UIImage      *imageToCrop;
 @property (nonatomic, strong) UIButton     *doneButton;
 @property (nonatomic, strong) UIButton     *cancelButton;
+@property (nonatomic, strong) UIButton     *editButton;
 
 @property (nonatomic, assign) CGFloat      zoomScale;
 @property (nonatomic, assign) CGFloat      maximumZoomScale;
@@ -32,12 +33,13 @@
 
 @implementation BASSquareCropperViewController
 
-- (instancetype)initWithImage:(UIImage *)image minimumCroppedImageSideLength:(CGFloat)minimumCroppedImageSideLength
+- (instancetype)initWithImage:(UIImage *)image ImageName:(NSString *)name MinimumCroppedImageSideLength:(CGFloat)minimumCroppedImageSideLength;
 {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         _imageToCrop = image;
         _minimumCroppedImageSideLength = minimumCroppedImageSideLength;
+        _name = name;
     }
     return self;
 }
@@ -71,6 +73,45 @@
     [self.imageView sizeToFit];
     self.minimumCroppedImageSideLength = MIN(MIN(CGRectGetHeight(self.imageView.bounds), CGRectGetWidth(self.imageView.bounds)), self.minimumCroppedImageSideLength);
     
+    
+    if (self.editMode == NO)
+    {
+        [self layoutSubviews];
+        
+        self.topBorderView.alpha = 0;
+        self.bottomBorderView.alpha = 0;
+        self.leftBorderView.alpha = 0;
+        self.rightBorderView.alpha = 0;
+        self.doneButton.alpha = 0;
+        self.cancelButton.alpha = 0;
+        self.croppingOverlayView.layer.borderColor = [UIColor clearColor].CGColor;
+        
+        }
+    else
+    {
+        [self layoutSubviews];
+        self.editButton.hidden = YES;
+    }
+}
+
+- (void)animateSubviewsViaFade
+{
+    [UIView animateWithDuration:0.3 animations:^{
+        self.topBorderView.alpha = 0.85;
+        self.bottomBorderView.alpha = 0.85;
+        self.leftBorderView.alpha = 0.85;
+        self.rightBorderView.alpha = 0.85;
+        self.doneButton.alpha = 1;
+        self.cancelButton.alpha = 1;
+        self.editButton.hidden = YES;
+        self.croppingOverlayView.layer.borderColor = self.borderColor.CGColor;
+        [self.view layoutIfNeeded];
+    }];
+}
+
+
+- (void)layoutSubviews
+{
     self.croppingOverlayView = [UIView new];
     self.croppingOverlayView.backgroundColor = [UIColor clearColor];
     self.croppingOverlayView.layer.borderColor = self.borderColor.CGColor;
@@ -116,7 +157,14 @@
     [self.cancelButton addTarget:self action:@selector(cancelCrop) forControlEvents:UIControlEventTouchUpInside];
     [self.cancelButton sizeToFit];
     
-    NSDictionary *views = NSDictionaryOfVariableBindings(_scrollView, _doneButton, _cancelButton, _croppingOverlayView, _topBorderView, _bottomBorderView, _leftBorderView, _rightBorderView);
+    self.editButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.editButton setTitle:@"Edit" forState:UIControlStateNormal];
+    [self.editButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    self.editButton.titleLabel.font = self.doneFont;
+    [self.editButton addTarget:self action:@selector(animateSubviewsViaFade) forControlEvents:UIControlEventTouchUpInside];
+    [self.editButton sizeToFit];
+    
+    NSDictionary *views = NSDictionaryOfVariableBindings(_scrollView, _doneButton, _cancelButton, _editButton, _croppingOverlayView, _topBorderView, _bottomBorderView, _leftBorderView, _rightBorderView);
     [views enumerateKeysAndObjectsUsingBlock:^(id key, UIView *view, BOOL *stop) {
         view.translatesAutoresizingMaskIntoConstraints = NO;
         [self.view addSubview:view];
@@ -131,6 +179,7 @@
     [self.view sendSubviewToBack:_scrollView];
     [self.view bringSubviewToFront:self.doneButton];
     [self.view bringSubviewToFront:self.cancelButton];
+    [self.view bringSubviewToFront:self.editButton];
     
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_scrollView]|" options:0 metrics:nil views:views]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_scrollView]|" options:0 metrics:nil views:views]];
@@ -142,13 +191,15 @@
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topBorderView][_leftBorderView][_bottomBorderView]|" options:0 metrics:nil views:views]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_topBorderView][_rightBorderView][_bottomBorderView]|" options:0 metrics:nil views:views]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-10-[_cancelButton]->=0-[_doneButton]-10-|" options:NSLayoutFormatAlignAllCenterY metrics:nil views:views]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_editButton]-10-|" options:0 metrics:nil views:views]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|->=130-[_editButton]->=140-|" options:0 metrics:nil views:views]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_doneButton]-10-|" options:0 metrics:nil views:views]];
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_croppingOverlayView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:_croppingOverlayView attribute:NSLayoutAttributeWidth multiplier:2.0f constant:0.0f]];
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_croppingOverlayView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterY multiplier:1.0f constant:0.0f]];
     [self.scrollView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_imageView]|" options:0 metrics: 0 views:scrollViews]];
     [self.scrollView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_imageView]|" options:0 metrics: 0 views:scrollViews]];
-}
 
+}
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -274,7 +325,7 @@
     
     _cropRect = (CGRect){.origin.x = -translation.x, .origin.y = -translation.y, .size.width = croppedImageRect.size.width, .size.height = croppedImageRect.size.height};
     
-    [self.squareCropperDelegate squareCropperDidCropImage:croppedImage inCropper:self];
+    [self.squareCropperDelegate squareCropperDidCropImage:croppedImage withImageName:self.name inCropper:self];
 }
 
 - (void)cancelCrop

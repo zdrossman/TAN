@@ -33,7 +33,7 @@
 @property (strong, nonatomic) UIButton *nowButton;
 @property (strong, nonatomic) UIImage *thenImage;
 @property (strong, nonatomic) UIImage *nowImage;
-
+@property (strong, nonatomic) UIButton *editButton;
 
 #pragma mark - LayoutConstraint Properties
 @property (strong, nonatomic) NSDictionary *topBottomViewsDictionary;
@@ -62,11 +62,15 @@
 @property (nonatomic) BOOL takingPhoto;
 @property (nonatomic) BOOL originalOrder;
 @property (nonatomic) BOOL currentPosition;
-//@property (strong, nonatomic) THPictureAddition *pictureAddition;
+@property (nonatomic) BOOL editMode;
 
+@property (nonatomic) BOOL horizontalSplit;
+@property (nonatomic) BOOL thenOnLeftOrTop;
+
+@property (nonatomic) THPictureAddition *pictureAddition;
 
 - (void)removeAllConstraints;
-- (void)generateStandardToolbarConstraints;
+- (void)cameraTapped:(id)sender;
 
 @end
 
