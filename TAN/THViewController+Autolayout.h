@@ -25,9 +25,9 @@
 - (void)removeAllTopLevelViewConstraints;
 - (void)removeSubviewConstraints;
 
-- (void)layoutThenAndNowScrollViews;
-- (void)layoutHorizontalSplitOfScrollViews;
-- (void)layoutVerticalSplitOfScrollViews;
+- (void)layoutThenAndNowContainerViews;
+- (void)layoutHorizontalSplitOfContainerViews;
+- (void)layoutVerticalSplitOfContainerViews;
 - (void)switchImagesAcrossVerticalSplit;
 - (void)switchImagesAcrossHorizontalSplit;
 - (void)animateCameraResignWithSetupViewsBlock:(void (^)(void))setupViewsBehindCameraBlock AndCompletion:(void (^)(void))completionBlock;

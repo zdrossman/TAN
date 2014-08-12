@@ -11,31 +11,40 @@
 @implementation THViewController (Autolayout)
 
 #pragma mark - Scroll View Layout
-- (void)layoutThenAndNowScrollViews
+- (void)layoutThenAndNowContainerViews
 {
-    self.nowScrollView.hidden = NO;
+    self.nowContainerView.hidden = NO;
     
     self.toolbar.alpha = 1;
     self.toolbar.hidden = NO;
         
     if (self.horizontalSplit) {
-        [self layoutHorizontalSplitOfScrollViews];
+        [self layoutHorizontalSplitOfContainerViews];
     }
     else {
-        [self layoutVerticalSplitOfScrollViews];
+        [self layoutVerticalSplitOfContainerViews];
     }
-    
+
+    [self removeContainerViewConstraints];
     [self removeSubviewConstraints];
 
-    [self layoutThenSubviews];
     [self layoutNowSubviews];
+
+    [self layoutThenSubviews];
 }
 
 - (void)layoutThenSubviews
 {
+    self.verticalThenScrollViewConstraints =  [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_thenScrollView]|" options:0 metrics:self.metrics views:self.subviewsDictionary];
+    
+    self.horizontalThenScrollViewConstraints =  [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_thenScrollView]|" options:0 metrics:self.metrics views:self.subviewsDictionary];
+    
     self.verticalThenImageConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_thenImageView(thenImageHeight)]|" options:0 metrics:self.metrics views:self.subviewsDictionary];
     
     self.horizontalThenImageConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_thenImageView(thenImageWidth)]|" options:0 metrics:self.metrics views:self.subviewsDictionary];
+    
+    [self.thenContainerView addConstraints:self.horizontalThenScrollViewConstraints];
+    [self.thenContainerView addConstraints:self.verticalThenScrollViewConstraints];
     
     [self.thenScrollView addConstraints:self.verticalThenImageConstraints];
     [self.thenScrollView addConstraints:self.horizontalThenImageConstraints];
@@ -43,38 +52,46 @@
 
 - (void)layoutNowSubviews
 {
+    
+    self.verticalNowScrollViewConstraints =  [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_nowScrollView]|" options:0 metrics:self.metrics views:self.subviewsDictionary];
+    
+    self.horizontalNowScrollViewConstraints =  [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_nowScrollView]|" options:0 metrics:self.metrics views:self.subviewsDictionary];
+    
     self.verticalNowImageConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_nowImageView(nowImageHeight)]|" options:0 metrics:self.metrics views:self.subviewsDictionary];
     
     self.horizontalNowImageConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_nowImageView(nowImageWidth)]|" options:0 metrics:self.metrics views:self.subviewsDictionary];
     
+    [self.nowContainerView addConstraints:self.horizontalNowScrollViewConstraints];
+    [self.nowContainerView addConstraints:self.verticalNowScrollViewConstraints];
+
     [self.nowScrollView addConstraints:self.verticalNowImageConstraints];
     [self.nowScrollView addConstraints:self.horizontalNowImageConstraints];
 }
 
 
-- (void)layoutHorizontalSplitOfScrollViews {
+- (void)layoutHorizontalSplitOfContainerViews {
     
-    [self removeThenScrollViewAndNowScrollViewConstraints];
+    [self removeThenContainerViewAndNowContainerViewConstraints];
     
-    self.verticalISVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(124)-[_topScrollView(==230)][_bottomScrollView(==_topScrollView)-(124)-]" options:0 metrics:nil views:self.topBottomViewsDictionary];
-    self.horizontalThenScrollViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_topScrollView]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
-    self.horizontalNowScrollViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_bottomScrollView]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
+    self.verticalICVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(124)-[_topContainerView(==230)][_bottomContainerView(==_topContainerView)-(124)-]" options:0 metrics:nil views:self.topBottomViewsDictionary];
+    self.horizontalNowContainerViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_topContainerView]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
+    self.horizontalThenContainerViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_bottomContainerView]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
     
-    [self addThenScrollViewAndNowScrollViewConstraints];
+    [self addThenContainerViewAndNowContainerViewConstraints];
     
     [self layoutToolbarOfStandardHeight];
     
 }
 
-- (void)layoutVerticalSplitOfScrollViews {
+- (void)layoutVerticalSplitOfContainerViews {
     
-    [self removeThenScrollViewAndNowScrollViewConstraints];
+    [self removeThenContainerViewAndNowContainerViewConstraints];
 
-    self.horizontalISVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_leftScrollView(==160)][_rightScrollView(==_leftScrollView)]" options:0 metrics:nil views:self.leftRightViewsDictionary];
-    self.verticalThenScrollViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(124)-[_leftScrollView]-(124)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
-    self.verticalNowScrollViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(124)-[_rightScrollView]-(124)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
+    self.horizontalICVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_leftContainerView(==160)][_rightContainerView(==_leftContainerView)]" options:0 metrics:nil views:self.leftRightViewsDictionary];
+    self.verticalThenContainerViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(124)-[_leftContainerView]-(124)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
+    self.verticalNowContainerViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(124)-[_rightContainerView]-(124)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
     
-    [self addThenScrollViewAndNowScrollViewConstraints];
+    [self addThenContainerViewAndNowContainerViewConstraints];
     
     [self layoutToolbarOfStandardHeight];
     
@@ -85,11 +102,11 @@
 - (void)switchImagesAcrossVerticalSplit{
     
     [self bringLeftSubviewToFront];
-    [self animateLayoutVerticalSplitThenScrollViewOnDifferentPlaneThanNowScrollViewWithCompletion:^{
+    [self animateLayoutVerticalSplitThenContainerViewOnDifferentPlaneThanNowContainerViewWithCompletion:^{
         
-        [self animateLayoutVerticalSplitThenScrollViewOnDifferentPlaneThanNowScrollViewAndSwitchedPlacesWithCompletion:^{
+        [self animateLayoutVerticalSplitThenContainerViewOnDifferentPlaneThanNowContainerViewAndSwitchedPlacesWithCompletion:^{
             
-            [self animateLayoutVerticalSplitThenScrollViewSwitchedWithNowScrollViewOnSamePlaneWithCompletion:^{
+            [self animateLayoutVerticalSplitThenContainerViewSwitchedWithNowContainerViewOnSamePlaneWithCompletion:^{
                 self.thenOnLeftOrTop = !self.thenOnLeftOrTop;
             }];
         }];
@@ -97,24 +114,24 @@
 }
 
 //TODO: Add comment explaining animation
-- (void)layoutVerticalSplitThenScrollViewOnDifferentPlaneThanNowScrollViewWithCompletion {
+- (void)layoutVerticalSplitThenContainerViewOnDifferentPlaneThanNowContainerViewWithCompletion {
     
-    [self removeThenScrollViewAndNowScrollViewConstraints];
+    [self removeThenContainerViewAndNowContainerViewConstraints];
     
-    self.verticalThenScrollViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(143)-[_leftScrollView]-(143)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
-    self.verticalNowScrollViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(128)-[_rightScrollView]-(128)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
-    self.horizontalISVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(15)-[_leftScrollView(==130)]-(15)-[_rightScrollView(==160)]" options:0 metrics:nil views:self.leftRightViewsDictionary];
+    self.verticalThenContainerViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(143)-[_leftContainerView]-(143)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
+    self.verticalNowContainerViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(128)-[_rightContainerView]-(128)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
+    self.horizontalICVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(15)-[_leftContainerView(==130)]-(15)-[_rightContainerView(==160)]" options:0 metrics:nil views:self.leftRightViewsDictionary];
     
-    [self addThenScrollViewAndNowScrollViewConstraints];
+    [self addThenContainerViewAndNowContainerViewConstraints];
     
     [self.view layoutIfNeeded];
 }
 
-- (void)animateLayoutVerticalSplitThenScrollViewOnDifferentPlaneThanNowScrollViewWithCompletion:(void (^)(void))completionBlock {
+- (void)animateLayoutVerticalSplitThenContainerViewOnDifferentPlaneThanNowContainerViewWithCompletion:(void (^)(void))completionBlock {
     
     [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         
-        [self layoutVerticalSplitThenScrollViewOnDifferentPlaneThanNowScrollViewWithCompletion];
+        [self layoutVerticalSplitThenContainerViewOnDifferentPlaneThanNowContainerViewWithCompletion];
         
     } completion:^(BOOL finished) {
         if (completionBlock)
@@ -125,26 +142,26 @@
 }
 
 //TODO: Add comment explaining animation
-- (void)layoutVerticalSplitThenScrollViewOnDifferentPlaneThanNowScrollViewAndSwitchedPlaces {
+- (void)layoutVerticalSplitThenContainerViewOnDifferentPlaneThanNowContainerViewAndSwitchedPlaces {
     
-    [self removeThenScrollViewAndNowScrollViewConstraints];
+    [self removeThenContainerViewAndNowContainerViewConstraints];
     
-    self.verticalThenScrollViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(143)-[_leftScrollView]-(143)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
-    self.verticalNowScrollViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(128)-[_rightScrollView]-(128)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
-    self.horizontalISVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_rightScrollView(==160)]-(15)-[_leftScrollView(==130)]-(15)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
+    self.verticalThenContainerViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(143)-[_leftContainerView]-(143)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
+    self.verticalNowContainerViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(128)-[_rightContainerView]-(128)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
+    self.horizontalICVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_rightContainerView(==160)]-(15)-[_leftContainerView(==130)]-(15)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
     
-    [self addThenScrollViewAndNowScrollViewConstraints];
+    [self addThenContainerViewAndNowContainerViewConstraints];
     
     [self layoutToolbarOfStandardHeight];
     
     [self.view layoutIfNeeded];
 }
 
-- (void)animateLayoutVerticalSplitThenScrollViewOnDifferentPlaneThanNowScrollViewAndSwitchedPlacesWithCompletion:(void (^)(void))completionBlock {
+- (void)animateLayoutVerticalSplitThenContainerViewOnDifferentPlaneThanNowContainerViewAndSwitchedPlacesWithCompletion:(void (^)(void))completionBlock {
     
     [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         
-        [self layoutVerticalSplitThenScrollViewOnDifferentPlaneThanNowScrollViewAndSwitchedPlaces];
+        [self layoutVerticalSplitThenContainerViewOnDifferentPlaneThanNowContainerViewAndSwitchedPlaces];
         
     } completion:^(BOOL finished) {
         if (completionBlock)
@@ -155,25 +172,25 @@
 }
 
 //TODO: Add comment explaining animation
-- (void)layoutVerticalSplitThenScrollViewSwitchedWithNowScrollViewOnSamePlane {
+- (void)layoutVerticalSplitThenContainerViewSwitchedWithNowContainerViewOnSamePlane {
     
-    [self.view removeConstraints:self.verticalThenScrollViewConstraints];
-    [self.view removeConstraints:self.horizontalISVConstraints];
+    [self.view removeConstraints:self.verticalThenContainerViewConstraints];
+    [self.view removeConstraints:self.horizontalICVConstraints];
     
-    self.verticalThenScrollViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(128)-[_leftScrollView]-(128)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
-    self.horizontalISVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_rightScrollView(==160)][_leftScrollView(==_rightScrollView)]|" options:0 metrics:nil views:self.leftRightViewsDictionary];
+    self.verticalThenContainerViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(128)-[_leftContainerView]-(128)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
+    self.horizontalICVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_rightContainerView(==160)][_leftContainerView(==_rightContainerView)]|" options:0 metrics:nil views:self.leftRightViewsDictionary];
     
-    [self.view addConstraints:self.verticalThenScrollViewConstraints];
-    [self.view addConstraints:self.horizontalISVConstraints];
+    [self.view addConstraints:self.verticalThenContainerViewConstraints];
+    [self.view addConstraints:self.horizontalICVConstraints];
     
     [self.view layoutIfNeeded];
 }
 
-- (void)animateLayoutVerticalSplitThenScrollViewSwitchedWithNowScrollViewOnSamePlaneWithCompletion:(void (^)(void))completionBlock {
+- (void)animateLayoutVerticalSplitThenContainerViewSwitchedWithNowContainerViewOnSamePlaneWithCompletion:(void (^)(void))completionBlock {
     
     [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         
-        [self layoutVerticalSplitThenScrollViewSwitchedWithNowScrollViewOnSamePlane];
+        [self layoutVerticalSplitThenContainerViewSwitchedWithNowContainerViewOnSamePlane];
         
     } completion:^(BOOL finished) {
         if (completionBlock)
@@ -191,14 +208,14 @@
     self.nowImageView.layer.shadowOffset = CGSizeMake(0,0);
     self.nowImageView.layer.shadowRadius = 25;
     
-    [self animateLayoutHorizontalSplitThenScrollViewOnDifferentPlaneThanNowScrollViewWithCompletion:^{
+    [self animateLayoutHorizontalSplitThenContainerViewOnDifferentPlaneThanNowContainerViewWithCompletion:^{
         
         //        self.thenImageView.layer.shadowOffset = CGSizeMake(20,50);
         //        self.thenImageView.layer.shadowRadius = 50;
         //        self.thenImageView.layer.shadowOpacity = 1;
         //
         
-        [self animateLayoutHorizontalSplitThenScrollViewOnDifferentPlaneThanNowScrollViewAndSwitchedPlacesWithCompletion:^{
+        [self animateLayoutHorizontalSplitThenContainerViewOnDifferentPlaneThanNowContainerViewAndSwitchedPlacesWithCompletion:^{
             
             NSLog(@"Animation for setupPhotos called");
             
@@ -209,7 +226,7 @@
             [self.nowImageView.layer addAnimation:anim forKey:@"shadowOpacity"];
             self.nowImageView.layer.shadowOpacity = 0.0;
             
-            [self animateLayoutHorizontalSplitThenScrollViewSwitchedWithNowScrollViewOnSamePlaneWithCompletion:^{
+            [self animateLayoutHorizontalSplitThenContainerViewSwitchedWithNowContainerViewOnSamePlaneWithCompletion:^{
                 self.thenOnLeftOrTop = !self.thenOnLeftOrTop;
             }];
         }];
@@ -225,24 +242,24 @@
 }
 
 
-- (void)layoutHorizontalSplitThenScrollViewOnDifferentPlaneThanNowScrollViewWithCompletion {
+- (void)layoutHorizontalSplitThenContainerViewOnDifferentPlaneThanNowContainerViewWithCompletion {
     
-    [self removeThenScrollViewAndNowScrollViewConstraints];
+    [self removeThenContainerViewAndNowContainerViewConstraints];
     
-    self.horizontalThenScrollViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(15)-[_topScrollView(==290)]-(15)-|" options:0 metrics:nil views:self.topBottomViewsDictionary];
-    self.horizontalNowScrollViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_bottomScrollView]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
-    self.verticalISVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(79)-[_topScrollView(==200)]-(15)-[_bottomScrollView(==230)]" options:0 metrics:nil views:self.topBottomViewsDictionary];
+    self.horizontalThenContainerViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(15)-[_topContainerView(==290)]-(15)-|" options:0 metrics:nil views:self.topBottomViewsDictionary];
+    self.horizontalNowContainerViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_bottomContainerView]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
+    self.verticalICVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(79)-[_topContainerView(==200)]-(15)-[_bottomContainerView(==230)]" options:0 metrics:nil views:self.topBottomViewsDictionary];
     
-    [self addThenScrollViewAndNowScrollViewConstraints];
+    [self addThenContainerViewAndNowContainerViewConstraints];
     
     [self.view layoutIfNeeded];
 }
 
-- (void)animateLayoutHorizontalSplitThenScrollViewOnDifferentPlaneThanNowScrollViewWithCompletion:(void (^)(void))completionBlock {
+- (void)animateLayoutHorizontalSplitThenContainerViewOnDifferentPlaneThanNowContainerViewWithCompletion:(void (^)(void))completionBlock {
     
     [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         
-        [self layoutHorizontalSplitThenScrollViewOnDifferentPlaneThanNowScrollViewWithCompletion];
+        [self layoutHorizontalSplitThenContainerViewOnDifferentPlaneThanNowContainerViewWithCompletion];
         
     } completion:^(BOOL finished) {
         if (completionBlock)
@@ -253,26 +270,26 @@
 }
 
 //TODO: Add comment explaining animation
-- (void)layoutHorizontalSplitThenScrollViewOnDifferentPlaneThanNowScrollViewAndSwitchedPlaces {
+- (void)layoutHorizontalSplitThenContainerViewOnDifferentPlaneThanNowContainerViewAndSwitchedPlaces {
     
-    [self removeThenScrollViewAndNowScrollViewConstraints];
+    [self removeThenContainerViewAndNowContainerViewConstraints];
     
-    self.horizontalThenScrollViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(15)-[_topScrollView(==290)]-(15)-|" options:0 metrics:nil views:self.topBottomViewsDictionary];
-    self.verticalISVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(64)-[_bottomScrollView(==230)]-(15)-[_topScrollView(==200)]" options:0 metrics:nil views:self.topBottomViewsDictionary];
-    self.horizontalNowScrollViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_bottomScrollView]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
+    self.horizontalNowContainerViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(15)-[_topContainerView(==290)]-(15)-|" options:0 metrics:nil views:self.topBottomViewsDictionary];
+    self.verticalICVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(64)-[_bottomContainerView(==230)]-(15)-[_topContainerView(==200)]" options:0 metrics:nil views:self.topBottomViewsDictionary];
+    self.horizontalThenContainerViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_bottomContainerView]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
     
-    [self addThenScrollViewAndNowScrollViewConstraints];
+    [self addThenContainerViewAndNowContainerViewConstraints];
     
     [self layoutToolbarOfStandardHeight];
 
     [self.view layoutIfNeeded];
 }
 
-- (void)animateLayoutHorizontalSplitThenScrollViewOnDifferentPlaneThanNowScrollViewAndSwitchedPlacesWithCompletion:(void (^)(void))completionBlock {
+- (void)animateLayoutHorizontalSplitThenContainerViewOnDifferentPlaneThanNowContainerViewAndSwitchedPlacesWithCompletion:(void (^)(void))completionBlock {
     
     [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         
-        [self layoutHorizontalSplitThenScrollViewOnDifferentPlaneThanNowScrollViewAndSwitchedPlaces];
+        [self layoutHorizontalSplitThenContainerViewOnDifferentPlaneThanNowContainerViewAndSwitchedPlaces];
         
     } completion:^(BOOL finished) {
         if (completionBlock)
@@ -283,14 +300,14 @@
 }
 
 //TODO: Add comment explaining animation
-- (void)layoutHorizontalSplitThenScrollViewSwitchedWithNowScrollViewOnSamePlane {
+- (void)layoutHorizontalSplitThenContainerViewSwitchedWithNowContainerViewOnSamePlane {
     
-    [self.view removeConstraints:self.horizontalThenScrollViewConstraints];
-    [self.view removeConstraints:self.verticalISVConstraints];
+    [self.view removeConstraints:self.horizontalNowContainerViewConstraints];
+    [self.view removeConstraints:self.verticalICVConstraints];
     
     
-    self.horizontalThenScrollViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_topScrollView]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
-    self.verticalISVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(64)-[_bottomScrollView(==230)][_topScrollView(==230)]" options:0 metrics:nil views:self.topBottomViewsDictionary];
+    self.horizontalThenContainerViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_topContainerView]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
+    self.verticalICVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(64)-[_bottomContainerView(==230)][_topContainerView(==230)]" options:0 metrics:nil views:self.topBottomViewsDictionary];
     
     
     self.nowImageView.layer.shadowOffset = CGSizeMake(0,0);
@@ -298,17 +315,17 @@
     //                  self.nowImageView.layer.shadowOpacity = 0;
     
     
-    [self.view addConstraints:self.horizontalThenScrollViewConstraints];
-    [self.view addConstraints:self.verticalISVConstraints];
+    [self.view addConstraints:self.horizontalThenContainerViewConstraints];
+    [self.view addConstraints:self.verticalICVConstraints];
     
     [self.view layoutIfNeeded];
 }
 
-- (void)animateLayoutHorizontalSplitThenScrollViewSwitchedWithNowScrollViewOnSamePlaneWithCompletion:(void (^)(void))completionBlock {
+- (void)animateLayoutHorizontalSplitThenContainerViewSwitchedWithNowContainerViewOnSamePlaneWithCompletion:(void (^)(void))completionBlock {
     
     [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         
-        [self layoutHorizontalSplitThenScrollViewSwitchedWithNowScrollViewOnSamePlane];
+        [self layoutHorizontalSplitThenContainerViewSwitchedWithNowContainerViewOnSamePlane];
         
     } completion:^(BOOL finished) {
         if (completionBlock)
@@ -322,11 +339,11 @@
 {
     if (!self.thenOnLeftOrTop)
     {
-        [self.view bringSubviewToFront:self.thenScrollView];
+        [self.view bringSubviewToFront:self.thenContainerView];
     }
     else
     {
-        [self.view bringSubviewToFront:self.nowScrollView];
+        [self.view bringSubviewToFront:self.nowContainerView];
     }
 }
 
@@ -397,33 +414,32 @@
 
 - (void)layoutCameraPIP
 {
-    self.nowScrollView.hidden = YES;
+    self.nowContainerView.hidden = YES;
 
-    [self removeThenScrollViewAndNowScrollViewConstraints];
+    [self removeThenContainerViewAndNowContainerViewConstraints];
     
-    self.horizontalThenScrollViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(25)-[_leftScrollView]" options:0 metrics:nil views:self.leftRightViewsDictionary];
+    self.horizontalThenContainerViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(25)-[_leftContainerView]" options:0 metrics:nil views:self.leftRightViewsDictionary];
     
-    self.verticalISVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(400)-[_leftScrollView]" options:0 metrics:nil views:self.leftRightViewsDictionary];
+    self.verticalICVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(400)-[_leftContainerView]" options:0 metrics:nil views:self.leftRightViewsDictionary];
     
     //unusual scenario in which we cannot use our standard add constraint methods
-    [self.view addConstraints:self.horizontalThenScrollViewConstraints];
-    [self.view addConstraints:self.verticalISVConstraints];
+    [self.view addConstraints:self.horizontalNowContainerViewConstraints];
+    [self.view addConstraints:self.verticalICVConstraints];
     
     [self.view layoutIfNeeded];
     
     [self.view bringSubviewToFront:self.thenScrollView];
     
-    self.thenScrollView.alpha = 0;
-    self.thenScrollView.transform = CGAffineTransformMakeScale(0.4, 0.4);
-    self.thenScrollView.scrollEnabled = NO;
-    self.thenScrollView.hidden = NO;
+    self.thenContainerView.alpha = 0;
+    self.thenContainerView.transform = CGAffineTransformMakeScale(0.4, 0.4);
+    self.thenContainerView.hidden = NO;
     
     //[self removeToolbarConstraints];
     
     //[self slideToolbarUpWithCompletionBlock:nil];
     
     [UIView animateWithDuration:1 animations:^{
-        self.thenScrollView.alpha = 1;
+        self.thenContainerView.alpha = 1;
     }];
 }
 
@@ -447,7 +463,7 @@
 }
 
 
-- (void)animateThenScrollViewFadeInWithCompletion:(void (^)(void))completionBlock
+- (void)animateThenContainerViewFadeInWithCompletion:(void (^)(void))completionBlock
 {
     [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         self.thenScrollView.alpha = 1;
@@ -460,7 +476,7 @@
 }
 
 
-- (void)animateThenScrollViewFadeOutWithCompletion:(void (^)(void))completionBlock
+- (void)animateThenContainerViewFadeOutWithCompletion:(void (^)(void))completionBlock
 {
     [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
         self.thenScrollView.alpha = 0;
@@ -475,10 +491,10 @@
 
 - (void)animateCameraResignWithSetupViewsBlock:(void (^)(void))setupViewsBehindCameraBlock AndCompletion:(void (^)(void))completionBlock {
     
-    [self animateThenScrollViewFadeOutWithCompletion:^{
+    [self animateThenContainerViewFadeOutWithCompletion:^{
         
         [self.view bringSubviewToFront:self.cameraContainerView];
-        self.nowScrollView.hidden = NO;
+        self.nowContainerView.hidden = NO;
         self.thenScrollView.transform = CGAffineTransformIdentity;
         self.thenScrollView.alpha = 1;
         
@@ -591,49 +607,49 @@
 }
 
 #pragma mark - Constraint Addition and Removal
-- (void)removeThenScrollViewAndNowScrollViewConstraints {
+- (void)removeThenContainerViewAndNowContainerViewConstraints {
     if (self.horizontalSplit)
     {
-        if (self.verticalISVConstraints) {
-            [self.view removeConstraints:self.verticalISVConstraints];
+        if (self.verticalICVConstraints) {
+            [self.view removeConstraints:self.verticalICVConstraints];
         }
         
-        if (self.horizontalNowScrollViewConstraints) {
-            [self.view removeConstraints:self.horizontalNowScrollViewConstraints];
+        if (self.horizontalNowContainerViewConstraints) {
+            [self.view removeConstraints:self.horizontalNowContainerViewConstraints];
         }
         
-        if (self.horizontalThenScrollViewConstraints) {
-            [self.view removeConstraints:self.horizontalThenScrollViewConstraints];
+        if (self.horizontalThenContainerViewConstraints) {
+            [self.view removeConstraints:self.horizontalThenContainerViewConstraints];
         }
     }
     else
     {
-        if (self.horizontalISVConstraints) {
-            [self.view removeConstraints:self.horizontalISVConstraints];
+        if (self.horizontalICVConstraints) {
+            [self.view removeConstraints:self.horizontalICVConstraints];
         }
         
-        if (self.verticalNowScrollViewConstraints) {
-            [self.view removeConstraints:self.verticalNowScrollViewConstraints];
+        if (self.verticalNowContainerViewConstraints) {
+            [self.view removeConstraints:self.verticalNowContainerViewConstraints];
         }
         
-        if (self.verticalThenScrollViewConstraints) {
-            [self.view removeConstraints:self.verticalThenScrollViewConstraints];
+        if (self.verticalThenContainerViewConstraints) {
+            [self.view removeConstraints:self.verticalThenContainerViewConstraints];
         }
     }
 }
 
-- (void)addThenScrollViewAndNowScrollViewConstraints {
+- (void)addThenContainerViewAndNowContainerViewConstraints {
     if (self.horizontalSplit)
     {
-        [self.view addConstraints:self.verticalISVConstraints];
-        [self.view addConstraints:self.horizontalNowScrollViewConstraints];
-        [self.view addConstraints:self.horizontalThenScrollViewConstraints];
+        [self.view addConstraints:self.verticalICVConstraints];
+        [self.view addConstraints:self.horizontalNowContainerViewConstraints];
+        [self.view addConstraints:self.horizontalThenContainerViewConstraints];
     }
     else
     {
-        [self.view addConstraints:self.horizontalISVConstraints];
-        [self.view addConstraints:self.verticalNowScrollViewConstraints];
-        [self.view addConstraints:self.verticalThenScrollViewConstraints];
+        [self.view addConstraints:self.horizontalICVConstraints];
+        [self.view addConstraints:self.verticalNowContainerViewConstraints];
+        [self.view addConstraints:self.verticalThenContainerViewConstraints];
     }
 }
 
@@ -676,19 +692,37 @@
     self.cameraContainerView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.cameraContainerView removeConstraints:self.cameraContainerView.constraints];
     
+    self.thenContainerView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.thenContainerView removeConstraints:self.thenContainerView.constraints];
+    
+    self.nowContainerView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.nowContainerView removeConstraints:self.nowContainerView.constraints];
+
     self.toolbar.translatesAutoresizingMaskIntoConstraints = NO;
     [self.toolbar removeConstraints:self.toolbar.constraints];
 }
 
+- (void)removeContainerViewConstraints {
+    
+    self.thenContainerView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.thenContainerView removeConstraints:self.thenContainerView.constraints];
+    
+    self.nowContainerView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.nowContainerView removeConstraints:self.nowContainerView.constraints];
+}
+
 - (void)removeSubviewConstraints {
-    self.nowScrollView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.nowScrollView removeConstraints:self.nowScrollView.constraints];
+    self.nowContainerView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.nowContainerView removeConstraints:self.nowContainerView.constraints];
     
     self.thenScrollView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.thenScrollView removeConstraints:self.thenScrollView.constraints];
-    
-    self.thenContentView.translatesAutoresizingMaskIntoConstraints = YES;
-    self.thenContentView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+
+    self.nowScrollView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.nowScrollView removeConstraints:self.nowScrollView.constraints];
+
+//    self.thenContentView.translatesAutoresizingMaskIntoConstraints = YES;
+//    self.thenContentView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
     self.thenScrollView.translatesAutoresizingMaskIntoConstraints = NO;
     self.thenImageView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -704,6 +738,7 @@
 
 - (void)layoutTextLabels
 {
+    //TODO: COMPLETE METHOD
     
     NSLayoutConstraint *thenLabelLeft = [NSLayoutConstraint constraintWithItem:self.thenLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.thenScrollView attribute:NSLayoutAttributeLeft multiplier:1 constant:20];
     
@@ -720,5 +755,6 @@
 
     
 }
+
 
 @end

@@ -63,6 +63,7 @@ typedef void(^ButtonReplacementBlock)(void);
     
 }
 
+
 - (UIImageView *)nowImageView {
     
     if (self.nowImage)
@@ -97,21 +98,21 @@ typedef void(^ButtonReplacementBlock)(void);
 {
     id _cameraView = self.cameraContainerView;
     id _topLayoutGuide = self.topLayoutGuide;
-    id _topScrollView = self.thenScrollView;
-    id _bottomScrollView = self.nowScrollView;
+    id _topContainerView;
+    id _bottomContainerView;
     
     if (self.thenOnLeftOrTop)
     {
-        _topScrollView = self.thenScrollView;
-        _bottomScrollView = self.nowScrollView;
+        _topContainerView = self.thenContainerView;
+        _bottomContainerView = self.nowContainerView;
     }
     else
     {
-        _bottomScrollView = self.thenScrollView;
-        _topScrollView = self.nowScrollView;
+        _bottomContainerView = self.thenContainerView;
+        _topContainerView = self.nowContainerView;
     }
     
-    _topBottomViewsDictionary = NSDictionaryOfVariableBindings(_topScrollView, _bottomScrollView, _toolbar, _topLayoutGuide, _cameraView);
+    _topBottomViewsDictionary = NSDictionaryOfVariableBindings(_topContainerView, _bottomContainerView, _toolbar, _topLayoutGuide, _cameraView);
     
     
     
@@ -120,24 +121,24 @@ typedef void(^ButtonReplacementBlock)(void);
 
 -(NSDictionary *)leftRightViewsDictionary{
     
-    id _leftScrollView = self.thenScrollView;
-    id _rightScrollView = self.nowScrollView;
+    id _leftContainerView;
+    id _rightContainerView;
     id _cameraView = self.cameraContainerView;
     
     if (self.thenOnLeftOrTop)
     {
         
-        _leftScrollView = self.thenScrollView;
-        _rightScrollView = self.nowScrollView;
+        _leftContainerView = self.thenContainerView;
+        _rightContainerView = self.nowContainerView;
         
     }
     else
     {
-        _rightScrollView = self.thenScrollView;
-        _leftScrollView = self.nowScrollView;
+        _rightContainerView = self.thenContainerView;
+        _leftContainerView = self.nowContainerView;
     }
     
-    _leftRightViewsDictionary = NSDictionaryOfVariableBindings(_leftScrollView, _rightScrollView,_cameraView,_toolbar);
+    _leftRightViewsDictionary = NSDictionaryOfVariableBindings(_leftContainerView, _rightContainerView,_cameraView,_toolbar);
     
     return _leftRightViewsDictionary;
 }
@@ -184,6 +185,9 @@ typedef void(^ButtonReplacementBlock)(void);
 
 - (void)baseInit{
 
+    self.nowContainerView = [[UIView alloc] init];
+    self.thenContainerView = [[UIView alloc] init];
+    
     self.nowScrollView = [[UIScrollView alloc] init];
     self.thenScrollView = [[UIScrollView alloc] init];
     
@@ -198,17 +202,16 @@ typedef void(^ButtonReplacementBlock)(void);
     self.thenScrollView.maximumZoomScale = 4;
     self.thenScrollView.minimumZoomScale = thenMinZoomScale;
     
-    
     self.nowScrollView.showsHorizontalScrollIndicator = NO;
     self.nowScrollView.showsVerticalScrollIndicator = NO;
     self.thenScrollView.showsHorizontalScrollIndicator = NO;
     self.thenScrollView.showsVerticalScrollIndicator = NO;
     
-    self.nowScrollView.layer.borderColor = [UIColor whiteColor].CGColor;
-    self.nowScrollView.layer.borderWidth = 3;
+    self.nowContainerView.layer.borderColor = [UIColor whiteColor].CGColor;
+    self.nowContainerView.layer.borderWidth = 3;
     
-    self.thenScrollView.layer.borderColor = [UIColor whiteColor].CGColor;
-    self.thenScrollView.layer.borderWidth = 3;
+    self.thenContainerView.layer.borderColor = [UIColor whiteColor].CGColor;
+    self.thenContainerView.layer.borderWidth = 3;
 
     self.cameraContainerView = [[UIView alloc] init];
     
@@ -220,19 +223,20 @@ typedef void(^ButtonReplacementBlock)(void);
     
     self.nowLabel = [[UILabel alloc] init];
     self.thenLabel = [[UILabel alloc] init];
-
-    [self.view addSubview:self.nowScrollView];
-    [self.view addSubview:self.thenScrollView];
+    
+    [self.view addSubview:self.thenContainerView];
+    [self.view addSubview:self.nowContainerView];
     [self.view addSubview:self.toolbar];
     [self.view addSubview:self.cameraContainerView];
-
-    //[self.nowView addSubview:self.nowButton];
-    //[self.thenView addSubview:self.thenButton];
-    [self.view addSubview:self.thenScrollView];
-    [self.view addSubview:self.nowScrollView];
     
+
+    [self.thenContainerView addSubview:self.thenScrollView];
+    [self.nowContainerView addSubview:self.nowScrollView];
     [self.thenScrollView addSubview:self.thenImageView];
     [self.nowScrollView addSubview:self.nowImageView];
+    
+    [self.thenScrollView setBackgroundColor:[UIColor redColor]];
+    [self.nowScrollView setBackgroundColor:[UIColor yellowColor]];
     
     [self.toolbar setItems:self.baseToolbarItems]; //technically not a property...
 }
@@ -265,7 +269,7 @@ typedef void(^ButtonReplacementBlock)(void);
     self.cameraContainerView.hidden = YES;
     
     //FIXIT: Should i keep this line? self.thenImageView.alpha =1.0;
-    [self layoutThenAndNowScrollViews];
+    [self layoutThenAndNowContainerViews];
     [self layoutBaseNavbar];
     
 }
@@ -415,7 +419,7 @@ typedef void(^ButtonReplacementBlock)(void);
         self.nowScrollView.maximumZoomScale = 4;
         self.nowScrollView.minimumZoomScale = nowMinZoomScale;
         
-        [self layoutThenAndNowScrollViews];
+        [self layoutThenAndNowContainerViews];
     }
     
     [self resignCamera];

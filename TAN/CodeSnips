@@ -144,3 +144,22 @@
 
 }
 
+- (void)layoutScrollViews
+{
+    
+    self.horizontalThenScrollViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_thenScrollView]|" options:0 metrics:nil views:self.subviewsDictionary];
+    
+    self.verticalThenScrollViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_thenScrollView]|" options:0 metrics:nil views:self.subviewsDictionary];
+    
+    self.horizontalNowScrollViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_nowScrollView]|" options:0 metrics:nil views:self.subviewsDictionary];
+    
+    self.verticalNowScrollViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_nowScrollView]|" options:0 metrics:nil views:self.subviewsDictionary];
+    
+    [self.view addConstraints:self.horizontalThenScrollViewConstraints];
+    [self.view addConstraints:self.verticalThenScrollViewConstraints];
+
+    [self.view addConstraints:self.horizontalNowScrollViewConstraints];
+    [self.view addConstraints:self.verticalNowScrollViewConstraints];
+
+    
+}

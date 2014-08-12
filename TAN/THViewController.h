@@ -18,9 +18,11 @@
 
 #pragma mark - Object Properties
 @property (strong, nonatomic) UIView *cameraContainerView;
+@property (strong, nonatomic) UIView *thenContainerView;
+@property (strong, nonatomic) UIView *nowContainerView;
+
 @property (strong, nonatomic) UIScrollView *nowScrollView;
 @property (strong, nonatomic) UIScrollView *thenScrollView;
-@property (strong, nonatomic) UIView *thenContentView;
 @property (strong, nonatomic) THCamera2ViewController *cameraVC;
 
 @property (strong, nonatomic) UIBarButtonItem *cameraButton;
@@ -48,16 +50,22 @@
 @property (strong, nonatomic) NSArray *verticalToolbarConstraints;
 @property (strong, nonatomic) NSArray *verticalCameraConstraints;
 @property (strong, nonatomic) NSArray *horizontalCameraConstraints;
-@property (strong, nonatomic) NSArray *horizontalThenScrollViewConstraints;
-@property (strong, nonatomic) NSArray *horizontalNowScrollViewConstraints;
-@property (strong, nonatomic) NSArray *verticalISVConstraints;
+
 @property (strong, nonatomic) NSArray *verticalNowImageConstraints;
 @property (strong, nonatomic) NSArray *verticalThenImageConstraints;
 @property (strong, nonatomic) NSArray *horizontalNowImageConstraints;
 @property (strong, nonatomic) NSArray *horizontalThenImageConstraints;
-@property (strong, nonatomic) NSArray *horizontalISVConstraints;
 @property (strong, nonatomic) NSArray *verticalThenScrollViewConstraints;
 @property (strong, nonatomic) NSArray *verticalNowScrollViewConstraints;
+@property (strong, nonatomic) NSArray *horizontalThenScrollViewConstraints;
+@property (strong, nonatomic) NSArray *horizontalNowScrollViewConstraints;
+
+@property (strong, nonatomic) NSArray *horizontalICVConstraints;
+@property (strong, nonatomic) NSArray *verticalThenContainerViewConstraints;
+@property (strong, nonatomic) NSArray *verticalNowContainerViewConstraints;
+@property (strong, nonatomic) NSArray *horizontalThenContainerViewConstraints;
+@property (strong, nonatomic) NSArray *horizontalNowContainerViewConstraints;
+@property (strong, nonatomic) NSArray *verticalICVConstraints;
 
 @property (strong, nonatomic) NSArray *horizontalScrollViewContentSizeConstraints;
 @property (strong, nonatomic) NSArray *verticalScrollViewContentSizeConstraints;
