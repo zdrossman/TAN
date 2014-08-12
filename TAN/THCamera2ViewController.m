@@ -26,14 +26,14 @@
     //self.videoPreviewWidth = (self.view.bounds.size.height - 64) / 2;
     self.excessSpacePerSide = 60;
     
-    UIView *leftCropView = [[UIView alloc] initWithFrame:CGRectMake(0, 94, self.excessSpacePerSide, 400)];
-    UIView *rightCropView = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.size.width - self.excessSpacePerSide, 94, self.excessSpacePerSide, 400)];
+    UIView *leftCropView = [[UIView alloc] initWithFrame:CGRectMake(0, 64, self.excessSpacePerSide, 500)];
+    UIView *rightCropView = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.size.width - self.excessSpacePerSide, 64, self.excessSpacePerSide, 500)];
     
     leftCropView.backgroundColor = [UIColor blackColor];
-    leftCropView.alpha = 0.85;
+    leftCropView.alpha = 0.7;
     
     rightCropView.backgroundColor = [UIColor blackColor];
-    rightCropView.alpha = 0.85;
+    rightCropView.alpha = 0.7;
     
     self.videoPreview = [[UIView alloc] initWithFrame:CGRectMake(0,0,320,568)];
     [self.view addSubview:self.videoPreview];
@@ -44,14 +44,16 @@
 	// Do any additional setup after loading the view, typically from a nib.
     self.frontCamera = YES;
     //cameraSwitch.selectedSegmentIndex = 0;
-    self.takePhotoButton = [[THCameraButton alloc] initWithFrame:CGRectMake(125,430,70,70)];
-    [self.takePhotoButton addTarget:self action:@selector(takePhotoTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.takePhotoButton];
-    [self.view addSubview:leftCropView];
+        [self.view addSubview:leftCropView];
     [self.view addSubview:rightCropView];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+    
+    self.takePhotoButton = [[THCameraButton alloc] initWithFrame:CGRectMake(125,485,70,70)];
+    [self.takePhotoButton addTarget:self action:@selector(takePhotoTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.takePhotoButton];
+
     [self initializeCamera];
 }
 

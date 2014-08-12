@@ -17,34 +17,26 @@
 @interface THViewController : UIViewController
 
 #pragma mark - Object Properties
-@property (strong, nonatomic) UIView *cropperContainerView;
 @property (strong, nonatomic) UIView *cameraContainerView;
-@property (strong, nonatomic) UIView *nowView;
-@property (strong, nonatomic) UIView *thenView;
+@property (strong, nonatomic) UIScrollView *nowScrollView;
 @property (strong, nonatomic) UIScrollView *thenScrollView;
-
-@property (strong, nonatomic) BASSquareCropperViewController *cropperVC;
+@property (strong, nonatomic) UIView *thenContentView;
 @property (strong, nonatomic) THCamera2ViewController *cameraVC;
 
 @property (strong, nonatomic) UIBarButtonItem *cameraButton;
-@property (strong, nonatomic) UIButton *thenButton;
-@property (strong, nonatomic) UIButton *nowButton;
-@property (strong, nonatomic) UIButton *editButton;
+@property (strong, nonatomic) UIImageView *thenImageView;
+@property (strong, nonatomic) UIImageView *nowImageView;
 
 @property (strong, nonatomic) UIImage *thenImage;
 @property (strong, nonatomic) UIImage *nowImage;
-@property (strong, nonatomic) UIImage *thenImageCropped;
-@property (strong, nonatomic) UIImage *nowImageCropped;
+@property (strong, nonatomic) UILabel *thenLabel;
+@property (strong, nonatomic) UILabel *nowLabel;
 
 @property (strong, nonatomic) UIToolbar *toolbar;
 @property (strong, nonatomic) NSArray *toolbarButtonsArray;
 @property (strong, nonatomic) NSArray *baseToolbarItems;
 
-@property (strong, nonatomic) UIImage *thenTextImage;
-@property (strong, nonatomic) UIImage *nowTextImage;
-
-@property (strong, nonatomic) UIImageView *thenTextImageView;
-@property (strong, nonatomic) UIImageView *nowTextImageView;
+@property (strong, nonatomic) UIButton *editButton;
 
 #pragma mark - LayoutConstraint Properties
 @property (strong, nonatomic) NSDictionary *topBottomViewsDictionary;
@@ -56,16 +48,23 @@
 @property (strong, nonatomic) NSArray *verticalToolbarConstraints;
 @property (strong, nonatomic) NSArray *verticalCameraConstraints;
 @property (strong, nonatomic) NSArray *horizontalCameraConstraints;
-@property (strong, nonatomic) NSArray *horizontalThenViewConstraints;
-@property (strong, nonatomic) NSArray *horizontalNowViewConstraints;
-@property (strong, nonatomic) NSArray *verticalICVConstraints;
+@property (strong, nonatomic) NSArray *horizontalThenScrollViewConstraints;
+@property (strong, nonatomic) NSArray *horizontalNowScrollViewConstraints;
+@property (strong, nonatomic) NSArray *verticalISVConstraints;
 @property (strong, nonatomic) NSArray *verticalNowImageConstraints;
 @property (strong, nonatomic) NSArray *verticalThenImageConstraints;
 @property (strong, nonatomic) NSArray *horizontalNowImageConstraints;
 @property (strong, nonatomic) NSArray *horizontalThenImageConstraints;
-@property (strong, nonatomic) NSArray *horizontalICVConstraints;
-@property (strong, nonatomic) NSArray *verticalThenViewConstraints;
-@property (strong, nonatomic) NSArray *verticalNowViewConstraints;
+@property (strong, nonatomic) NSArray *horizontalISVConstraints;
+@property (strong, nonatomic) NSArray *verticalThenScrollViewConstraints;
+@property (strong, nonatomic) NSArray *verticalNowScrollViewConstraints;
+
+@property (strong, nonatomic) NSArray *horizontalScrollViewContentSizeConstraints;
+@property (strong, nonatomic) NSArray *verticalScrollViewContentSizeConstraints;
+@property (strong, nonatomic) NSArray *horizontalScrollViewConstraints;
+@property (strong, nonatomic) NSArray *verticalScrollViewConstraints;
+@property (strong, nonatomic) NSArray *horizontalLabelConstraints;
+@property (strong, nonatomic) NSArray *verticalLabelConstraints;
 
 @property (strong, nonatomic) NSDictionary *metrics;
 

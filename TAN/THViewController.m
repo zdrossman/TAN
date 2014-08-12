@@ -10,16 +10,14 @@
 #import "THDraggableView.h"
 #import "THCamera2ViewController.h"
 #import "THDraggableImageView.h"
-#import "BASSquareCropperViewController.h"
 #import "THPictureAddition.h"
 #import "THViewController+Autolayout.h"
-#import "THTextOverlay.h"
 
 //#import "UIImage+Resize.h"
 
 typedef void(^ButtonReplacementBlock)(void);
 
-@interface THViewController () <UINavigationControllerDelegate, THCameraDelegateProtocol, BASSquareCropperDelegate>
+@interface THViewController () <UINavigationControllerDelegate, THCameraDelegateProtocol, UIScrollViewDelegate>
 
 @end
 
@@ -52,29 +50,28 @@ typedef void(^ButtonReplacementBlock)(void);
 
 
 -(NSDictionary *)metrics {
+    
+    NSNumber *thenImageHeight = [NSNumber numberWithFloat:self.thenImage.size.height];
+    NSNumber *thenImageWidth = [NSNumber numberWithFloat:self.thenImage.size.width];
+    
+    NSNumber *nowImageHeight = [NSNumber numberWithFloat:self.nowImage.size.height];
+    NSNumber *nowImageWidth = [NSNumber numberWithFloat:self.nowImage.size.width];
+    
+    _metrics = @{@"cameraViewTop":@64, @"cameraViewBottom":@0, @"toolbarHeight":@44, @"cameraViewBottomAnimated":@460, @"thenImageHeight":thenImageHeight, @"thenImageWidth":thenImageWidth,@"nowImageHeight":nowImageHeight,@"nowImageWidth":nowImageWidth};
  
-    if (!_metrics)
-    {
-    
-        _metrics = @{@"cameraViewTop":@64, @"cameraViewBottom":@0, @"toolbarHeight":@44, @"cameraViewBottomAnimated":@460};
-    }
-    
     return _metrics;
     
 }
 
-- (UIButton *)nowButton {
+- (UIImageView *)nowImageView {
     
     if (self.nowImage)
     {
-        [_nowButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
-        [_nowButton setImage:self.nowImage forState:UIControlStateNormal];
-        [_nowButton addTarget:self
-                       action:@selector(setupCropper:)
-             forControlEvents:UIControlEventTouchUpInside];
+        [_nowImageView setContentMode:UIViewContentModeScaleAspectFit];
+        [_nowImageView setImage:self.nowImage];
     }
     
-    return _nowButton;
+    return _nowImageView;
 }
 
 -(NSArray *)verticalCameraConstraints {
@@ -98,25 +95,23 @@ typedef void(^ButtonReplacementBlock)(void);
     
 -(NSDictionary *)topBottomViewsDictionary
 {
-   
-    
     id _cameraView = self.cameraContainerView;
     id _topLayoutGuide = self.topLayoutGuide;
-    id _topImageView = self.thenView;
-    id _bottomImageView = self.nowView;
+    id _topScrollView = self.thenScrollView;
+    id _bottomScrollView = self.nowScrollView;
     
     if (self.thenOnLeftOrTop)
     {
-        _topImageView = self.thenView;
-        _bottomImageView = self.nowView;
+        _topScrollView = self.thenScrollView;
+        _bottomScrollView = self.nowScrollView;
     }
     else
     {
-        _bottomImageView = self.thenView;
-        _topImageView = self.nowView;
+        _bottomScrollView = self.thenScrollView;
+        _topScrollView = self.nowScrollView;
     }
     
-    _topBottomViewsDictionary = NSDictionaryOfVariableBindings(_topImageView, _bottomImageView, _toolbar, _topLayoutGuide, _cameraView);
+    _topBottomViewsDictionary = NSDictionaryOfVariableBindings(_topScrollView, _bottomScrollView, _toolbar, _topLayoutGuide, _cameraView);
     
     
     
@@ -125,24 +120,24 @@ typedef void(^ButtonReplacementBlock)(void);
 
 -(NSDictionary *)leftRightViewsDictionary{
     
-    id _leftImageView = self.thenView;
-    id _rightImageView = self.nowView;
+    id _leftScrollView = self.thenScrollView;
+    id _rightScrollView = self.nowScrollView;
     id _cameraView = self.cameraContainerView;
     
     if (self.thenOnLeftOrTop)
     {
         
-        _leftImageView = self.thenView;
-        _rightImageView = self.nowView;
+        _leftScrollView = self.thenScrollView;
+        _rightScrollView = self.nowScrollView;
         
     }
     else
     {
-        _rightImageView = self.thenView;
-        _leftImageView = self.nowView;
+        _rightScrollView = self.thenScrollView;
+        _leftScrollView = self.nowScrollView;
     }
     
-    _leftRightViewsDictionary = NSDictionaryOfVariableBindings(_leftImageView, _rightImageView,_cameraView,_toolbar);
+    _leftRightViewsDictionary = NSDictionaryOfVariableBindings(_leftScrollView, _rightScrollView,_cameraView,_toolbar);
     
     return _leftRightViewsDictionary;
 }
@@ -151,7 +146,7 @@ typedef void(^ButtonReplacementBlock)(void);
 {
     if (!_subviewsDictionary)
     {
-        _subviewsDictionary = NSDictionaryOfVariableBindings(_thenButton, _nowButton);
+        _subviewsDictionary = NSDictionaryOfVariableBindings(_thenImageView, _nowImageView, _thenScrollView, _nowScrollView, _thenLabel, _nowLabel);
     }
     
     return _subviewsDictionary;
@@ -165,11 +160,7 @@ typedef void(^ButtonReplacementBlock)(void);
     self.thenOnLeftOrTop = YES;
     self.editMode = NO;
     self.thenImage = [UIImage imageNamed:@"funnyBabyPNG"];
-    [self setupCropper:nil];
-    //[self initPreviewPanel];
-    //[self layoutEditingPanel];
-    
-    
+    [self layoutEditingPanel];
 }
 
 - (void)layoutEditingPanel{
@@ -193,72 +184,71 @@ typedef void(^ButtonReplacementBlock)(void);
 
 - (void)baseInit{
 
-    self.nowView = [[UIView alloc] init];
-    self.thenView = [[UIView alloc] init];
+    self.nowScrollView = [[UIScrollView alloc] init];
+    self.thenScrollView = [[UIScrollView alloc] init];
+    
+    self.nowScrollView.delegate = self;
+    self.thenScrollView.delegate = self;
+    
+    CGFloat widthDivisor = 160.0;
+    CGFloat heightDivisor = 320.0;
+    
+    CGFloat thenMinZoomScale = MAX(widthDivisor/self.thenImage.size.width,heightDivisor/self.thenImage.size.height);
+
+    self.thenScrollView.maximumZoomScale = 4;
+    self.thenScrollView.minimumZoomScale = thenMinZoomScale;
+    
+    
+    self.nowScrollView.showsHorizontalScrollIndicator = NO;
+    self.nowScrollView.showsVerticalScrollIndicator = NO;
+    self.thenScrollView.showsHorizontalScrollIndicator = NO;
+    self.thenScrollView.showsVerticalScrollIndicator = NO;
+    
+    self.nowScrollView.layer.borderColor = [UIColor whiteColor].CGColor;
+    self.nowScrollView.layer.borderWidth = 3;
+    
+    self.thenScrollView.layer.borderColor = [UIColor whiteColor].CGColor;
+    self.thenScrollView.layer.borderWidth = 3;
+
     self.cameraContainerView = [[UIView alloc] init];
     
-    self.thenButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.nowButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.thenImageView = [[UIImageView alloc]  init];
+    self.nowImageView = [[UIImageView alloc]  init];
+    
     self.toolbar = [[UIToolbar alloc] init];
 //    self.pictureAddition = [[THPictureAddition alloc] init];
     
-    
-    self.nowTextImageView.hidden = YES;
-    self.thenTextImageView.hidden = YES;
-    
-    [self.view addSubview:self.nowView];
-    [self.view addSubview:self.thenView];
+    self.nowLabel = [[UILabel alloc] init];
+    self.thenLabel = [[UILabel alloc] init];
+
+    [self.view addSubview:self.nowScrollView];
+    [self.view addSubview:self.thenScrollView];
     [self.view addSubview:self.toolbar];
     [self.view addSubview:self.cameraContainerView];
 
-    [self.nowView addSubview:self.nowButton];
-    [self.thenView addSubview:self.thenButton];
+    //[self.nowView addSubview:self.nowButton];
+    //[self.thenView addSubview:self.thenButton];
+    [self.view addSubview:self.thenScrollView];
+    [self.view addSubview:self.nowScrollView];
+    
+    [self.thenScrollView addSubview:self.thenImageView];
+    [self.nowScrollView addSubview:self.nowImageView];
     
     [self.toolbar setItems:self.baseToolbarItems]; //technically not a property...
 }
 
-
-#pragma mark - Setup
--(void)setupCropper:(id)sender
+-(void)viewDidLayoutSubviews
 {
-
-    UIButton *button = sender;
-    NSString *imageName;
-    UIImage *imageToCrop;
-    if (button == self.nowButton && self.nowButton)
-    {
-            imageName = @"Now";
-    }
-    else if (button == self.thenButton && self.thenButton)
-    {
-        imageName = @"Then";
-    }
     
-    if (sender)
-    {
-        imageToCrop = button.imageView.image;
-    }
-    else
-    {
-        imageToCrop = self.thenImage;
-    }
-
-        
-    BASSquareCropperViewController *cropperVC = [[BASSquareCropperViewController alloc] initWithImage:imageToCrop ImageName:imageName MinimumCroppedImageSideLength:160];
-    
-    cropperVC.squareCropperDelegate = self;
-
-//        [self addChildViewController:self.cropperVC];
-//    self.cropperVC.view.frame = self.cropperContainerView.bounds;
-
-    //[self.cropperContainerView addSubview:self.cropperVC.view];
-    
-    [self presentViewController:cropperVC animated:YES completion:^{
-    }];
 }
 
 - (void)setupCamera
 {
+    if (self.cameraVC)
+    {
+        [self.cameraVC removeFromParentViewController];
+    }
+    
     self.cameraVC = [[THCamera2ViewController alloc] init];
     
     [self addChildViewController:self.cameraVC];
@@ -270,12 +260,12 @@ typedef void(^ButtonReplacementBlock)(void);
 
 -(void)setupEditView
 {
-    self.nowView.layer.backgroundColor = [UIColor redColor].CGColor;
-    self.thenView.layer.backgroundColor = [UIColor yellowColor].CGColor;
+    self.nowScrollView.layer.backgroundColor = [UIColor redColor].CGColor;
+    self.thenScrollView.layer.backgroundColor = [UIColor yellowColor].CGColor;
     self.cameraContainerView.hidden = YES;
     
     //FIXIT: Should i keep this line? self.thenImageView.alpha =1.0;
-    [self layoutThenAndNowContainerViews];
+    [self layoutThenAndNowScrollViews];
     [self layoutBaseNavbar];
     
 }
@@ -285,11 +275,9 @@ typedef void(^ButtonReplacementBlock)(void);
 - (void)setupInitialStateOfImageViews
 {
     self.thenImage = [UIImage imageNamed:@"funnyBabyPNG"];
+    [self.thenImageView setContentMode:UIViewContentModeScaleAspectFit];
+    [self.thenImageView setImage:self.thenImage];
     
-    [self.thenButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
-    self.thenButton.clipsToBounds = YES;
-    [self.thenButton setImage:self.thenImage forState:UIControlStateNormal];
-    [self.thenButton addTarget:self action:@selector(setupCropper:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 
@@ -359,77 +347,42 @@ typedef void(^ButtonReplacementBlock)(void);
 
 #pragma mark - buttonTaps
 - (void)cameraTapped:(id)sender {
-    
     [self layoutCamera];
     [self setupCameraNavigationBar];
 }
 
 - (void)textOverlayTapped {
     
+    [self.nowScrollView addSubview:self.nowLabel];
+    [self.thenScrollView addSubview:self.thenLabel];
     
-    self.thenTextImageView = [[UIImageView alloc] init];
-    self.nowTextImageView = [[UIImageView alloc] init];
+    [self.nowScrollView bringSubviewToFront:self.nowLabel];
+    [self.thenScrollView bringSubviewToFront:self.thenLabel];
     
-//    self.nowTextImageView.hidden = !self.nowTextImageView.hidden;
-//    self.thenTextImageView.hidden = !self.thenTextImageView.hidden;
+    UIColor *textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+    UIFont *font = [UIFont systemFontOfSize:20.0];
     
-//    if (self.thenTextImageView.hidden)
-//    {
-//        self.thenTextImageView.image = nil;
-//        self.nowTextImageView.image = nil;
-//    }
+    NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
     
-    [self.nowView addSubview:self.nowTextImageView];
-    [self.thenView addSubview:self.thenTextImageView];
+    paragraphStyle.alignment = NSTextAlignmentLeft;
     
-    THTextOverlay *thenTextOverlay = [[THTextOverlay alloc] initWithImageText:@"Then" Font:[UIFont systemFontOfSize:20] FontSize:20 TextAlignment:NSTextAlignmentLeft ForViewFrameToDrawIn:self.thenButton.frame];
-    self.thenTextImage = [thenTextOverlay imageFromText];
-    self.thenTextImageView.image = self.thenTextImage;
+    NSDictionary *attr = @{NSForegroundColorAttributeName:textColor, NSFontAttributeName:font, NSParagraphStyleAttributeName:paragraphStyle};
     
-    THTextOverlay *nowTextOverlay = [[THTextOverlay alloc] initWithImageText:@"Now" Font:[UIFont systemFontOfSize:20] FontSize:20 TextAlignment:NSTextAlignmentRight ForViewFrameToDrawIn:self.nowButton.frame];
-    self.nowTextImage = [nowTextOverlay imageFromText];
-    self.nowTextImageView.image = self.nowTextImage;
-
+    NSString *textForAttributedText = @"Then";
+    
+    NSMutableAttributedString *attributedText =
+    [[NSMutableAttributedString alloc] initWithString:textForAttributedText
+                                           attributes:attr];
+    
+    CGSize thetextSize = [textForAttributedText sizeWithAttributes:attr];
+    
+    self.thenLabel.attributedText = attributedText;
+    
     //self.thenTextImageView.backgroundColor = [UIColor orangeColor];
     //self.nowTextImageView.backgroundColor = [UIColor whiteColor];
 
-    self.textImageViewsDictionary = NSDictionaryOfVariableBindings(_thenTextImageView, _nowTextImageView);
-    [self layoutTextImageViews];
-    
-    
-    
+    [self layoutTextLabels];
 }
-
-#pragma mark - CropperDelegate
-- (void)squareCropperDidCancelCropInCropper:(BASSquareCropperViewController *)cropper
-{
-    [cropper dismissViewControllerAnimated:NO completion:nil];
-}
-
-- (void)squareCropperDidCropImage:(UIImage *)croppedImage withImageName:(NSString *)name inCropper:(BASSquareCropperViewController *)cropper
-{
-    if ([name isEqualToString:@"Then"])
-    {
-        [self.thenButton setImage:croppedImage forState:UIControlStateNormal];
-    }
-    else if ([name isEqualToString:@"Now"])
-    {
-        [self.nowButton setImage:croppedImage forState:UIControlStateNormal];
-    }
-    else
-    {
-        [self layoutEditingPanel];
-        [self.thenButton setImage:croppedImage forState:UIControlStateNormal];
-    }
-    
-    [cropper dismissViewControllerAnimated:NO completion:^{
-        if (self.editMode == NO)
-        {
-            self.editMode = YES;
-        }
-    }];
-}
-
 
 
 #pragma mark - FrameDelegate
@@ -453,6 +406,16 @@ typedef void(^ButtonReplacementBlock)(void);
     if (image)
     {
         self.nowImage = image;
+        self.nowImageView.image = self.nowImage;
+        
+        CGFloat widthDivisor = 160.0;
+        CGFloat heightDivisor = 320.0;
+        
+        CGFloat nowMinZoomScale = MAX(widthDivisor/self.nowImage.size.width,heightDivisor/self.nowImage.size.height);
+        self.nowScrollView.maximumZoomScale = 4;
+        self.nowScrollView.minimumZoomScale = nowMinZoomScale;
+        
+        [self layoutThenAndNowScrollViews];
     }
     
     [self resignCamera];
@@ -467,5 +430,14 @@ typedef void(^ButtonReplacementBlock)(void);
     
 }
 
+-(UIView *) viewForZoomingInScrollView:(UIScrollView *)scrollView
+{
+    if (scrollView == self.thenScrollView)
+    {
+        return self.thenImageView;
+    };
+    
+    return self.nowImageView;
+}
 
 @end

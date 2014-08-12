@@ -42,7 +42,6 @@
     CGSize thetextSize = [self.imageText sizeWithAttributes:attr];
     
     // Compute rect to draw the text inside
-    CGSize viewSize = self.viewFrameToDrawIn.size;
     
     CGRect textRect = CGRectMake(self.viewFrameToDrawIn.origin.x, self.viewFrameToDrawIn.origin.y, thetextSize.width, thetextSize.height);
     
