@@ -163,16 +163,19 @@ typedef void(^ButtonReplacementBlock)(void);
     [super viewDidLoad];
     self.horizontalSplit = NO;
     self.thenOnLeftOrTop = YES;
-    //self.thenImage = [UIImage imageNamed:@"funnyBabyPNG"];
+    self.editMode = NO;
+    self.thenImage = [UIImage imageNamed:@"funnyBabyPNG"];
+    [self setupCropper:nil];
     //[self initPreviewPanel];
-    [self layoutEditingPanel];
-
+    //[self layoutEditingPanel];
+    
     
 }
 
 - (void)layoutEditingPanel{
     self.navigationController.navigationBar.hidden = NO;
     self.navigationController.navigationBar.alpha = 1;
+    self.editMode = YES;
     self.takingPhoto = NO;
     [self baseInit];
     [self removeAllTopLevelViewConstraints];
@@ -219,11 +222,6 @@ typedef void(^ButtonReplacementBlock)(void);
 -(void)setupCropper:(id)sender
 {
 
-//    self.cropperContainerView = [[UIView alloc] initWithFrame:self.view.bounds];
-//    self.cropperContainerView.backgroundColor = [UIColor greenColor];
-//    [self.view addSubview:self.cropperContainerView];
-//    self.cropperContainerView.hidden = NO;
-    
     UIButton *button = sender;
     NSString *imageName;
     UIImage *imageToCrop;
@@ -368,29 +366,38 @@ typedef void(^ButtonReplacementBlock)(void);
 
 - (void)textOverlayTapped {
     
+    
     self.thenTextImageView = [[UIImageView alloc] init];
-    THTextOverlay *thenTextOverlay = [[THTextOverlay alloc] initWithImageText:@"Then" Font:[UIFont systemFontOfSize:20] FontSize:20 TextAlignment:NSTextAlignmentLeft ForViewFrameToDrawIn:self.thenButton.frame];
-    self.thenTextImage = [thenTextOverlay imageFromText];
-    self.thenTextImageView.image = self.thenTextImage;
-    
     self.nowTextImageView = [[UIImageView alloc] init];
-    THTextOverlay *nowTextOverlay = [[THTextOverlay alloc] initWithImageText:@"Now" Font:[UIFont systemFontOfSize:20] FontSize:20 TextAlignment:NSTextAlignmentRight ForViewFrameToDrawIn:self.thenButton.frame];
-    self.nowTextImage = [nowTextOverlay imageFromText];
-    self.nowTextImageView.image = self.nowTextImage;
     
+//    self.nowTextImageView.hidden = !self.nowTextImageView.hidden;
+//    self.thenTextImageView.hidden = !self.thenTextImageView.hidden;
+    
+//    if (self.thenTextImageView.hidden)
+//    {
+//        self.thenTextImageView.image = nil;
+//        self.nowTextImageView.image = nil;
+//    }
     
     [self.nowView addSubview:self.nowTextImageView];
     [self.thenView addSubview:self.thenTextImageView];
     
+    THTextOverlay *thenTextOverlay = [[THTextOverlay alloc] initWithImageText:@"Then" Font:[UIFont systemFontOfSize:20] FontSize:20 TextAlignment:NSTextAlignmentLeft ForViewFrameToDrawIn:self.thenButton.frame];
+    self.thenTextImage = [thenTextOverlay imageFromText];
+    self.thenTextImageView.image = self.thenTextImage;
+    
+    THTextOverlay *nowTextOverlay = [[THTextOverlay alloc] initWithImageText:@"Now" Font:[UIFont systemFontOfSize:20] FontSize:20 TextAlignment:NSTextAlignmentRight ForViewFrameToDrawIn:self.nowButton.frame];
+    self.nowTextImage = [nowTextOverlay imageFromText];
+    self.nowTextImageView.image = self.nowTextImage;
+
     //self.thenTextImageView.backgroundColor = [UIColor orangeColor];
     //self.nowTextImageView.backgroundColor = [UIColor whiteColor];
 
     self.textImageViewsDictionary = NSDictionaryOfVariableBindings(_thenTextImageView, _nowTextImageView);
     [self layoutTextImageViews];
     
-    self.nowTextImageView.hidden = !self.nowTextImageView.hidden;
-    self.thenTextImageView.hidden = !self.thenTextImageView.hidden;
-
+    
+    
 }
 
 #pragma mark - CropperDelegate

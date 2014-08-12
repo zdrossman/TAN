@@ -691,7 +691,10 @@
     
     self.nowButton.translatesAutoresizingMaskIntoConstraints = NO;
     [self.nowButton removeConstraints:self.nowButton.constraints];
-    
+}
+
+- (void)removeTextImageViewConstraints
+{
     self.thenTextImageView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.thenTextImageView removeConstraints:self.thenTextImageView.constraints];
     
@@ -701,9 +704,9 @@
 
 - (void)layoutTextImageViews
 {
+    [self removeTextImageViewConstraints];
     
-    
-    CGRect thenImageRect = AVMakeRectWithAspectRatioInsideRect(self.thenImageCropped.size, self.thenButton.frame);
+    CGRect thenImageRect = AVMakeRectWithAspectRatioInsideRect(self.thenImage.size, self.thenButton.frame);
     
     NSNumber *topThenImageRectGuide = [NSNumber numberWithInteger:thenImageRect.origin.y];
     NSNumber *bottomThenImageRectGuide = [NSNumber numberWithInteger:568 - (thenImageRect.origin.y + thenImageRect.size.height) ];
@@ -715,18 +718,18 @@
 
     NSDictionary *metrics = @{@"topThenImageRectGuide":topThenImageRectGuide, @"bottomThenImageRectGuide":bottomThenImageRectGuide, @"topNowImageRectGuide":topNowImageRectGuide, @"bottomNowImageRectGuide":bottomNowImageRectGuide};
     
-    NSArray *horizontalThenTextImageViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_thenTextImageView]|" options:0 metrics:nil views:self.textImageViewsDictionary];
+    NSArray *horizontalThenTextImageViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_thenTextImageView]" options:0 metrics:nil views:self.textImageViewsDictionary];
     
-//    NSArray *verticalThenTextImageViewConstraints  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-topThenImageRectGuide-[_thenTextImageView]-bottomThenImageRectGuide-|" options:0 metrics:metrics views:self.textImageViewsDictionary];
+    NSArray *verticalThenTextImageViewConstraints  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-topThenImageRectGuide-[_thenTextImageView]" options:0 metrics:metrics views:self.textImageViewsDictionary];
     
-    NSArray *horizontalNowTextImageViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_nowTextImageView]|" options:0 metrics:nil views:self.textImageViewsDictionary];
+//    NSArray *horizontalNowTextImageViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|->=0-[_nowTextImageView]->=0-|" options:0 metrics:nil views:self.textImageViewsDictionary];
 //    
 //    NSArray *verticalNowTextImageViewConstraints  = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_nowTextImageView]|" options:0 metrics:nil views:self.textImageViewsDictionary];
     
-    [self.nowView addConstraints:horizontalNowTextImageViewConstraints];
+  //  [self.nowView addConstraints:horizontalNowTextImageViewConstraints];
     [self.thenView addConstraints:horizontalThenTextImageViewConstraints];
    // [self.nowView addConstraints:verticalNowTextImageViewConstraints];
-   // [self.thenView addConstraints:verticalThenTextImageViewConstraints];
+    [self.thenView addConstraints:verticalThenTextImageViewConstraints];
 }
 
 //- (void)addSubviewConstraints {

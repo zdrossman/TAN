@@ -21,6 +21,7 @@
 @property (strong, nonatomic) UIView *cameraContainerView;
 @property (strong, nonatomic) UIView *nowView;
 @property (strong, nonatomic) UIView *thenView;
+@property (strong, nonatomic) UIScrollView *thenScrollView;
 
 @property (strong, nonatomic) BASSquareCropperViewController *cropperVC;
 @property (strong, nonatomic) THCamera2ViewController *cameraVC;

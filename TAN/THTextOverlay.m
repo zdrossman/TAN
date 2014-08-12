@@ -48,6 +48,7 @@
     
     // Create the image
     UIGraphicsBeginImageContextWithOptions(textRect.size , NO , 0.0f);
+    CGContextClearRect(UIGraphicsGetCurrentContext(), textRect);
     [self.imageText drawInRect:textRect withAttributes:attr];
     UIImage *resultImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
