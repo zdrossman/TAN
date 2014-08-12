@@ -589,6 +589,7 @@
     [UIView animateWithDuration:0.3 animations:^{
 
         [self layoutToolbarOfStandardHeight];
+        [self.view layoutIfNeeded];
 
     } completion:^(BOOL finished) {
         if (completionBlock)
@@ -736,22 +737,42 @@
 
 }
 
+- (void)removeLabelConstraints {
+    
+    self.nowLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.nowLabel removeConstraints:self.nowLabel.constraints];
+    
+    self.thenLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.thenLabel removeConstraints:self.thenLabel.constraints];
+    
+}
 - (void)layoutTextLabels
 {
-    //TODO: COMPLETE METHOD
+    [self removeLabelConstraints];
     
-    NSLayoutConstraint *thenLabelLeft = [NSLayoutConstraint constraintWithItem:self.thenLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.thenScrollView attribute:NSLayoutAttributeLeft multiplier:1 constant:20];
+    NSLayoutConstraint *thenLabelLeft = [NSLayoutConstraint constraintWithItem:self.thenLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.thenContainerView attribute:NSLayoutAttributeLeft multiplier:1 constant:20];
     
-    NSLayoutConstraint *thenLabelTop = [NSLayoutConstraint constraintWithItem:self.thenLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.thenScrollView attribute:NSLayoutAttributeTop multiplier:1 constant:20];
+    NSLayoutConstraint *thenLabelTop = [NSLayoutConstraint constraintWithItem:self.thenLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.thenContainerView attribute:NSLayoutAttributeTop multiplier:1 constant:20];
     
-    self.horizontalLabelConstraints = @[thenLabelLeft,thenLabelTop];
+    NSLayoutConstraint *nowLabelRight = [NSLayoutConstraint constraintWithItem:self.nowLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.nowContainerView attribute:NSLayoutAttributeRight multiplier:1 constant:-20];
     
-    [self.view addConstraints:self.horizontalLabelConstraints];
+    NSLayoutConstraint *nowLabelBottom = [NSLayoutConstraint constraintWithItem:self.nowLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.nowContainerView attribute:NSLayoutAttributeBottom multiplier:1 constant:-20];
+    
+//    NSArray *horizontalAndLabelConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_andLabel]|" options:0 metrics:nil views:self.labelsDictionary];
+//    
+//    NSArray *verticalAndLabelConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_andLabel]|" options:0 metrics:nil views:self.labelsDictionary];
+
+    
+    self.thenLabelConstraints = @[thenLabelLeft,thenLabelTop];
+    self.nowLabelConstraints = @[nowLabelBottom, nowLabelRight];
+    [self.view addConstraints:self.thenLabelConstraints];
+    [self.view addConstraints:self.nowLabelConstraints];
+
     [self.view layoutIfNeeded];
     
-    self.horizontalLabelConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_thenLabel(==_thenScrollView)]" options:0 metrics:nil views:self.subviewsDictionary];
-    
-    self.verticalLabelConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_thenLabel(==_thenScrollView)]" options:0 metrics:nil views:self.subviewsDictionary];
+//    self.horizontalLabelConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_thenLabel(==_thenScrollView)]" options:0 metrics:nil views:self.labelsDictionary];
+//    
+//    self.verticalLabelConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_thenLabel(==_thenScrollView)]" options:0 metrics:nil views:self.labelsDictionary];
 
     
 }

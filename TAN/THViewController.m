@@ -45,7 +45,20 @@ typedef void(^ButtonReplacementBlock)(void);
     
     UIBarButtonItem *polaroidFrameButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"polaroidIcon.png"] style:UIBarButtonItemStylePlain target:self action:@selector(didTapPolaroidIcon:)];
     
-    return self.toolbarButtonsArray = @[switchSubviewsButton, textOverlay, polaroidFrameButton];
+    UIBarButtonItem *spacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    
+    UIBarButtonItem *stickerButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1169-star-toolbar"] style:UIBarButtonItemStylePlain target:self action:@selector(stickerTapped)];
+    
+
+    
+    return _baseToolbarItems = @[switchSubviewsButton, spacer, textOverlay, spacer, polaroidFrameButton, spacer, stickerButton];
+}
+
+-(NSArray *)stickerToolbarItems
+{
+    UIBarButtonItem *returnButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"433-x"] style:UIBarButtonItemStylePlain target:self action:@selector(returnTapped)];
+
+    return _stickerToolbarItems = @[returnButton];
 }
 
 
@@ -145,12 +158,21 @@ typedef void(^ButtonReplacementBlock)(void);
 
 -(NSDictionary *)subviewsDictionary
 {
-    if (!_subviewsDictionary)
-    {
-        _subviewsDictionary = NSDictionaryOfVariableBindings(_thenImageView, _nowImageView, _thenScrollView, _nowScrollView, _thenLabel, _nowLabel);
+    
+    if (!_subviewsDictionary) {
+    _subviewsDictionary = NSDictionaryOfVariableBindings(_thenImageView, _nowImageView, _thenScrollView, _nowScrollView);
     }
     
     return _subviewsDictionary;
+}
+
+-(NSDictionary *)labelsDictionary
+{
+    if (!_labelsDictionary) {
+        _labelsDictionary = NSDictionaryOfVariableBindings(_thenLabel, _nowLabel);
+    }
+    
+    return _labelsDictionary;
 }
 
 #pragma mark - Lifecycle
@@ -221,8 +243,7 @@ typedef void(^ButtonReplacementBlock)(void);
     self.toolbar = [[UIToolbar alloc] init];
 //    self.pictureAddition = [[THPictureAddition alloc] init];
     
-    self.nowLabel = [[UILabel alloc] init];
-    self.thenLabel = [[UILabel alloc] init];
+
     
     [self.view addSubview:self.thenContainerView];
     [self.view addSubview:self.nowContainerView];
@@ -285,10 +306,10 @@ typedef void(^ButtonReplacementBlock)(void);
 }
 
 
-- (void)replaceToolbarWithButtons:(ButtonReplacementBlock)buttonReplacementBlock
+- (void)replaceToolbarWithButtons:(NSArray *)buttons
 {
     [self animateLayoutToolbarOfHeightZeroAtBottomOfScreenWithCompletion:^{
-        [self.toolbar setItems:self.toolbarButtonsArray animated:NO];
+        [self.toolbar setItems:buttons animated:NO];
         [self animateLayoutToolbarOfStandardHeightWithCompletion:^{
             NSLog(@"Completed toolbar button update.");
         }];
@@ -298,7 +319,7 @@ typedef void(^ButtonReplacementBlock)(void);
 
 - (void)resignCamera
 {
-    [self.toolbar setItems:self.toolbarButtonsArray animated:NO];
+    [self.toolbar setItems:self.baseToolbarItems animated:NO];
     [self animateCameraResignWithSetupViewsBlock:^{
         [self setupEditView];
     } AndCompletion:^{
@@ -355,37 +376,65 @@ typedef void(^ButtonReplacementBlock)(void);
     [self setupCameraNavigationBar];
 }
 
+- (void)returnTapped {
+    [self replaceToolbarWithButtons:self.baseToolbarItems];
+}
+
+- (void)stickerTapped {
+    [self replaceToolbarWithButtons:self.stickerToolbarItems];
+}
 - (void)textOverlayTapped {
     
-    [self.nowScrollView addSubview:self.nowLabel];
-    [self.thenScrollView addSubview:self.thenLabel];
+    if (!self.thenLabel)
+    {
+        self.nowLabel = [[UILabel alloc] init];
+        self.thenLabel = [[UILabel alloc] init];
     
-    [self.nowScrollView bringSubviewToFront:self.nowLabel];
-    [self.thenScrollView bringSubviewToFront:self.thenLabel];
-    
-    UIColor *textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
-    UIFont *font = [UIFont systemFontOfSize:20.0];
-    
-    NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-    
-    paragraphStyle.alignment = NSTextAlignmentLeft;
-    
-    NSDictionary *attr = @{NSForegroundColorAttributeName:textColor, NSFontAttributeName:font, NSParagraphStyleAttributeName:paragraphStyle};
-    
-    NSString *textForAttributedText = @"Then";
-    
-    NSMutableAttributedString *attributedText =
-    [[NSMutableAttributedString alloc] initWithString:textForAttributedText
-                                           attributes:attr];
-    
-    CGSize thetextSize = [textForAttributedText sizeWithAttributes:attr];
-    
-    self.thenLabel.attributedText = attributedText;
-    
-    //self.thenTextImageView.backgroundColor = [UIColor orangeColor];
-    //self.nowTextImageView.backgroundColor = [UIColor whiteColor];
-
-    [self layoutTextLabels];
+        [self.nowContainerView addSubview:self.nowLabel];
+        [self.nowContainerView addSubview:self.thenLabel];
+        
+        [self.nowContainerView bringSubviewToFront:self.nowLabel];
+        [self.nowContainerView bringSubviewToFront:self.thenLabel];
+        
+        UIColor *textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+        UIFont *font = [UIFont systemFontOfSize:20.0];
+        
+        NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+        
+        paragraphStyle.alignment = NSTextAlignmentLeft;
+        
+        NSDictionary *attr = @{NSForegroundColorAttributeName:textColor, NSFontAttributeName:font, NSParagraphStyleAttributeName:paragraphStyle};
+        
+        NSString *textForAttributedThenText = @"Then";
+        NSString *textForAttributedNowText = @"Now";
+        
+        NSMutableAttributedString *attributedThenText =
+        [[NSMutableAttributedString alloc] initWithString:textForAttributedThenText
+                                               attributes:attr];
+        
+        NSMutableAttributedString *attributedNowText =
+        [[NSMutableAttributedString alloc] initWithString:textForAttributedNowText
+                                               attributes:attr];
+        
+        self.thenLabel.attributedText = attributedThenText;
+        self.nowLabel.attributedText = attributedNowText;
+        
+        //self.thenTextImageView.backgroundColor = [UIColor orangeColor];
+        //self.nowTextImageView.backgroundColor = [UIColor whiteColor];
+        
+        [self layoutTextLabels];
+    }
+    else
+    {
+        [self.nowContainerView bringSubviewToFront:self.nowLabel];
+        [self.nowContainerView bringSubviewToFront:self.thenLabel];
+        
+        self.thenLabel.hidden = !self.thenLabel.hidden;
+        self.nowLabel.hidden = !self.nowLabel.hidden;
+        
+        //self.nowLabel = nil;
+        //[self removeLabelConstraints];
+    }
 }
 
 

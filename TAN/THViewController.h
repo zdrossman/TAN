@@ -35,8 +35,13 @@
 @property (strong, nonatomic) UILabel *nowLabel;
 
 @property (strong, nonatomic) UIToolbar *toolbar;
-@property (strong, nonatomic) NSArray *toolbarButtonsArray;
 @property (strong, nonatomic) NSArray *baseToolbarItems;
+@property (strong, nonatomic) NSArray *textToolbarItems;
+@property (strong, nonatomic) NSArray *stickerToolbarItems;
+@property (strong, nonatomic) NSArray *frameToolbarItems;
+@property (strong, nonatomic) NSArray *layoutToolbarItems;
+
+
 
 @property (strong, nonatomic) UIButton *editButton;
 
@@ -44,7 +49,7 @@
 @property (strong, nonatomic) NSDictionary *topBottomViewsDictionary;
 @property (strong, nonatomic) NSDictionary *leftRightViewsDictionary;
 @property (strong, nonatomic) NSDictionary *subviewsDictionary;
-@property (strong, nonatomic) NSDictionary *textImageViewsDictionary;
+@property (strong, nonatomic) NSDictionary *labelsDictionary;
 
 @property (strong, nonatomic) NSArray *horizontalToolbarConstraints;
 @property (strong, nonatomic) NSArray *verticalToolbarConstraints;
@@ -71,8 +76,8 @@
 @property (strong, nonatomic) NSArray *verticalScrollViewContentSizeConstraints;
 @property (strong, nonatomic) NSArray *horizontalScrollViewConstraints;
 @property (strong, nonatomic) NSArray *verticalScrollViewConstraints;
-@property (strong, nonatomic) NSArray *horizontalLabelConstraints;
-@property (strong, nonatomic) NSArray *verticalLabelConstraints;
+@property (strong, nonatomic) NSArray *thenLabelConstraints;
+@property (strong, nonatomic) NSArray *nowLabelConstraints;
 
 @property (strong, nonatomic) NSDictionary *metrics;
 
