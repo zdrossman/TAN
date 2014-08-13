@@ -19,6 +19,12 @@ typedef void(^ButtonReplacementBlock)(void);
 
 @interface THViewController () <UINavigationControllerDelegate, THCameraDelegateProtocol, UIScrollViewDelegate>
 
+@property (nonatomic, assign) CGFloat      zoomScale;
+@property (nonatomic, assign) CGFloat      maximumZoomScale;
+@property (nonatomic, assign) CGFloat      minimumZoomScale;
+@property (nonatomic, assign) CGPoint      contentOffset;
+@property (nonatomic, assign) UIEdgeInsets contentInset;
+
 @end
 
 @implementation THViewController
@@ -50,7 +56,7 @@ typedef void(^ButtonReplacementBlock)(void);
     UIBarButtonItem *switchButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"759-refresh-2"] style:UIBarButtonItemStylePlain target:self action:@selector(changeSplit)];
 
     
-    return _baseToolbarItems = @[switchSubviewsButton, self.spacerBBI, textOverlay, self.spacerBBI, polaroidFrameButton, self.spacerBBI, stickerButton];
+    return _baseToolbarItems = @[switchSubviewsButton, self.spacerBBI, switchButton, self.spacerBBI, textOverlay, self.spacerBBI, polaroidFrameButton, self.spacerBBI, stickerButton];
 }
 
 -(void)changeSplit {
@@ -153,25 +159,6 @@ typedef void(^ButtonReplacementBlock)(void);
     return _nowImageView;
 }
 
-//-(NSArray *)verticalCameraConstraints {
-//
-//    if (!_verticalCameraConstraints)
-//    {
-//        _verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_cameraView(==0)]" options:0 metrics:self.metrics views:self.topBottomViewsDictionary];
-//    }
-//    
-//    return _verticalCameraConstraints;
-//}
-//
-//- (NSArray *)horizontalCameraConstraints {
-//    if (!_horizontalCameraConstraints)
-//    {
-//        _horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:self.metrics views:self.topBottomViewsDictionary];
-//    }
-//    
-//    return _horizontalCameraConstraints;
-//}
-
 -(NSDictionary *)topBottomViewsDictionary
 {
     id _cameraView = self.cameraContainerView;
@@ -256,10 +243,19 @@ typedef void(^ButtonReplacementBlock)(void);
     self.horizontalSplit = NO;
     [self baseInit];
     [self removeAllTopLevelViewConstraints];
-    [self setupEditView];
+    self.nowScrollView.layer.backgroundColor = [UIColor blackColor].CGColor;
+    self.thenScrollView.layer.backgroundColor = [UIColor blackColor].CGColor;
+    [self layoutThenAndNowContainerViews];
+    [self layoutBaseNavbar];
+    self.cameraContainerView.hidden = YES;
     [self setupCamera];
     [self setupInitialStateOfImageViews];
     [self.view layoutIfNeeded];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    //[self resetZoomScaleAndContentOffset];
 }
 
 - (void)didReceiveMemoryWarning
@@ -302,6 +298,9 @@ typedef void(^ButtonReplacementBlock)(void);
     self.cameraContainerView = [[UIView alloc] init];
     self.cameraContainerView.hidden = YES;
 
+    self.contentViewForThenImage = [[UIView alloc] init];
+    self.contentViewForNowImage = [[UIView alloc] init];
+    
     self.thenImageView = [[UIImageView alloc]  init];
     self.nowImageView = [[UIImageView alloc]  init];
     self.thenImageView.contentMode = UIViewContentModeCenter;
@@ -349,19 +348,6 @@ typedef void(^ButtonReplacementBlock)(void);
     self.cameraVC.delegate = self;
 }
 
--(void)setupEditView
-{
-    self.nowScrollView.layer.backgroundColor = [UIColor blackColor].CGColor;
-    self.thenScrollView.layer.backgroundColor = [UIColor blackColor].CGColor;
-    self.cameraContainerView.hidden = YES;
-    
-    //FIXIT: Should i keep this line? self.thenImageView.alpha =1.0;
-    [self layoutThenAndNowContainerViews];
-    [self layoutBaseNavbar];
-    
-}
-
-
 
 - (void)setupInitialStateOfImageViews
 {
@@ -387,7 +373,7 @@ typedef void(^ButtonReplacementBlock)(void);
 {
     [self.toolbar setItems:self.baseToolbarItems animated:NO];
     [self animateCameraResignWithSetupViewsBlock:^{
-        [self setupEditView];
+        [self layoutThenAndNowContainerViews];
     } AndCompletion:^{
         [self setupCamera];
         self.cameraContainerView.hidden = YES;
@@ -600,8 +586,6 @@ typedef void(^ButtonReplacementBlock)(void);
         CGFloat nowMinZoomScale = MAX(widthDivisor/self.nowImage.size.width,heightDivisor/self.nowImage.size.height);
         self.nowScrollView.maximumZoomScale = 4;
         self.nowScrollView.minimumZoomScale = 0.2;
-        
-        [self layoutThenAndNowContainerViews];
     }
     
     [self resignCamera];
@@ -666,4 +650,54 @@ typedef void(^ButtonReplacementBlock)(void);
     
     return _typefaceButtonArray;
 }
+
+//- (void)updateScrollViewParameters
+//{
+//    self.zoomScale = self.scrollView.zoomScale;
+//    self.maximumZoomScale = self.scrollView.maximumZoomScale;
+//    self.minimumZoomScale = self.scrollView.minimumZoomScale;
+//    self.contentOffset = self.scrollView.contentOffset;
+//    self.contentInset = self.scrollView.contentInset;
+//}
+
+//- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale
+//{
+//    [self updateScrollViewParameters];
+//}
+//
+//- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+//{
+//    if (!decelerate) {
+//        [self updateScrollViewParameters];
+//    }
+//}
+//
+//- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+//{
+//    [self updateScrollViewParameters];
+//}
+//
+//- (void)resetZoomScaleAndContentOffset
+//{
+//    CGFloat minZoomScaleX = CGRectGetWidth(self.croppingOverlayView.bounds) / self.imageToCrop.size.width;
+//    CGFloat minZoomScaleY = CGRectGetHeight(self.croppingOverlayView.bounds) / self.imageToCrop.size.height;
+//    
+//    CGFloat maxZoomScaleX = CGRectGetWidth(self.croppingOverlayView.bounds) / self.minimumCroppedImageSideLength;
+//    CGFloat maxZoomScaleY = CGRectGetHeight(self.croppingOverlayView.bounds) / self.minimumCroppedImageSideLength;
+//    
+//    self.scrollView.minimumZoomScale = MAX(minZoomScaleX, minZoomScaleY);
+//    self.scrollView.maximumZoomScale = MIN(maxZoomScaleX, maxZoomScaleY);
+//    
+//    [self.scrollView setZoomScale:self.scrollView.minimumZoomScale animated:NO];
+//    
+//    CGPoint contentOffset = CGPointZero;
+//    contentOffset.x = (self.scrollView.contentSize.width - (CGRectGetWidth(self.scrollView.bounds) - self.scrollView.contentInset.left - self.scrollView.contentInset.right)) / 2.0f;
+//    contentOffset.y = (self.scrollView.contentSize.height - (CGRectGetHeight(self.scrollView.bounds) - self.scrollView.contentInset.top - self.scrollView.contentInset.bottom)) / 2.0f;
+//    contentOffset.x -= self.scrollView.contentInset.left;
+//    contentOffset.y -= self.scrollView.contentInset.top;
+//    [self.scrollView setContentOffset:contentOffset animated:NO];
+//    
+//    [self updateScrollViewParameters];
+//}
+
 @end

@@ -28,7 +28,8 @@
 @property (strong, nonatomic) UIBarButtonItem *cameraButton;
 @property (strong, nonatomic) UIImageView *thenImageView;
 @property (strong, nonatomic) UIImageView *nowImageView;
-@property (strong, nonatomic) UIView *contentViewForImage;
+@property (strong, nonatomic) UIView *contentViewForThenImage;
+@property (strong, nonatomic) UIView *contentViewForNowImage;
 @property (strong, nonatomic) UIView *contentViewForSecondaryToolbar;
 @property (strong, nonatomic) UIImage *thenImage;
 @property (strong, nonatomic) UIImage *nowImage;
