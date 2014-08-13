@@ -24,7 +24,9 @@
     else {
         [self layoutVerticalSplitOfContainerViews];
     }
-
+    
+    [self layoutToolbarOfStandardHeight];
+    
     [self removeContainerViewConstraints];
     [self removeSubviewConstraints];
 
@@ -72,13 +74,11 @@
     
     [self removeThenContainerViewAndNowContainerViewConstraints];
     
-    self.verticalICVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(124)-[_topContainerView(==230)][_bottomContainerView(==_topContainerView)-(124)-]" options:0 metrics:nil views:self.topBottomViewsDictionary];
+    self.verticalICVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(124)-[_topContainerView(==160)][_bottomContainerView(==_topContainerView)]-(124)-|" options:0 metrics:nil views:self.topBottomViewsDictionary];
     self.horizontalNowContainerViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_topContainerView]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
     self.horizontalThenContainerViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_bottomContainerView]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
     
     [self addThenContainerViewAndNowContainerViewConstraints];
-    
-    [self layoutToolbarOfStandardHeight];
     
 }
 
@@ -92,23 +92,53 @@
     
     [self addThenContainerViewAndNowContainerViewConstraints];
     
-    [self layoutToolbarOfStandardHeight];
-    
 }
+
+
+- (void)animateLayoutVerticalSplitOfContainerViewsWithCompletion:(void (^)(void))completionBlock {
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        [self layoutVerticalSplitOfContainerViews];
+        [self.view layoutIfNeeded];
+    } completion:^(BOOL finished) {
+        if (completionBlock)
+        {
+            completionBlock();
+        }
+    }];
+}
+
+- (void)animateLayoutHorizontalSplitOfContainerViewsWithCompletion:(void (^)(void))completionBlock {
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        [self layoutHorizontalSplitOfContainerViews];
+        [self.view layoutIfNeeded];
+    } completion:^(BOOL finished) {
+        if (completionBlock)
+        {
+            completionBlock();
+        }
+    }];
+}
+
 
 
 #pragma mark - Scroll View Vertical Split Animations
 - (void)switchImagesAcrossVerticalSplit{
     
+    
     [self bringLeftSubviewToFront];
+    
     [self animateLayoutVerticalSplitThenContainerViewOnDifferentPlaneThanNowContainerViewWithCompletion:^{
-        
+//        if (self.thenOnLeftOrTop)
+//        {
         [self animateLayoutVerticalSplitThenContainerViewOnDifferentPlaneThanNowContainerViewAndSwitchedPlacesWithCompletion:^{
             
             [self animateLayoutVerticalSplitThenContainerViewSwitchedWithNowContainerViewOnSamePlaneWithCompletion:^{
                 self.thenOnLeftOrTop = !self.thenOnLeftOrTop;
             }];
         }];
+        //}
     }];
 }
 
@@ -119,7 +149,7 @@
     
     self.verticalThenContainerViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(143)-[_leftContainerView]-(143)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
     self.verticalNowContainerViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(128)-[_rightContainerView]-(128)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
-    self.horizontalICVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(15)-[_leftContainerView(==130)]-(15)-[_rightContainerView(==160)]" options:0 metrics:nil views:self.leftRightViewsDictionary];
+    self.horizontalICVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(15)-[_leftContainerView(==130)]-(15)-[_rightContainerView(==160)]|" options:0 metrics:nil views:self.leftRightViewsDictionary];
     
     [self addThenContainerViewAndNowContainerViewConstraints];
     
@@ -354,7 +384,7 @@
     
     self.horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:self.metrics views:self.topBottomViewsDictionary];
     
-    self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_cameraView(==568)]" options:0 metrics:self.metrics views:self.topBottomViewsDictionary];
+    self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_cameraView(==524)]" options:0 metrics:self.metrics views:self.topBottomViewsDictionary];
     
     [self addCameraConstraints];
     
@@ -370,7 +400,7 @@
     [self.toolbar setItems:nil animated:YES];
     self.horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
     
-    //self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_cameraView(==524)]" options:0 metrics:nil views:self.topBottomViewsDictionary];
+    self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_cameraView(==568)]" options:0 metrics:nil views:self.topBottomViewsDictionary];
     
     self.horizontalToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_toolbar]|" options:0 metrics:nil views:self.topBottomViewsDictionary];
     
@@ -417,28 +447,36 @@
 
     [self removeThenContainerViewAndNowContainerViewConstraints];
     
-    self.horizontalThenContainerViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(25)-[_leftContainerView]" options:0 metrics:nil views:self.leftRightViewsDictionary];
-    
-    self.verticalICVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(400)-[_leftContainerView]" options:0 metrics:nil views:self.leftRightViewsDictionary];
+    if (self.thenOnLeftOrTop)
+    {
+        self.horizontalThenContainerViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(15)-[_leftContainerView]-(205)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
+        self.verticalICVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(420)-[_leftContainerView]-(23)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
+    }
+    else
+    {
+        self.horizontalThenContainerViewConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(25)-[_rightContainerView]-(40)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
+        self.verticalICVConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(400)-[_rightContainerView]-(50)-|" options:0 metrics:nil views:self.leftRightViewsDictionary];
+    }
     
     //unusual scenario in which we cannot use our standard add constraint methods
-    [self.view addConstraints:self.horizontalNowContainerViewConstraints];
+    [self.view addConstraints:self.horizontalThenContainerViewConstraints];
     [self.view addConstraints:self.verticalICVConstraints];
     
-    [self.view layoutIfNeeded];
-    
-    [self.view bringSubviewToFront:self.thenScrollView];
+    [self.view bringSubviewToFront:self.thenContainerView];
     
     self.thenContainerView.alpha = 0;
-    self.thenContainerView.transform = CGAffineTransformMakeScale(0.4, 0.4);
+    self.thenImageView.transform = CGAffineTransformMakeScale(0.3, 0.3);
     self.thenContainerView.hidden = NO;
-    
+    self.thenImageView.contentMode = UIViewContentModeCenter;
+    [self.view layoutIfNeeded];
+
     //[self removeToolbarConstraints];
     
     //[self slideToolbarUpWithCompletionBlock:nil];
     
     [UIView animateWithDuration:1 animations:^{
         self.thenContainerView.alpha = 1;
+        [self.view layoutIfNeeded];
     }];
 }
 
@@ -447,6 +485,11 @@
 {
     
     [self removeCameraConstraints]; //necessary in case calling from a place where there were previous constraints!
+    
+    self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_cameraView(==0)]" options:0 metrics:self.metrics views:self.topBottomViewsDictionary];
+    
+    self.horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:self.metrics views:self.topBottomViewsDictionary];
+    
     [self addCameraConstraints]; //resets the constraints using getter methods, since the layout arrays will be nil
     [self.view bringSubviewToFront:self.cameraContainerView];
     
@@ -456,7 +499,7 @@
 
     [self animateLayoutCameraFromTopOfScreenToToolbarWithCompletion:^{
         [self animateLayoutCameraFromTopOfScreenToBottomOfScreenPlusHideToolbarWithCompletion:^{
-//            [self layoutCameraPIP];
+        //   [self layoutCameraPIP];
         }];
     }];
 }
@@ -465,7 +508,7 @@
 - (void)animateThenContainerViewFadeInWithCompletion:(void (^)(void))completionBlock
 {
     [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
-        self.thenScrollView.alpha = 1;
+        self.thenContainerView.alpha = 1;
     } completion:^(BOOL finished) {
         if (completionBlock)
         {
@@ -477,8 +520,8 @@
 
 - (void)animateThenContainerViewFadeOutWithCompletion:(void (^)(void))completionBlock
 {
-    [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
-        self.thenScrollView.alpha = 0;
+    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+        self.thenContainerView.alpha = 0;
         [self.view layoutIfNeeded];
     } completion:^(BOOL finished) {
         if (completionBlock)
@@ -499,7 +542,14 @@
         
         if (setupViewsBehindCameraBlock)
         {
-            setupViewsBehindCameraBlock();
+            self.cameraContainerView.hidden = NO;
+            [self.view bringSubviewToFront:self.cameraContainerView];
+            [self.view layoutIfNeeded];
+
+            self.thenContainerView.alpha = 1;
+            self.thenImageView.transform = CGAffineTransformIdentity;
+            
+            //setupViewsBehindCameraBlock();
         }
         
         [self.view layoutIfNeeded];
@@ -513,12 +563,17 @@
                 
                 [UIView animateWithDuration:0.25 animations:^{
                     [self removeCameraConstraints];
-                    self.horizontalCameraConstraints = nil;
-                    self.verticalCameraConstraints = nil;
+    
+                    self.horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:self.metrics views:self.topBottomViewsDictionary];
+                    
+                    self.verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_cameraView(==0)]" options:0 metrics:self.metrics views:self.topBottomViewsDictionary];
+
                     [self addCameraConstraints]; //resets to default from getter
                     
                     [self.view layoutIfNeeded];
-                    
+
+                    self.cameraContainerView.hidden = YES;
+                
                     if(completionBlock)
                     {
                         completionBlock();
@@ -608,10 +663,12 @@
 
 #pragma mark - Constraint Addition and Removal
 - (void)removeThenContainerViewAndNowContainerViewConstraints {
+
     if (self.horizontalSplit)
     {
         if (self.verticalICVConstraints) {
             [self.view removeConstraints:self.verticalICVConstraints];
+            
         }
         
         if (self.horizontalNowContainerViewConstraints) {
@@ -847,6 +904,7 @@
                                views:NSDictionaryOfVariableBindings(spacer, button, topSpacer)]];
 }
 
+
 - (void)layoutSecondaryToolbar
 {
     [self removeSecondaryToolbarConstraints];
@@ -914,4 +972,5 @@
     [self.view addConstraints:self.verticalSecondaryToolbarConstraints];
     [self.view addConstraints:self.horizontalSecondaryToolbarConstraints];
 }
+
 @end

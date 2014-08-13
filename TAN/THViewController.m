@@ -47,9 +47,25 @@ typedef void(^ButtonReplacementBlock)(void);
     
     UIBarButtonItem *stickerButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1169-star-toolbar"] style:UIBarButtonItemStylePlain target:self action:@selector(stickerTapped)];
     
+    UIBarButtonItem *switchButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"759-refresh-2"] style:UIBarButtonItemStylePlain target:self action:@selector(changeSplit)];
 
     
     return _baseToolbarItems = @[switchSubviewsButton, self.spacerBBI, textOverlay, self.spacerBBI, polaroidFrameButton, self.spacerBBI, stickerButton];
+}
+
+-(void)changeSplit {
+    self.horizontalSplit = !self.horizontalSplit;
+    
+    if (self.horizontalSplit)
+    {
+        [self animateLayoutHorizontalSplitOfContainerViewsWithCompletion:nil];
+    }
+    else
+    {
+        [self animateLayoutVerticalSplitOfContainerViewsWithCompletion:nil];
+    }
+    
+    [self replaceToolbarWithButtons:self.baseToolbarItems];
 }
 
 -(NSArray *)stickerToolbarItems {
@@ -137,25 +153,25 @@ typedef void(^ButtonReplacementBlock)(void);
     return _nowImageView;
 }
 
--(NSArray *)verticalCameraConstraints {
+//-(NSArray *)verticalCameraConstraints {
+//
+//    if (!_verticalCameraConstraints)
+//    {
+//        _verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_cameraView(==0)]" options:0 metrics:self.metrics views:self.topBottomViewsDictionary];
+//    }
+//    
+//    return _verticalCameraConstraints;
+//}
+//
+//- (NSArray *)horizontalCameraConstraints {
+//    if (!_horizontalCameraConstraints)
+//    {
+//        _horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:self.metrics views:self.topBottomViewsDictionary];
+//    }
+//    
+//    return _horizontalCameraConstraints;
+//}
 
-    if (!_verticalCameraConstraints)
-    {
-        _verticalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_cameraView(==0)]" options:0 metrics:self.metrics views:self.topBottomViewsDictionary];
-    }
-    
-    return _verticalCameraConstraints;
-}
-
-- (NSArray *)horizontalCameraConstraints {
-    if (!_horizontalCameraConstraints)
-    {
-        _horizontalCameraConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_cameraView]|" options:0 metrics:self.metrics views:self.topBottomViewsDictionary];
-    }
-    
-    return _horizontalCameraConstraints;
-}
-    
 -(NSDictionary *)topBottomViewsDictionary
 {
     id _cameraView = self.cameraContainerView;
@@ -228,18 +244,16 @@ typedef void(^ButtonReplacementBlock)(void);
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.horizontalSplit = NO;
-    self.thenOnLeftOrTop = YES;
-    self.editMode = NO;
-    self.thenImage = [UIImage imageNamed:@"funnyBabyPNG"];
     [self layoutEditingPanel];
 }
 
 - (void)layoutEditingPanel{
     self.navigationController.navigationBar.hidden = NO;
     self.navigationController.navigationBar.alpha = 1;
-    self.editMode = YES;
+    self.thenOnLeftOrTop = YES;
+    self.thenImage = [UIImage imageNamed:@"funnyBabyPNG"];
     self.takingPhoto = NO;
+    self.horizontalSplit = NO;
     [self baseInit];
     [self removeAllTopLevelViewConstraints];
     [self setupEditView];
@@ -286,10 +300,12 @@ typedef void(^ButtonReplacementBlock)(void);
     self.thenContainerView.layer.borderWidth = 3;
 
     self.cameraContainerView = [[UIView alloc] init];
-    
+    self.cameraContainerView.hidden = YES;
+
     self.thenImageView = [[UIImageView alloc]  init];
     self.nowImageView = [[UIImageView alloc]  init];
-    
+    self.thenImageView.contentMode = UIViewContentModeCenter;
+
     self.toolbar = [[UIToolbar alloc] init];
 //    self.pictureAddition = [[THPictureAddition alloc] init];
     
@@ -374,6 +390,8 @@ typedef void(^ButtonReplacementBlock)(void);
         [self setupEditView];
     } AndCompletion:^{
         [self setupCamera];
+        self.cameraContainerView.hidden = YES;
+        [self.view layoutIfNeeded];
     }];
 }
 
@@ -498,10 +516,10 @@ typedef void(^ButtonReplacementBlock)(void);
         self.thenLabel = [[UILabel alloc] init];
         
         [self.nowContainerView addSubview:self.nowLabel];
-        [self.nowContainerView addSubview:self.thenLabel];
+        [self.thenContainerView addSubview:self.thenLabel];
         
         [self.nowContainerView bringSubviewToFront:self.nowLabel];
-        [self.nowContainerView bringSubviewToFront:self.thenLabel];
+        [self.thenContainerView bringSubviewToFront:self.thenLabel];
             
         [self layoutTextLabels];
 
