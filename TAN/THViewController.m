@@ -45,22 +45,71 @@ typedef void(^ButtonReplacementBlock)(void);
     
     UIBarButtonItem *polaroidFrameButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"polaroidIcon.png"] style:UIBarButtonItemStylePlain target:self action:@selector(didTapPolaroidIcon:)];
     
-    UIBarButtonItem *spacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    
     UIBarButtonItem *stickerButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"1169-star-toolbar"] style:UIBarButtonItemStylePlain target:self action:@selector(stickerTapped)];
     
 
     
-    return _baseToolbarItems = @[switchSubviewsButton, spacer, textOverlay, spacer, polaroidFrameButton, spacer, stickerButton];
+    return _baseToolbarItems = @[switchSubviewsButton, self.spacerBBI, textOverlay, self.spacerBBI, polaroidFrameButton, self.spacerBBI, stickerButton];
 }
 
--(NSArray *)stickerToolbarItems
+-(NSArray *)stickerToolbarItems {
+
+    if (!_stickerToolbarItems)
+    {
+    
+        NSMutableArray *toolbarArray = [[NSMutableArray alloc] init];
+        
+        [toolbarArray addObject:self.returnButton];
+        
+        _stickerToolbarItems = toolbarArray;
+    }
+
+    return _stickerToolbarItems;
+}
+
+
+
+-(NSArray *)textToolbarItems {
+    
+
+    
+    if (!_textToolbarItems)
+    {
+        NSMutableArray *toolbarArray = [[NSMutableArray alloc] init];
+        
+        [toolbarArray addObject:self.returnButton];
+        
+        UIBarButtonItem *typefaceBBI = [[UIBarButtonItem alloc] initWithTitle:@"Typeface" style:UIBarButtonItemStylePlain target:self action:@selector(typefaceButtonTapped)];
+        
+        UIBarButtonItem *textColorBBI = [[UIBarButtonItem alloc] initWithTitle:@"TextColor" style:UIBarButtonItemStylePlain target:self action:@selector(layoutSecondaryToolbar)];
+        
+        [toolbarArray addObjectsFromArray:@[self.spacerBBI, typefaceBBI, self.spacerBBI, textColorBBI, self.spacerBBI]];
+        
+        _textToolbarItems = toolbarArray;
+    }
+    
+    
+    return _textToolbarItems;
+    
+}
+
+- (UIBarButtonItem *)returnButton {
+    if (!_returnButton)
+    {
+    _returnButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"433-x"] style:UIBarButtonItemStylePlain target:self action:@selector(returnTapped)];
+    }
+    return _returnButton;
+}
+
+-(UIBarButtonItem *)spacerBBI
 {
-    UIBarButtonItem *returnButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"433-x"] style:UIBarButtonItemStylePlain target:self action:@selector(returnTapped)];
-
-    return _stickerToolbarItems = @[returnButton];
+    if (!_spacerBBI)
+    {
+        _spacerBBI = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    }
+    
+    return _spacerBBI;
 }
-
 
 -(NSDictionary *)metrics {
     
@@ -210,6 +259,7 @@ typedef void(^ButtonReplacementBlock)(void);
     self.nowContainerView = [[UIView alloc] init];
     self.thenContainerView = [[UIView alloc] init];
     
+    
     self.nowScrollView = [[UIScrollView alloc] init];
     self.thenScrollView = [[UIScrollView alloc] init];
     
@@ -222,7 +272,7 @@ typedef void(^ButtonReplacementBlock)(void);
     CGFloat thenMinZoomScale = MAX(widthDivisor/self.thenImage.size.width,heightDivisor/self.thenImage.size.height);
 
     self.thenScrollView.maximumZoomScale = 4;
-    self.thenScrollView.minimumZoomScale = thenMinZoomScale;
+    self.thenScrollView.minimumZoomScale = 0.2;
     
     self.nowScrollView.showsHorizontalScrollIndicator = NO;
     self.nowScrollView.showsVerticalScrollIndicator = NO;
@@ -256,8 +306,8 @@ typedef void(^ButtonReplacementBlock)(void);
     [self.thenScrollView addSubview:self.thenImageView];
     [self.nowScrollView addSubview:self.nowImageView];
     
-    [self.thenScrollView setBackgroundColor:[UIColor redColor]];
-    [self.nowScrollView setBackgroundColor:[UIColor yellowColor]];
+    [self.thenScrollView setBackgroundColor:[UIColor blackColor]];
+    [self.nowScrollView setBackgroundColor:[UIColor blackColor]];
     
     [self.toolbar setItems:self.baseToolbarItems]; //technically not a property...
 }
@@ -285,8 +335,8 @@ typedef void(^ButtonReplacementBlock)(void);
 
 -(void)setupEditView
 {
-    self.nowScrollView.layer.backgroundColor = [UIColor redColor].CGColor;
-    self.thenScrollView.layer.backgroundColor = [UIColor yellowColor].CGColor;
+    self.nowScrollView.layer.backgroundColor = [UIColor blackColor].CGColor;
+    self.thenScrollView.layer.backgroundColor = [UIColor blackColor].CGColor;
     self.cameraContainerView.hidden = YES;
     
     //FIXIT: Should i keep this line? self.thenImageView.alpha =1.0;
@@ -377,33 +427,104 @@ typedef void(^ButtonReplacementBlock)(void);
 }
 
 - (void)returnTapped {
+    self.secondaryToolbar.hidden = YES;
     [self replaceToolbarWithButtons:self.baseToolbarItems];
 }
 
 - (void)stickerTapped {
+    
     [self replaceToolbarWithButtons:self.stickerToolbarItems];
+    
 }
+
 - (void)textOverlayTapped {
     
-    if (!self.thenLabel)
+    [self replaceToolbarWithButtons:self.textToolbarItems];
+    
+    if (!self.secondaryToolbar)
     {
+        
+        self.secondaryToolbar = [[UIScrollView alloc] init];
+        [self.view addSubview:self.secondaryToolbar];
+    
+        [self.secondaryToolbar setShowsHorizontalScrollIndicator:NO];
+        [self.secondaryToolbar setShowsVerticalScrollIndicator:NO];
+        
+        self.contentViewForSecondaryToolbar = [[UIView alloc] init];
+        [self.secondaryToolbar addSubview:self.contentViewForSecondaryToolbar];
+        
+        
+        [self layoutSecondaryToolbar];
+    }
+    
+    [self typefaceButtonTapped];
+
+}
+
+- (void)typefaceButtonTapped {
+    
+    [self showHideTANTextWithFont:nil];
+    
+    self.secondaryToolbar.backgroundColor = [UIColor whiteColor];
+    self.secondaryToolbar.alpha = 0.85;
+    [self.secondaryToolbar layoutIfNeeded];
+    
+}
+
+- (void)animateTypefaceChange:(id)sender
+{
+    [UIView animateWithDuration:0.2 animations:^{
+        self.nowLabel.alpha = 0;
+        self.thenLabel.alpha = 0;
+        
+    } completion:^(BOOL finished) {
+        
+        [self showHideTANTextWithFont:sender];
+        
+        [UIView animateWithDuration:0.2 animations:^{
+            self.thenLabel.alpha = 1;
+            self.nowLabel.alpha = 1;
+        } completion:^(BOOL finished) {
+            
+        }];
+    }];
+}
+
+- (void)showHideTANTextWithFont:(id)sender
+{
+        if (!self.nowLabel)
+        {
         self.nowLabel = [[UILabel alloc] init];
         self.thenLabel = [[UILabel alloc] init];
-    
+        
         [self.nowContainerView addSubview:self.nowLabel];
         [self.nowContainerView addSubview:self.thenLabel];
         
         [self.nowContainerView bringSubviewToFront:self.nowLabel];
         [self.nowContainerView bringSubviewToFront:self.thenLabel];
-        
+            
+        [self layoutTextLabels];
+
+        }
+    
         UIColor *textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
-        UIFont *font = [UIFont systemFontOfSize:20.0];
         
+        UIButton *senderButton = (UIButton *)sender;
+    
+        if (!self.labelsFont || senderButton)
+        {
+            self.labelsFont = [UIFont fontWithName:senderButton.titleLabel.text size:30.0];
+        }
+        else if (!senderButton && !self.labelsFont)
+        {
+            self.labelsFont = [UIFont fontWithName:@"Georgia-Bold" size:30.0];
+        }
+            
         NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
         
         paragraphStyle.alignment = NSTextAlignmentLeft;
         
-        NSDictionary *attr = @{NSForegroundColorAttributeName:textColor, NSFontAttributeName:font, NSParagraphStyleAttributeName:paragraphStyle};
+        NSDictionary *attr = @{NSForegroundColorAttributeName:textColor, NSFontAttributeName:self.labelsFont, NSParagraphStyleAttributeName:paragraphStyle};
         
         NSString *textForAttributedThenText = @"Then";
         NSString *textForAttributedNowText = @"Now";
@@ -418,25 +539,19 @@ typedef void(^ButtonReplacementBlock)(void);
         
         self.thenLabel.attributedText = attributedThenText;
         self.nowLabel.attributedText = attributedNowText;
-        
-        //self.thenTextImageView.backgroundColor = [UIColor orangeColor];
-        //self.nowTextImageView.backgroundColor = [UIColor whiteColor];
-        
-        [self layoutTextLabels];
-    }
-    else
-    {
-        [self.nowContainerView bringSubviewToFront:self.nowLabel];
-        [self.nowContainerView bringSubviewToFront:self.thenLabel];
-        
-        self.thenLabel.hidden = !self.thenLabel.hidden;
-        self.nowLabel.hidden = !self.nowLabel.hidden;
-        
-        //self.nowLabel = nil;
-        //[self removeLabelConstraints];
-    }
-}
+    
+    
+//    }
+//    else
+//    {
+//        [self.nowContainerView bringSubviewToFront:self.nowLabel];
+//        [self.nowContainerView bringSubviewToFront:self.thenLabel];
+//        
+//        self.thenLabel.hidden = !self.thenLabel.hidden;
+//        self.nowLabel.hidden = !self.nowLabel.hidden;
+//    }
 
+}
 
 #pragma mark - FrameDelegate
 - (void)didTapPolaroidIcon:(id)sender
@@ -466,7 +581,7 @@ typedef void(^ButtonReplacementBlock)(void);
         
         CGFloat nowMinZoomScale = MAX(widthDivisor/self.nowImage.size.width,heightDivisor/self.nowImage.size.height);
         self.nowScrollView.maximumZoomScale = 4;
-        self.nowScrollView.minimumZoomScale = nowMinZoomScale;
+        self.nowScrollView.minimumZoomScale = 0.2;
         
         [self layoutThenAndNowContainerViews];
     }
@@ -493,4 +608,44 @@ typedef void(^ButtonReplacementBlock)(void);
     return self.nowImageView;
 }
 
+- (NSArray *)typefaceButtonArray
+{
+    
+    if (!_typefaceButtonArray)
+    {
+        NSArray *typefaceArray = @[@"Georgia-Bold",@"Verdana",@
+                                   "Papyrus", @"SnellRoundhand-Black", @"Zapfino"];
+        NSMutableArray *buttonArray = [[NSMutableArray alloc] init];
+        
+        for (NSInteger i = 0; i < [typefaceArray count]; i++)
+        {
+            UIButton *typeFaceButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            
+            UIColor *textColor = [UIColor colorWithRed:0 green:0 blue:1.0 alpha:1.0];
+            NSString *fontName = (NSString *)typefaceArray[i];
+            UIFont *font = [UIFont fontWithName:fontName size:20.0];
+            
+            NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+            
+            paragraphStyle.alignment = NSTextAlignmentLeft;
+            
+            NSDictionary *attr = @{NSForegroundColorAttributeName:textColor, NSFontAttributeName:font, NSParagraphStyleAttributeName:paragraphStyle};
+            
+            NSString *textForAttributedText = (NSString *)typefaceArray[i];
+            
+            NSMutableAttributedString *attributedText =
+            [[NSMutableAttributedString alloc] initWithString:textForAttributedText
+                                                   attributes:attr];
+            
+            [typeFaceButton setAttributedTitle:attributedText forState:UIControlStateNormal];
+            [typeFaceButton addTarget:self action:@selector(animateTypefaceChange:) forControlEvents:UIControlEventTouchUpInside];
+            
+            [buttonArray addObject:typeFaceButton];
+        }
+        
+        _typefaceButtonArray = [[NSArray alloc] initWithArray:buttonArray];
+    }
+    
+    return _typefaceButtonArray;
+}
 @end

@@ -32,5 +32,6 @@
 - (void)switchImagesAcrossHorizontalSplit;
 - (void)animateCameraResignWithSetupViewsBlock:(void (^)(void))setupViewsBehindCameraBlock AndCompletion:(void (^)(void))completionBlock;
 - (void)layoutTextLabels;
+- (void)layoutSecondaryToolbar;
 
 @end

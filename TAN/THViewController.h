@@ -28,7 +28,8 @@
 @property (strong, nonatomic) UIBarButtonItem *cameraButton;
 @property (strong, nonatomic) UIImageView *thenImageView;
 @property (strong, nonatomic) UIImageView *nowImageView;
-
+@property (strong, nonatomic) UIView *contentViewForImage;
+@property (strong, nonatomic) UIView *contentViewForSecondaryToolbar;
 @property (strong, nonatomic) UIImage *thenImage;
 @property (strong, nonatomic) UIImage *nowImage;
 @property (strong, nonatomic) UILabel *thenLabel;
@@ -41,9 +42,12 @@
 @property (strong, nonatomic) NSArray *frameToolbarItems;
 @property (strong, nonatomic) NSArray *layoutToolbarItems;
 
-
-
+//@property (strong, nonatomic) NSMutableArray *typefaceFields;
+@property (strong, nonatomic) NSMutableArray *dataFields;
+@property (strong, nonatomic) UIView *topSpacer;
 @property (strong, nonatomic) UIButton *editButton;
+@property (strong, nonatomic) UIBarButtonItem *returnButton;
+@property (strong, nonatomic) UIBarButtonItem *spacerBBI;
 
 #pragma mark - LayoutConstraint Properties
 @property (strong, nonatomic) NSDictionary *topBottomViewsDictionary;
@@ -53,6 +57,7 @@
 
 @property (strong, nonatomic) NSArray *horizontalToolbarConstraints;
 @property (strong, nonatomic) NSArray *verticalToolbarConstraints;
+
 @property (strong, nonatomic) NSArray *verticalCameraConstraints;
 @property (strong, nonatomic) NSArray *horizontalCameraConstraints;
 
@@ -60,6 +65,7 @@
 @property (strong, nonatomic) NSArray *verticalThenImageConstraints;
 @property (strong, nonatomic) NSArray *horizontalNowImageConstraints;
 @property (strong, nonatomic) NSArray *horizontalThenImageConstraints;
+
 @property (strong, nonatomic) NSArray *verticalThenScrollViewConstraints;
 @property (strong, nonatomic) NSArray *verticalNowScrollViewConstraints;
 @property (strong, nonatomic) NSArray *horizontalThenScrollViewConstraints;
@@ -72,22 +78,32 @@
 @property (strong, nonatomic) NSArray *horizontalNowContainerViewConstraints;
 @property (strong, nonatomic) NSArray *verticalICVConstraints;
 
-@property (strong, nonatomic) NSArray *horizontalScrollViewContentSizeConstraints;
-@property (strong, nonatomic) NSArray *verticalScrollViewContentSizeConstraints;
+@property (strong, nonatomic) NSArray *horizontalImageScrollViewContentSizeConstraints;
+@property (strong, nonatomic) NSArray *verticalImageScrollViewContentSizeConstraints;
+
+@property (strong, nonatomic) NSArray *horizontalToolbarScrollViewContentSizeConstraints;
+@property (strong, nonatomic) NSArray *verticalToolbarScrollViewContentSizeConstraints;
+
 @property (strong, nonatomic) NSArray *horizontalScrollViewConstraints;
 @property (strong, nonatomic) NSArray *verticalScrollViewConstraints;
 @property (strong, nonatomic) NSArray *thenLabelConstraints;
 @property (strong, nonatomic) NSArray *nowLabelConstraints;
 
+@property (strong, nonatomic) NSArray *verticalSecondaryToolbarConstraints;
+@property (strong, nonatomic) NSArray *horizontalSecondaryToolbarConstraints;
+@property (strong, nonatomic) UIScrollView *secondaryToolbar;
+
 @property (strong, nonatomic) NSDictionary *metrics;
 
-
+@property (strong, nonatomic) UIFont *labelsFont;
 
 #pragma mark - Other Properties
 @property (nonatomic) BOOL takingPhoto;
 @property (nonatomic) BOOL editMode;
 @property (nonatomic) BOOL horizontalSplit;
 @property (nonatomic) BOOL thenOnLeftOrTop;
+
+@property (strong, nonatomic) NSArray *typefaceButtonArray;
 
 //@property (nonatomic) THPictureAddition *pictureAddition;
 

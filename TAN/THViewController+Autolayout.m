@@ -68,7 +68,6 @@
     [self.nowScrollView addConstraints:self.horizontalNowImageConstraints];
 }
 
-
 - (void)layoutHorizontalSplitOfContainerViews {
     
     [self removeThenContainerViewAndNowContainerViewConstraints];
@@ -495,8 +494,8 @@
         
         [self.view bringSubviewToFront:self.cameraContainerView];
         self.nowContainerView.hidden = NO;
-        self.thenScrollView.transform = CGAffineTransformIdentity;
-        self.thenScrollView.alpha = 1;
+        self.thenContainerView.transform = CGAffineTransformIdentity;
+        self.thenContainerView.alpha = 1;
         
         if (setupViewsBehindCameraBlock)
         {
@@ -506,27 +505,27 @@
         [self.view layoutIfNeeded];
         [self layoutBaseNavbar];
 
-//        [self animateLayoutToolbarOfHeightZeroAtBottomOfScreenWithCompletion:^{
-//            
-//            [self.toolbar setItems:self.baseToolbarItems animated:NO]; //technically not a property...
-//
-//            [self animateLayoutToolbarOfStandardHeightWithCompletion:^{
-//                
-//                [UIView animateWithDuration:0.25 animations:^{
-//                    [self removeCameraConstraints];
-//                    self.horizontalCameraConstraints = nil;
-//                    self.verticalCameraConstraints = nil;
-//                    [self addCameraConstraints]; //resets to default from getter
-//                    
-//                    [self.view layoutIfNeeded];
-//                    
-//                    if(completionBlock)
-//                    {
-//                        completionBlock();
-//                    }
-//                }];
-//            }];
-//        }];
+        [self animateLayoutToolbarOfHeightZeroAtBottomOfScreenWithCompletion:^{
+            
+            [self.toolbar setItems:self.baseToolbarItems animated:NO]; //technically not a property...
+
+            [self animateLayoutToolbarOfStandardHeightWithCompletion:^{
+                
+                [UIView animateWithDuration:0.25 animations:^{
+                    [self removeCameraConstraints];
+                    self.horizontalCameraConstraints = nil;
+                    self.verticalCameraConstraints = nil;
+                    [self addCameraConstraints]; //resets to default from getter
+                    
+                    [self.view layoutIfNeeded];
+                    
+                    if(completionBlock)
+                    {
+                        completionBlock();
+                    }
+                }];
+            }];
+        }];
     }];
 }
 
@@ -701,6 +700,9 @@
 
     self.toolbar.translatesAutoresizingMaskIntoConstraints = NO;
     [self.toolbar removeConstraints:self.toolbar.constraints];
+    
+    self.secondaryToolbar.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.secondaryToolbar removeConstraints:self.secondaryToolbar.constraints];
 }
 
 - (void)removeContainerViewConstraints {
@@ -740,10 +742,10 @@
 - (void)removeLabelConstraints {
     
     self.nowLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.nowLabel removeConstraints:self.nowLabel.constraints];
+    [self.view removeConstraints:self.nowLabel.constraints];
     
     self.thenLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.thenLabel removeConstraints:self.thenLabel.constraints];
+    [self.view removeConstraints:self.thenLabel.constraints];
     
 }
 - (void)layoutTextLabels
@@ -769,13 +771,147 @@
     [self.view addConstraints:self.nowLabelConstraints];
 
     [self.view layoutIfNeeded];
-    
-//    self.horizontalLabelConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_thenLabel(==_thenScrollView)]" options:0 metrics:nil views:self.labelsDictionary];
-//    
-//    self.verticalLabelConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_thenLabel(==_thenScrollView)]" options:0 metrics:nil views:self.labelsDictionary];
 
     
 }
 
 
+
+- (void)buildSecondaryToolbarWithButtonArray:(NSArray *)buttonArray {
+//    self.view.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addButtonsWithButtonArray:buttonArray];
+    [self addSpacers];
+}
+
+- (void)addButtonsWithButtonArray:(NSArray *)buttonArray {
+    self.dataFields = [NSMutableArray array];
+    for (NSInteger i = 0; i < [buttonArray count]; ++i) {
+        [self addButtonFromButtonArray:buttonArray AtIndex:i];
+    }
+}
+
+- (void)addButtonFromButtonArray:(NSArray *)buttonArray AtIndex:(NSInteger)index {
+    UIButton *button = buttonArray[index];
+    button.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.contentViewForSecondaryToolbar addSubview:button];
+    [button setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+    [button setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+    [self.contentViewForSecondaryToolbar addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[button]-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(button)]];
+    [self.dataFields addObject:button];
+}
+
+- (void)addSpacers {
+    [self addTopSpacer];
+    for (NSInteger i = 1, count = [self.dataFields count]; i < count; ++i) {
+        [self addSpacerFromBottomOfView:self.dataFields[i - 1]
+                            toTopOfView:self.dataFields[i]];
+    }
+    [self addBottomSpacer];
+}
+
+- (void)addTopSpacer {
+    UIView *spacer = [self newSpacer];
+    UIButton *button = self.dataFields[0];
+    
+    [self.contentViewForSecondaryToolbar addConstraints:[NSLayoutConstraint
+                               constraintsWithVisualFormat:@"H:|[spacer(==20)][button]" options:0 metrics:nil
+                               views:NSDictionaryOfVariableBindings(spacer, button)]];
+    self.topSpacer = spacer;
+}
+
+- (UIView *)newSpacer {
+    UIView *spacer = [[UIView alloc] init];
+    spacer.hidden = YES; // Views participate in layout even when hidden.
+    spacer.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.contentViewForSecondaryToolbar addSubview:spacer];
+    [self.contentViewForSecondaryToolbar addConstraints:[NSLayoutConstraint
+                               constraintsWithVisualFormat:@"V:|[spacer]|" options:0 metrics:nil
+                               views:NSDictionaryOfVariableBindings(spacer)]];
+    return spacer;
+}
+
+- (void)addSpacerFromBottomOfView:(UIView *)overView toTopOfView:(UIView *)underView {
+    UIView *spacer = [self newSpacer];
+    id topSpacer = self.topSpacer;
+    [self.contentViewForSecondaryToolbar addConstraints:[NSLayoutConstraint
+                               constraintsWithVisualFormat:@"H:[overView][spacer(==topSpacer)][underView]" options:0 metrics:nil
+                               views:NSDictionaryOfVariableBindings(spacer, overView, underView, topSpacer)]];
+}
+
+- (void)addBottomSpacer {
+    id topSpacer = self.topSpacer;
+    UIView *spacer = [self newSpacer];
+    UIButton *button = self.dataFields.lastObject;
+    [self.contentViewForSecondaryToolbar addConstraints:[NSLayoutConstraint
+                               constraintsWithVisualFormat:@"H:[button][spacer(==topSpacer)]|" options:0 metrics:nil
+                               views:NSDictionaryOfVariableBindings(spacer, button, topSpacer)]];
+}
+
+- (void)layoutSecondaryToolbar
+{
+    [self removeSecondaryToolbarConstraints];
+    [self removeContentViewForSecondaryToolbarConstraints];
+    
+    id _secondaryToolbar = self.secondaryToolbar;
+    id contentView = self.contentViewForSecondaryToolbar;
+
+    NSDictionary *secondaryToolbarDictionary = NSDictionaryOfVariableBindings(_secondaryToolbar, contentView);
+    
+    
+    NSArray *verticalContentViewForSecondaryToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[contentView(==66)]|"
+                                                                                                         options:0
+                                                                                                         metrics:nil
+                                                                                                           views:secondaryToolbarDictionary];
+    
+    NSArray *horizontalContentViewForSecondaryToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[contentView(==1000)]|"
+                                                                                                           options:0
+                                                                                                           metrics:nil
+                                                                                                             views:secondaryToolbarDictionary];
+    
+    
+    self.verticalSecondaryToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_secondaryToolbar(==contentView)]-(44)-|" options:0 metrics:nil views:secondaryToolbarDictionary];
+    self.horizontalSecondaryToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_secondaryToolbar(==320)]|" options:0 metrics:nil views:secondaryToolbarDictionary];
+    
+    [self addSecondaryToolbarConstraints];
+
+    [self.secondaryToolbar addConstraints:verticalContentViewForSecondaryToolbarConstraints];
+    
+    [self.secondaryToolbar addConstraints:horizontalContentViewForSecondaryToolbarConstraints];
+
+    
+    self.secondaryToolbar.backgroundColor = [UIColor blueColor];
+    
+    [self buildSecondaryToolbarWithButtonArray:self.typefaceButtonArray];
+    
+}
+
+- (void)removeContentViewForSecondaryToolbarConstraints
+{
+    self.contentViewForSecondaryToolbar.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.contentViewForSecondaryToolbar removeConstraints:self.contentViewForSecondaryToolbar.constraints];
+}
+
+- (void)removeSecondaryToolbarConstraints
+{
+    
+    self.secondaryToolbar.translatesAutoresizingMaskIntoConstraints = NO;
+    //[self.secondaryToolbar removeConstraints:self.secondaryToolbar.constraints];
+    
+    if (self.verticalSecondaryToolbarConstraints)
+    {
+    [self.view removeConstraints:self.verticalSecondaryToolbarConstraints];
+    }
+    
+    if (self.horizontalSecondaryToolbarConstraints)
+    {
+    [self.view removeConstraints:self.horizontalSecondaryToolbarConstraints];
+    }
+
+}
+
+- (void)addSecondaryToolbarConstraints
+{
+    [self.view addConstraints:self.verticalSecondaryToolbarConstraints];
+    [self.view addConstraints:self.horizontalSecondaryToolbarConstraints];
+}
 @end
