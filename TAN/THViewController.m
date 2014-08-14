@@ -101,11 +101,13 @@ typedef void(^ButtonReplacementBlock)(void);
         
         [toolbarArray addObject:self.returnButton];
         
+        UIBarButtonItem *deleteBBI = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"711-trash"] style:UIBarButtonItemStylePlain target:self action:@selector(hideText)];
+        
         UIBarButtonItem *typefaceBBI = [[UIBarButtonItem alloc] initWithTitle:@"Typeface" style:UIBarButtonItemStylePlain target:self action:@selector(typefaceButtonTapped)];
         
         UIBarButtonItem *textColorBBI = [[UIBarButtonItem alloc] initWithTitle:@"TextColor" style:UIBarButtonItemStylePlain target:self action:@selector(layoutSecondaryToolbar)];
         
-        [toolbarArray addObjectsFromArray:@[self.spacerBBI, typefaceBBI, self.spacerBBI, textColorBBI, self.spacerBBI]];
+        [toolbarArray addObjectsFromArray:@[self.spacerBBI, deleteBBI, self.spacerBBI, typefaceBBI, self.spacerBBI, textColorBBI, self.spacerBBI]];
         
         _textToolbarItems = toolbarArray;
     }
@@ -114,6 +116,11 @@ typedef void(^ButtonReplacementBlock)(void);
     return _textToolbarItems;
     
 }
+
+- (void)hideText
+{
+    self.thenLabel.hidden = YES;
+    self.nowLabel.hidden = YES;}
 
 - (UIBarButtonItem *)returnButton {
     if (!_returnButton)
@@ -154,6 +161,8 @@ typedef void(^ButtonReplacementBlock)(void);
         NSString *buttonWidth = [NSString stringWithFormat:@"%d",(int)roundf(ceilf(buttonSize.width))];
         
         return [buttonWidth intValue];
+        
+        
     }];
     
     _metrics = @{@"cameraViewTop":@64, @"cameraViewBottom":@0, @"toolbarHeight":@44, @"cameraViewBottomAnimated":@460, @"thenImageHeight":thenImageHeight, @"thenImageWidth":thenImageWidth,@"nowImageHeight":nowImageHeight,@"nowImageWidth":nowImageWidth,@"typefaceToolbarWidth":typefaceToolbarWidth};
@@ -457,6 +466,9 @@ typedef void(^ButtonReplacementBlock)(void);
 }
 
 - (void)textOverlayTapped {
+    self.secondaryToolbar.hidden = NO;
+    self.thenLabel.hidden = NO;
+    self.nowLabel.hidden = NO;
     
     [self replaceToolbarWithButtons:self.textToolbarItems];
     
@@ -688,7 +700,7 @@ typedef void(^ButtonReplacementBlock)(void);
 
 - (NSNumber *)determineWidthOfSecondaryToolbarWithButtons:(NSArray *)buttonsArray usingIndividualButtonWidthBlock:( NSInteger (^)(UIButton *))buttonWidthBlock;
 {
-    NSInteger widthOfSecondaryToolbar = 20;
+    NSInteger widthOfSecondaryToolbar = 108;
     
     for (UIButton *button in buttonsArray)
     {
