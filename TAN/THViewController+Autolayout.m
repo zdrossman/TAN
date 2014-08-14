@@ -909,17 +909,18 @@
 
     NSDictionary *secondaryToolbarDictionary = NSDictionaryOfVariableBindings(_secondaryToolbar, contentView);
     
+    NSArray *verticalContentViewForSecondaryToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[contentView(==66)]|" options:0 metrics:nil views:secondaryToolbarDictionary];
     
-    NSArray *verticalContentViewForSecondaryToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[contentView(==66)]|"
-                                                                                                         options:0
-                                                                                                         metrics:nil
-                                                                                                           views:secondaryToolbarDictionary];
+    NSArray *horizontalContentViewForSecondaryToolbarConstraints;
     
-    NSArray *horizontalContentViewForSecondaryToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[contentView(==1000)]|"
-                                                                                                           options:0
-                                                                                                           metrics:nil
-                                                                                                             views:secondaryToolbarDictionary];
-    
+    if ((NSInteger)self.metrics[@"typefaceToolbarWidth"] <= 320)
+    {
+       horizontalContentViewForSecondaryToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[contentView(==320)]|" options:0 metrics:self.metrics views:secondaryToolbarDictionary];
+    }
+    else
+    {
+        horizontalContentViewForSecondaryToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[contentView(==typefaceToolbarWidth)]|"options:0 metrics:self.metrics views:secondaryToolbarDictionary];
+    }
     
     self.verticalSecondaryToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_secondaryToolbar(==contentView)]-(44)-|" options:0 metrics:nil views:secondaryToolbarDictionary];
     self.horizontalSecondaryToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_secondaryToolbar(==320)]|" options:0 metrics:nil views:secondaryToolbarDictionary];

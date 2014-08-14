@@ -105,6 +105,7 @@
 @property (nonatomic) BOOL thenOnLeftOrTop;
 
 @property (strong, nonatomic) NSArray *typefaceButtonArray;
+@property (strong, nonatomic) NSArray *fontColorButtonArray;
 
 //@property (nonatomic) THPictureAddition *pictureAddition;
 

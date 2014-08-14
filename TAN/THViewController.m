@@ -141,7 +141,22 @@ typedef void(^ButtonReplacementBlock)(void);
     NSNumber *nowImageHeight = [NSNumber numberWithFloat:self.nowImage.size.height];
     NSNumber *nowImageWidth = [NSNumber numberWithFloat:self.nowImage.size.width];
     
-    _metrics = @{@"cameraViewTop":@64, @"cameraViewBottom":@0, @"toolbarHeight":@44, @"cameraViewBottomAnimated":@460, @"thenImageHeight":thenImageHeight, @"thenImageWidth":thenImageWidth,@"nowImageHeight":nowImageHeight,@"nowImageWidth":nowImageWidth};
+    NSNumber *typefaceToolbarWidth = [self determineWidthOfSecondaryToolbarWithButtons:self.typefaceButtonArray usingIndividualButtonWidthBlock:^NSInteger(UIButton *button) {
+        
+        __block CGSize buttonSize;
+        [button.titleLabel.attributedText enumerateAttributesInRange:NSMakeRange(0,[button.titleLabel.text length]) options:NSAttributedStringEnumerationReverse usingBlock:
+         ^(NSDictionary *attributes, NSRange range, BOOL *stop) {
+             
+              buttonSize = [button.titleLabel.text sizeWithAttributes:attributes];
+             
+         }];
+        
+        NSString *buttonWidth = [NSString stringWithFormat:@"%d",(int)roundf(ceilf(buttonSize.width))];
+        
+        return [buttonWidth intValue];
+    }];
+    
+    _metrics = @{@"cameraViewTop":@64, @"cameraViewBottom":@0, @"toolbarHeight":@44, @"cameraViewBottomAnimated":@460, @"thenImageHeight":thenImageHeight, @"thenImageWidth":thenImageWidth,@"nowImageHeight":nowImageHeight,@"nowImageWidth":nowImageWidth,@"typefaceToolbarWidth":typefaceToolbarWidth};
  
     return _metrics;
     
@@ -557,6 +572,11 @@ typedef void(^ButtonReplacementBlock)(void);
 
 }
 
+- (void)generateAttributedString
+{
+    
+}
+
 #pragma mark - FrameDelegate
 - (void)didTapPolaroidIcon:(id)sender
 {
@@ -649,6 +669,34 @@ typedef void(^ButtonReplacementBlock)(void);
     }
     
     return _typefaceButtonArray;
+}
+
+- (NSArray *)fontColorButtonArray
+{
+    
+    if (!_fontColorButtonArray)
+    {
+        NSMutableArray *buttonArray = [[NSMutableArray alloc] init];
+        
+        
+        _fontColorButtonArray = [[NSArray alloc] initWithArray:buttonArray];
+    }
+    
+    return _fontColorButtonArray;
+}
+
+
+- (NSNumber *)determineWidthOfSecondaryToolbarWithButtons:(NSArray *)buttonsArray usingIndividualButtonWidthBlock:( NSInteger (^)(UIButton *))buttonWidthBlock;
+{
+    NSInteger widthOfSecondaryToolbar = 20;
+    
+    for (UIButton *button in buttonsArray)
+    {
+        NSInteger individualButton = buttonWidthBlock(button);
+        widthOfSecondaryToolbar = individualButton + widthOfSecondaryToolbar + 20;
+    }
+    
+    return @(widthOfSecondaryToolbar);
 }
 
 //- (void)updateScrollViewParameters
