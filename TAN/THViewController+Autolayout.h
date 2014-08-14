@@ -32,7 +32,7 @@
 - (void)switchImagesAcrossHorizontalSplit;
 - (void)animateCameraResignWithSetupViewsBlock:(void (^)(void))setupViewsBehindCameraBlock AndCompletion:(void (^)(void))completionBlock;
 - (void)layoutTextLabels;
-- (void)layoutSecondaryToolbar;
+- (void)layoutSecondaryToolbarWithButtonsArray:(NSArray *)buttonsArray;
 - (void)animateLayoutVerticalSplitOfContainerViewsWithCompletion:(void (^)(void))completionBlock;
 - (void)animateLayoutHorizontalSplitOfContainerViewsWithCompletion:(void (^)(void))completionBlock;
 

@@ -899,7 +899,7 @@
 }
 
 
-- (void)layoutSecondaryToolbar
+- (void)layoutSecondaryToolbarWithButtonsArray:(NSArray *)buttonsArray
 {
     [self removeSecondaryToolbarConstraints];
     [self removeContentViewForSecondaryToolbarConstraints];
@@ -913,14 +913,16 @@
     
     NSArray *horizontalContentViewForSecondaryToolbarConstraints;
     
-    if ((NSInteger)self.metrics[@"typefaceToolbarWidth"] <= 320)
+    if ([buttonsArray isEqualToArray:self.typefaceButtonArray])
     {
-       horizontalContentViewForSecondaryToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[contentView(==320)]|" options:0 metrics:self.metrics views:secondaryToolbarDictionary];
+    
+        horizontalContentViewForSecondaryToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[contentView(==typefaceToolbarWidth)]|"options:0 metrics:self.metrics views:secondaryToolbarDictionary];
     }
     else
     {
-        horizontalContentViewForSecondaryToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[contentView(==typefaceToolbarWidth)]|"options:0 metrics:self.metrics views:secondaryToolbarDictionary];
+        horizontalContentViewForSecondaryToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[contentView(==fontColorToolbarWidth)]|"options:0 metrics:self.metrics views:secondaryToolbarDictionary];
     }
+
     
     self.verticalSecondaryToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_secondaryToolbar(==contentView)]-(44)-|" options:0 metrics:nil views:secondaryToolbarDictionary];
     self.horizontalSecondaryToolbarConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_secondaryToolbar(==320)]|" options:0 metrics:nil views:secondaryToolbarDictionary];
@@ -934,7 +936,7 @@
     
     self.secondaryToolbar.backgroundColor = [UIColor blueColor];
     
-    [self buildSecondaryToolbarWithButtonArray:self.typefaceButtonArray];
+    [self buildSecondaryToolbarWithButtonArray:buttonsArray];
     
 }
 

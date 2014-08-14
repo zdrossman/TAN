@@ -103,9 +103,9 @@ typedef void(^ButtonReplacementBlock)(void);
         
         UIBarButtonItem *deleteBBI = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"711-trash"] style:UIBarButtonItemStylePlain target:self action:@selector(hideText)];
         
-        UIBarButtonItem *typefaceBBI = [[UIBarButtonItem alloc] initWithTitle:@"Typeface" style:UIBarButtonItemStylePlain target:self action:@selector(typefaceButtonTapped)];
+        UIBarButtonItem *typefaceBBI = [[UIBarButtonItem alloc] initWithTitle:@"Typeface" style:UIBarButtonItemStylePlain target:self action:@selector(textOverlayTapped)];
         
-        UIBarButtonItem *textColorBBI = [[UIBarButtonItem alloc] initWithTitle:@"TextColor" style:UIBarButtonItemStylePlain target:self action:@selector(layoutSecondaryToolbar)];
+        UIBarButtonItem *textColorBBI = [[UIBarButtonItem alloc] initWithTitle:@"TextColor" style:UIBarButtonItemStylePlain target:self action:@selector(textColorButtonTapped)];
         
         [toolbarArray addObjectsFromArray:@[self.spacerBBI, deleteBBI, self.spacerBBI, typefaceBBI, self.spacerBBI, textColorBBI, self.spacerBBI]];
         
@@ -117,6 +117,11 @@ typedef void(^ButtonReplacementBlock)(void);
     
 }
 
+- (void)createSecondaryToolbarWithColors
+{
+    [self layoutSecondaryToolbarWithButtonsArray:self.fontColorButtonArray];
+    [self.view layoutIfNeeded];
+}
 - (void)hideText
 {
     self.thenLabel.hidden = YES;
@@ -165,7 +170,9 @@ typedef void(^ButtonReplacementBlock)(void);
         
     }];
     
-    _metrics = @{@"cameraViewTop":@64, @"cameraViewBottom":@0, @"toolbarHeight":@44, @"cameraViewBottomAnimated":@460, @"thenImageHeight":thenImageHeight, @"thenImageWidth":thenImageWidth,@"nowImageHeight":nowImageHeight,@"nowImageWidth":nowImageWidth,@"typefaceToolbarWidth":typefaceToolbarWidth};
+    NSNumber *fontColorToolbarWidth = @1500;
+    
+    _metrics = @{@"cameraViewTop":@64, @"cameraViewBottom":@0, @"toolbarHeight":@44, @"cameraViewBottomAnimated":@460, @"thenImageHeight":thenImageHeight, @"thenImageWidth":thenImageWidth,@"nowImageHeight":nowImageHeight,@"nowImageWidth":nowImageWidth,@"typefaceToolbarWidth":typefaceToolbarWidth,@"fontColorToolbarWidth":fontColorToolbarWidth};
  
     return _metrics;
     
@@ -472,9 +479,12 @@ typedef void(^ButtonReplacementBlock)(void);
     
     [self replaceToolbarWithButtons:self.textToolbarItems];
     
-    if (!self.secondaryToolbar)
+    if (self.secondaryToolbar)
     {
-        
+        [self.secondaryToolbar removeFromSuperview];
+        [self.contentViewForSecondaryToolbar removeFromSuperview];
+    }
+
         self.secondaryToolbar = [[UIScrollView alloc] init];
         [self.view addSubview:self.secondaryToolbar];
     
@@ -485,14 +495,49 @@ typedef void(^ButtonReplacementBlock)(void);
         [self.secondaryToolbar addSubview:self.contentViewForSecondaryToolbar];
         
         
-        [self layoutSecondaryToolbar];
-    }
+        [self layoutSecondaryToolbarWithButtonsArray:self.typefaceButtonArray];
+//    }
     
     [self typefaceButtonTapped];
 
 }
 
+- (void)textColorButtonTapped {
+    
+    self.secondaryToolbar.hidden = NO;
+    self.thenLabel.hidden = NO;
+    self.nowLabel.hidden = NO;
+    
+    if (self.secondaryToolbar)
+    {
+    [self.secondaryToolbar removeFromSuperview];
+    [self.contentViewForSecondaryToolbar removeFromSuperview];
+
+    }
+    
+    self.secondaryToolbar = [[UIScrollView alloc] init];
+    
+    [self.view addSubview:self.secondaryToolbar];
+    
+    [self.secondaryToolbar setShowsHorizontalScrollIndicator:NO];
+    [self.secondaryToolbar setShowsVerticalScrollIndicator:NO];
+    
+    self.contentViewForSecondaryToolbar = [[UIView alloc] init];
+    [self.secondaryToolbar addSubview:self.contentViewForSecondaryToolbar];
+    
+    [self layoutSecondaryToolbarWithButtonsArray:self.fontColorButtonArray];
+    
+    [self colorTANTextWithFontColor:nil];
+    
+    self.secondaryToolbar.backgroundColor = [UIColor whiteColor];
+    self.secondaryToolbar.alpha = 0.85;
+    [self.secondaryToolbar layoutIfNeeded];
+}
+
 - (void)typefaceButtonTapped {
+    self.secondaryToolbar.hidden = NO;
+    self.thenLabel.hidden = NO;
+    self.nowLabel.hidden = NO;
     
     [self showHideTANTextWithFont:nil];
     
@@ -502,11 +547,34 @@ typedef void(^ButtonReplacementBlock)(void);
     
 }
 
+- (void)fontColorButtonTapped:(id)sender {
+    self.secondaryToolbar.hidden = NO;
+    self.thenLabel.hidden = NO;
+    self.nowLabel.hidden = NO;
+    
+    [self colorTANTextWithFontColor:sender];
+
+    self.secondaryToolbar.backgroundColor = [UIColor whiteColor];
+    self.secondaryToolbar.alpha = 0.85;
+    [self.view layoutIfNeeded];
+    
+}
+
+
 - (void)animateTypefaceChange:(id)sender
 {
+    
     [UIView animateWithDuration:0.2 animations:^{
+        if (!self.thenLabel.hidden)
+        {
         self.nowLabel.alpha = 0;
         self.thenLabel.alpha = 0;
+        }
+        else
+        {
+            self.nowLabel.hidden = NO;
+            self.thenLabel.hidden = NO;
+        }
         
     } completion:^(BOOL finished) {
         
@@ -521,10 +589,73 @@ typedef void(^ButtonReplacementBlock)(void);
     }];
 }
 
+- (void)colorTANTextWithFontColor:(id)sender
+{
+    UIButton *senderButton = (UIButton *)sender;
+    
+    if ([sender isKindOfClass:[UIButton class]])
+    {
+    [self.thenLabel.attributedText enumerateAttributesInRange:NSMakeRange(0,[self.thenLabel.attributedText length]) options:NSAttributedStringEnumerationReverse usingBlock:
+     ^(NSDictionary *attributes, NSRange range, BOOL *stop) {
+         
+         __block UIColor *color;
+         
+         [senderButton.titleLabel.attributedText enumerateAttributesInRange:NSMakeRange(0,1) options:NSAttributedStringEnumerationReverse usingBlock:
+          ^(NSDictionary *attributes, NSRange range, BOOL *stop) {
+              
+              color = attributes[@"NSColor"];
+              
+          }];
+         
+         
+            NSMutableDictionary *mutableAttributes = [attributes mutableCopy];
+         
+            mutableAttributes[@"NSColor"] = color;
+         self.chosenColor = color;
+         
+         NSString *textForAttributedThenText = @"Then";
+         NSString *textForAttributedNowText = @"Now";
+         
+         NSMutableAttributedString *attributedThenText =
+         [[NSMutableAttributedString alloc] initWithString:textForAttributedThenText
+                                                attributes:mutableAttributes];
+         
+         NSMutableAttributedString *attributedNowText =
+         [[NSMutableAttributedString alloc] initWithString:textForAttributedNowText
+                                                attributes:mutableAttributes];
+         
+         self.thenLabel.attributedText = attributedThenText;
+         self.nowLabel.attributedText = attributedNowText;
+         
+     }];
+    }
+}
+
+- (UIColor *)colorFromImage:(UIImage *)image xCoordinate:(int)x yCoordinate:(int)y {
+    
+    CFDataRef pixelData = CGDataProviderCopyData(CGImageGetDataProvider(image.CGImage));
+    const UInt8* data = CFDataGetBytePtr(pixelData);
+    
+    int pixelInfo = ((image.size.width  * y) + x ) * 4; // The image is png
+    
+    UInt8 red = data[pixelInfo];         // If you need this info, enable it
+    UInt8 green = data[(pixelInfo + 1)]; // If you need this info, enable it
+    UInt8 blue = data[pixelInfo + 2];    // If you need this info, enable it
+    CFRelease(pixelData);
+    
+    //UIColor* color = [UIColor colorWithRed:red/255.0f green:green/255.0f blue:blue/255.0f alpha:alpha/255.0f]; // The pixel color info
+    
+    UIColor *color = [UIColor colorWithRed:red green:green blue:blue alpha:1];
+    
+    return color;
+}
+
 - (void)showHideTANTextWithFont:(id)sender
 {
-        if (!self.nowLabel)
-        {
+    UIColor *textColor;
+    
+    if (!self.nowLabel)
+    {
         self.nowLabel = [[UILabel alloc] init];
         self.thenLabel = [[UILabel alloc] init];
         
@@ -533,59 +664,63 @@ typedef void(^ButtonReplacementBlock)(void);
         
         [self.nowContainerView bringSubviewToFront:self.nowLabel];
         [self.thenContainerView bringSubviewToFront:self.thenLabel];
-            
+        
         [self layoutTextLabels];
-
-        }
-    
-        UIColor *textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
         
-        UIButton *senderButton = (UIButton *)sender;
-    
-        if (!self.labelsFont || senderButton)
-        {
-            self.labelsFont = [UIFont fontWithName:senderButton.titleLabel.text size:30.0];
-        }
-        else if (!senderButton && !self.labelsFont)
-        {
-            self.labelsFont = [UIFont fontWithName:@"Georgia-Bold" size:30.0];
-        }
-            
-        NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-        
-        paragraphStyle.alignment = NSTextAlignmentLeft;
-        
-        NSDictionary *attr = @{NSForegroundColorAttributeName:textColor, NSFontAttributeName:self.labelsFont, NSParagraphStyleAttributeName:paragraphStyle};
-        
-        NSString *textForAttributedThenText = @"Then";
-        NSString *textForAttributedNowText = @"Now";
-        
-        NSMutableAttributedString *attributedThenText =
-        [[NSMutableAttributedString alloc] initWithString:textForAttributedThenText
-                                               attributes:attr];
-        
-        NSMutableAttributedString *attributedNowText =
-        [[NSMutableAttributedString alloc] initWithString:textForAttributedNowText
-                                               attributes:attr];
-        
-        self.thenLabel.attributedText = attributedThenText;
-        self.nowLabel.attributedText = attributedNowText;
+    }
     
     
-//    }
-//    else
-//    {
-//        [self.nowContainerView bringSubviewToFront:self.nowLabel];
-//        [self.nowContainerView bringSubviewToFront:self.thenLabel];
-//        
-//        self.thenLabel.hidden = !self.thenLabel.hidden;
-//        self.nowLabel.hidden = !self.nowLabel.hidden;
-//    }
-
-}
-
-- (void)generateAttributedString
-{
+    
+    if (self.chosenColor)
+    {
+        textColor = self.chosenColor;
+    }
+    else
+    {
+        textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+    }
+    
+    UIButton *senderButton = (UIButton *)sender;
+    
+    if (!self.labelsFont || senderButton)
+    {
+        self.labelsFont = [UIFont fontWithName:senderButton.titleLabel.text size:30.0];
+    }
+    else if (!senderButton && !self.labelsFont)
+    {
+        self.labelsFont = [UIFont fontWithName:@"Georgia-Bold" size:30.0];
+    }
+    
+    NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    
+    paragraphStyle.alignment = NSTextAlignmentLeft;
+    
+    NSDictionary *attr = @{NSForegroundColorAttributeName:textColor, NSFontAttributeName:self.labelsFont, NSParagraphStyleAttributeName:paragraphStyle};
+    
+    NSString *textForAttributedThenText = @"Then";
+    NSString *textForAttributedNowText = @"Now";
+    
+    NSMutableAttributedString *attributedThenText =
+    [[NSMutableAttributedString alloc] initWithString:textForAttributedThenText
+                                           attributes:attr];
+    
+    NSMutableAttributedString *attributedNowText =
+    [[NSMutableAttributedString alloc] initWithString:textForAttributedNowText
+                                           attributes:attr];
+    
+    self.thenLabel.attributedText = attributedThenText;
+    self.nowLabel.attributedText = attributedNowText;
+    
+    
+    //    }
+    //    else
+    //    {
+    //        [self.nowContainerView bringSubviewToFront:self.nowLabel];
+    //        [self.nowContainerView bringSubviewToFront:self.thenLabel];
+    //
+    //        self.thenLabel.hidden = !self.thenLabel.hidden;
+    //        self.nowLabel.hidden = !self.nowLabel.hidden;
+    //    }
     
 }
 
@@ -690,6 +825,33 @@ typedef void(^ButtonReplacementBlock)(void);
     {
         NSMutableArray *buttonArray = [[NSMutableArray alloc] init];
         
+        for (NSInteger i = 0; i < 25; i++)
+        {
+        
+            UIButton *fontColorButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            
+            UIColor *color = [UIColor colorWithRed:arc4random_uniform(255.0)/255.0 green:arc4random_uniform(255.0)/255.0 blue:arc4random_uniform(255.0)/255.0 alpha:1.0];
+            
+            UIColor *textColor = color;
+            UIFont *font = [UIFont systemFontOfSize:20.0];
+            
+            NSDictionary *attr = @{NSForegroundColorAttributeName:textColor, NSFontAttributeName:font};
+            
+            NSString *textForAttributedText = @"AAA";
+            
+            NSMutableAttributedString *attributedText =
+            [[NSMutableAttributedString alloc] initWithString:textForAttributedText
+                                                   attributes:attr];
+            
+            [fontColorButton setAttributedTitle:attributedText forState:UIControlStateNormal];
+            
+            fontColorButton.backgroundColor = color;
+            
+            [fontColorButton addTarget:self action:@selector(colorTANTextWithFontColor:) forControlEvents:UIControlEventTouchUpInside];
+            
+            [buttonArray addObject:fontColorButton];
+            [self.buttonColorArray addObject:color];
+        }
         
         _fontColorButtonArray = [[NSArray alloc] initWithArray:buttonArray];
     }
@@ -697,10 +859,31 @@ typedef void(^ButtonReplacementBlock)(void);
     return _fontColorButtonArray;
 }
 
+-(NSMutableArray *)buttonColorArray
+{
+    if(!_buttonColorArray)
+    {
+        _buttonColorArray = [[NSMutableArray alloc] init];
+    }
+    
+    return _buttonColorArray;
+}
+
+//- (UIImage *)imageFromColor:(UIColor *)color {
+//    CGRect rect = CGRectMake(0, 0, 44, 44);
+//    UIGraphicsBeginImageContext(rect.size);
+//    CGContextRef context = UIGraphicsGetCurrentContext();
+//    CGContextSetFillColorWithColor(context, [color CGColor]);
+//    //  [[UIColor colorWithRed:222./255 green:227./255 blue: 229./255 alpha:1] CGColor]) ;
+//    CGContextFillRect(context, rect);
+//    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    return img;
+//}
 
 - (NSNumber *)determineWidthOfSecondaryToolbarWithButtons:(NSArray *)buttonsArray usingIndividualButtonWidthBlock:( NSInteger (^)(UIButton *))buttonWidthBlock;
 {
-    NSInteger widthOfSecondaryToolbar = 108;
+    NSInteger widthOfSecondaryToolbar = 20;
     
     for (UIButton *button in buttonsArray)
     {

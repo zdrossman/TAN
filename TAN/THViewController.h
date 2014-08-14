@@ -97,7 +97,7 @@
 @property (strong, nonatomic) NSDictionary *metrics;
 
 @property (strong, nonatomic) UIFont *labelsFont;
-
+@property (strong, nonatomic) UIColor *chosenColor;
 #pragma mark - Other Properties
 @property (nonatomic) BOOL takingPhoto;
 @property (nonatomic) BOOL editMode;
@@ -106,7 +106,7 @@
 
 @property (strong, nonatomic) NSArray *typefaceButtonArray;
 @property (strong, nonatomic) NSArray *fontColorButtonArray;
-
+@property (strong, nonatomic) NSMutableArray *buttonColorArray;
 //@property (nonatomic) THPictureAddition *pictureAddition;
 
 - (void)cameraTapped:(id)sender;
